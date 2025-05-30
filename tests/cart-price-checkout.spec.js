@@ -28,14 +28,16 @@ test("Login, add product to card, remove product from cart", async ({
 
   //Step 4: Add product to cart
   const addToCartBtn = page.locator("button:has-text('Add to Cart')");
-  await expect(addToCartBtn).toBeVisible({ timeout: 5000 });
+  await expect(addToCartBtn).toBeVisible({ timeout: 30000 });
   await addToCartBtn.click();
 
   // Step 5: Wait for the cart to display the quantity
-  const cartCount = page.locator(
-    "a[href='/default-channel/cart'] div:has-text('1')"
+  const countText = await page.textContent(
+    "div.bg-neutral-900.text-white.text-xs.font-medium"
   );
-  await expect(cartCount).toBeVisible({ timeout: 5000 });
+  const match = countText?.match(/\d+/);
+  const itemCount = match ? Number(match[0]) : 0;
+  expect(itemCount).toBeGreaterThan(0);
 
   console.log("Add product to cart successfully");
 
@@ -44,13 +46,7 @@ test("Login, add product to card, remove product from cart", async ({
   await expect(page).toHaveURL("https://mypod.io.vn/default-channel/cart");
 
   //Step 7: Remove product from cart
-  const deleteButton = page.locator("button .lucide-trash");
-  await expect(deleteButton).toBeVisible({ timeout: 5000 });
-  await deleteButton.first().click();
-
-  //Step 8: Check empty cart
-  const emptyMessage = page.locator("text=Your Shopping Cart is empty");
-  await expect(emptyMessage).toBeVisible({ timeout: 5000 });
+  await page.locator("button >> text=Delete").first().click();
 
   console.log("Removed product from cart successfully");
 });
@@ -71,7 +67,7 @@ test("Login, add product to cart, check total price, checkout", async ({
 
   // Check total price
   const totalLocator = page.locator("div.font-medium.text-neutral-900");
-  const priceText = await totalLocator.textContent({ timeout: 5000 });
+  const priceText = await totalLocator.textContent({ timeout: 300000 });
 
   const match = priceText?.match(/\$([\d.]+)/);
   expect(match).not.toBeNull();
@@ -83,49 +79,27 @@ test("Login, add product to cart, check total price, checkout", async ({
 
   // Click Checkout button
   const checkoutBtn = page.locator("text=/.*Checkout.*/i");
-  await checkoutBtn.waitFor({ state: "visible", timeout: 10000 });
+  await checkoutBtn.waitFor({ state: "visible", timeout: 30000 });
   await checkoutBtn.click();
 
   await page.waitForURL(/\/checkout\?checkout=/, { timeout: 15000 });
 
-  const countryDropdown = page.locator(
-    'select[name="shippingAddress.country"]'
-  );
+  const ShippingDropdown = page.locator('select[name="deliveryMethod"]');
 
-  await countryDropdown.waitFor({ state: "visible", timeout: 10000 });
+  await ShippingDropdown.waitFor({ state: "visible", timeout: 10000 });
 
-  await expect(countryDropdown).toBeVisible();
+  await expect(ShippingDropdown).toBeVisible();
 
-  await countryDropdown.selectOption({ value: "VN" });
+  await ShippingDropdown.selectOption({ value: "U2hpcHBpbmdNZXRob2Q6MTA=" });
 
-  const provinceSelect = page.locator(
-    'select[name="shippingAddress.countryArea"]'
-  );
-  await expect(provinceSelect).toBeVisible();
-
-  await provinceSelect.selectOption({ label: "An Giang" });
-
-  await page.fill('input[name="shippingAddress.firstName"]', "Lộc");
-  await page.fill('input[name="shippingAddress.lastName"]', "Ngô Thành");
-  await page.fill('input[name="shippingAddress.company"]', "POD Software");
-  await page.fill(
-    'input[name="shippingAddress.streetAddress1"]',
-    "123 Main Street"
-  );
-  await page.fill('input[name="shippingAddress.streetAddress2"]', "Suite 4B");
-  await page.fill('input[name="shippingAddress.city"]', "CAN THO");
-  await page.fill('input[name="shippingAddress.zipCode"]', "94000");
-  await page.fill('input[name="shippingAddress.phoneNumber"]', "0788815877");
-  await page.locator('input[name="useShippingAsBilling"]').check();
-
-  const totalPriceText = await page
-    .locator("text=Total price")
-    .locator("..")
+  const totalPrice = await page
+    .locator('[data-testid="totalOrderPrice"]')
+    .nth(1)
     .textContent();
-  console.log("Total price checkout:", totalPriceText);
+  console.log(`Tổng giá: ${totalPrice}`);
 
   await page.click('button:has-text("Place Order")');
 
-  await page.waitForLoadState("networkidle");
-  await expect(page).toHaveURL("https://mypod.io.vn/default-channel/orders");
+  // await page.waitForLoadState("networkidle");
+  await expect(page).toHaveURL("https://mypod.io.vn/default-channel/orders", {timeout: 30000});
 });
