@@ -1,10 +1,9 @@
 import { test, expect } from "@playwright/test";
+import { BASE_URL } from "./utils/constants";
 
-const baseURL = "https://mypod.io.vn/default-channel";
-
-test.describe("Registration Tests", () => {
+test.describe("Searching Tests", () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto(baseURL);
+    await page.goto(BASE_URL);
   });
 
   test("SF001 - Valid keyword search", async ({ page }) => {

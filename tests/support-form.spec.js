@@ -1,5 +1,6 @@
 const { test, expect } = require("@playwright/test");
 const { generateUniqueEmail } = require("./utils/testDataHelper");
+import { SUPPORT_URL } from "./utils/constants";
 
 // Helper function to verify dialog
 async function verifyDialog(page, expectedMessage) {
@@ -46,7 +47,7 @@ async function verifyDialog(page, expectedMessage) {
 test.describe("Support Form Tests", () => {
   test.beforeEach(async ({ page }) => {
     // Navigate to the support form page before each test
-    await page.goto("https://mypod.io.vn/default-channel/support", {
+    await page.goto(SUPPORT_URL, {
       waitUntil: "domcontentloaded",
     });
     // Wait for the main support form to be loaded
@@ -249,21 +250,18 @@ test.describe("Support Form Tests", () => {
     // Wait for submitting state
     await expect(page.getByText("Submitting...")).toBeVisible();
 
-    // ✅ Wait for submitting message to disappear (sửa lại cú pháp đúng)
+    //Wait for submitting message to disappear
     await expect(
       page.locator("text=Support request created successfully")
     ).toBeVisible({ timeout: 10000 });
 
-    // Pause để kiểm tra UI
+
     await page.pause();
 
-    // Debug: Log trạng thái trang
     console.log("Current URL:", page.url());
 
-    // Debug: Chụp screenshot trước khi tìm dialog
     await page.screenshot({ path: "before-dialog.png" });
 
-    // Debug: Log tất cả các element visible trên trang
     const visibleElements = await page.evaluate(() => {
       return Array.from(document.querySelectorAll("*"))
         .filter((el) => {
@@ -429,21 +427,17 @@ test.describe("Support Form Tests", () => {
     // Wait for submitting state
     await expect(page.getByText("Submitting...")).toBeVisible();
 
-    // ✅ Wait for submitting message to disappear (sửa lại cú pháp đúng)
+    //Wait for submitting message to disappear
     await expect(
       page.locator("text=Support request created successfully")
     ).toBeVisible({ timeout: 10000 });
 
-    // Pause để kiểm tra UI
     await page.pause();
 
-    // Debug: Log trạng thái trang
     console.log("Current URL:", page.url());
 
-    // Debug: Chụp screenshot trước khi tìm dialog
     await page.screenshot({ path: "before-dialog.png" });
 
-    // Debug: Log tất cả các element visible trên trang
     const visibleElements = await page.evaluate(() => {
       return Array.from(document.querySelectorAll("*"))
         .filter((el) => {
@@ -625,16 +619,12 @@ test.describe("Support Form Tests", () => {
     // Wait for submitting message to disappear
     await expect(page.getByText("Submitting...")).toBeHidden();
 
-    // Pause để kiểm tra UI
     await page.pause();
 
-    // Debug: Log trạng thái trang
     console.log("Current URL:", page.url());
 
-    // Debug: Chụp screenshot trước khi tìm dialog
     await page.screenshot({ path: "before-dialog.png" });
 
-    // Debug: Log tất cả các element visible trên trang
     const visibleElements = await page.evaluate(() => {
       return Array.from(document.querySelectorAll("*"))
         .filter((el) => {
@@ -745,7 +735,7 @@ test.describe("Support Form Tests", () => {
     try {
       // Try to find success message
       await page.waitForSelector('[data-testid="success-message"]', {
-        timeout: 2000,
+        timeout: 30000,
       });
     } catch {
       // If no success message, check if form was cleared/reset
@@ -783,16 +773,12 @@ test.describe("Support Form Tests", () => {
     // Wait for submitting message to disappear
     await expect(page.getByText("Submitting...")).toBeHidden();
 
-    // Pause để kiểm tra UI
     await page.pause();
 
-    // Debug: Log trạng thái trang
     console.log("Current URL:", page.url());
 
-    // Debug: Chụp screenshot trước khi tìm dialog
     await page.screenshot({ path: "before-dialog.png" });
 
-    // Debug: Log tất cả các element visible trên trang
     const visibleElements = await page.evaluate(() => {
       return Array.from(document.querySelectorAll("*"))
         .filter((el) => {

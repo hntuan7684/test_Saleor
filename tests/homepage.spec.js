@@ -1,6 +1,6 @@
 import { test, expect } from "@playwright/test";
 
-const BASE_URL = "https://mypod.io.vn/default-channel";
+import { BASE_URL } from "./utils/constants";
 
 test.describe("ZoomPrints UI Test Cases", () => {
   test.beforeEach(async ({ page }) => {
@@ -95,7 +95,7 @@ test.describe("ZoomPrints UI Test Cases", () => {
   test("HP010 - Login button disabled when already logged in (mock)", async ({
     page,
   }) => {
-    await page.goto("https://mypod.io.vn/default-channel/login");
+    await page.goto(`${BASE_URL}/login`);
     await page.fill('input[name="email"]', "ngothanhloc.22102003@gmail.com");
     await page.fill('input[name="password"]', "Loc22102005");
     await page.click('button:has-text("Log in")');

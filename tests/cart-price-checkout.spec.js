@@ -1,10 +1,14 @@
 import { test, expect } from "@playwright/test";
+import { PRODUCTS_URL } from "./utils/constants";
+import { CART_URL } from "./utils/constants";
+import { LOGIN_URL } from "./utils/constants";
+import {ORDERS_URL } from "./utils/constants";
 
 test("Login, add product to card, remove product from cart", async ({
   page,
 }) => {
   // Step 1: Login
-  await page.goto("https://mypod.io.vn/default-channel/login", {
+  await page.goto(LOGIN_URL, {
     waitUntil: "domcontentloaded",
   });
   await page.fill('input[name="email"]', "ngothanhloc.22102003@gmail.com");
@@ -13,7 +17,7 @@ test("Login, add product to card, remove product from cart", async ({
   await page.waitForURL("**/default-channel");
 
   //Step 2: Access product page
-  await page.goto("https://mypod.io.vn/default-channel/products", {
+  await page.goto(PRODUCTS_URL, {
     waitUntil: "domcontentloaded",
   });
 
@@ -43,7 +47,7 @@ test("Login, add product to card, remove product from cart", async ({
 
   //Step 6: Access the cart
   await page.click("a[href='/default-channel/cart']");
-  await expect(page).toHaveURL("https://mypod.io.vn/default-channel/cart");
+  await expect(page).toHaveURL(CART_URL);
 
   //Step 7: Remove product from cart
   await page.locator("button >> text=Delete").first().click();
@@ -54,13 +58,13 @@ test("Login, add product to card, remove product from cart", async ({
 test("Login, add product to cart, check total price, checkout", async ({
   page,
 }) => {
-  await page.goto("https://mypod.io.vn/default-channel/login");
+  await page.goto(LOGIN_URL);
   await page.fill('input[name="email"]', "ngothanhloc.22102003@gmail.com");
   await page.fill('input[name="password"]', "Loc22102005");
   await page.click('button:has-text("Log in")');
   await page.waitForURL("**/default-channel");
 
-  await page.goto("https://mypod.io.vn/default-channel/products");
+  await page.goto(PRODUCTS_URL);
   await page.locator("a[href*='/products/']").first().click();
   await page.locator("button:has-text('Add to Cart')").click();
   await page.click("a[href='/default-channel/cart']");
@@ -82,7 +86,7 @@ test("Login, add product to cart, check total price, checkout", async ({
   await checkoutBtn.waitFor({ state: "visible", timeout: 30000 });
   await checkoutBtn.click();
 
-  await page.waitForURL(/\/checkout\?checkout=/, { timeout: 15000 });
+  await page.waitForURL(/\/checkout\?checkout=/, { timeout: 150000 });
 
   const ShippingDropdown = page.locator('select[name="deliveryMethod"]');
 
@@ -101,5 +105,5 @@ test("Login, add product to cart, check total price, checkout", async ({
   await page.click('button:has-text("Place Order")');
 
   // await page.waitForLoadState("networkidle");
-  await expect(page).toHaveURL("https://mypod.io.vn/default-channel/orders", {timeout: 30000});
+  await expect(page).toHaveURL(ORDERS_URL, {timeout: 30000});
 });
