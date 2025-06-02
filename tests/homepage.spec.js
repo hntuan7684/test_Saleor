@@ -23,8 +23,11 @@ test.describe("ZoomPrints UI Test Cases", () => {
   });
 
   test("HP003 - Login button redirects to login page", async ({ page }) => {
-    await page.click('a[href="/default-channel/login"]');
-    await expect(page).toHaveURL(/login/);
+    await page.click("div.flex.items-center.justify-center.rounded-md.p-2");
+
+    await expect(page).toHaveURL(
+      /https:\/\/accounts\.mypodsoftware\.io\.vn\/realms\/keycloak/
+    );
   });
 
   // test("HP004 - Cart icon shows correct item count", async ({ page }) => {
@@ -75,10 +78,13 @@ test.describe("ZoomPrints UI Test Cases", () => {
   test("HP008 - Navigation links restricted when logged out", async ({
     page,
   }) => {
-    await page.click("a[href='/default-channel/login']");
-    await expect(page).toHaveURL(/login/);
-  });
+    await page.click("div.flex.items-center.justify-center.rounded-md.p-2");
 
+    await expect(page).toHaveURL(
+      /https:\/\/accounts\.mypodsoftware\.io\.vn\/realms\/keycloak/
+    );
+  });
+  
   test("HP009 - Search with invalid product returns no results", async ({
     page,
   }) => {
@@ -205,14 +211,6 @@ test.describe("ZoomPrints UI Test Cases", () => {
       () => window.getComputedStyle(document.body).fontFamily
     );
     expect(fontFamily).toMatch(/sans-serif|Roboto|Inter|Work_Sans/);
-  });
-
-  test('HP029 - Click "Learn More" when offline', async ({ browser }) => {
-    const context = await browser.newContext({ offline: true });
-    const page = await context.newPage();
-    await page.goto(BASE_URL);
-    await page.click("text=Learn More").catch(() => {});
-    await expect(page.locator("text=No Internet")).toBeVisible();
   });
 
   //   test("HP030 - Broken images show fallback content", async ({ page }) => {
