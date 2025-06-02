@@ -3,7 +3,7 @@ import { test, expect } from "@playwright/test";
 import { BASE_URL } from "./utils/constants.js";
 
 test.describe("Products Page Tests", () => {
-  let allTestResults = []; // Lưu trữ kết quả tạm thời
+  let allTestResults = []; // Temporarily store test results
 
   // test.beforeAll(async () => {
   //   await initExcel(); // Không cần truyền sheetName
@@ -416,7 +416,7 @@ test.describe("Products Page Tests", () => {
         console.log("ProductGrid elements count:", gridsCount);
 
         if (gridsCount === 0) {
-          throw new Error("Không tìm thấy phần tử ProductGrid trên trang");
+          throw new Error("ProductGrid element not found on the page");
         }
 
         const getGridColumns = async () => {
@@ -493,26 +493,26 @@ test.describe("Products Page Tests", () => {
           actual,
           status,
         };
-        allTestResults.push(testResult); // Thêm vào mảng tạm thời
+        allTestResults.push(testResult); // Add to temporary array
       } catch (err) {
-        console.error("Lỗi khi chuẩn bị kết quả:", err);
+        console.error("Error preparing result:", err);
       }
     });
   });
 
   // test.afterAll(async () => {
   //   try {
-  //     // Ghi tất cả kết quả vào Excel sau khi tất cả test case hoàn thành
+  //     // Write all results to Excel after all test cases are completed
   //     for (const result of allTestResults) {
   //       await logTestResult(result);
   //     }
 
-  //     // Chỉ lưu và mở Excel sau khi tất cả kết quả được ghi
+  //     // Only save and open Excel after all results are written
   //     await saveExcel();
   //     await openExcelAfterSave();
-  //     console.log("Đã lưu kết quả vào Excel thành công!");
+  //     console.log("Successfully saved results to Excel!");
   //   } catch (error) {
-  //     console.error("Lỗi khi lưu file Excel:", error);
+  //     console.error("Error saving Excel file:", error);
   //   }
   // });
 });
