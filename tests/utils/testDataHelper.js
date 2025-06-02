@@ -10,10 +10,10 @@ const generateUniqueEmail = (domain = "mailinator.com") => {
   const second = pad(now.getSeconds());
   const millisecond = pad(now.getMilliseconds(), 3);
 
-  const formatted = `${year}-${month}-${day}-${hour}-${minute}-${second}-${millisecond}`;
+  const formatted = `${year}${month}${day}${hour}${minute}${second}${millisecond}`;
   return `test${formatted}@${domain}`;
 };
 
 module.exports = {
-  generateUniqueEmail
-}
+  generateUniqueEmail,
+};

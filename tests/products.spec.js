@@ -1,18 +1,18 @@
 // products.spec.js
 import { test, expect } from "@playwright/test";
 import { BASE_URL } from "./utils/constants.js";
-import {
-  initExcel,
-  logTestResult,
-  saveExcel,
-} from "./utils/testResultLogger.js";
+// import {
+//   initExcel,
+//   logTestResult,
+//   saveExcel,
+// } from "./utils/testResultLogger.js";
 
 test.describe("Products Page Tests", () => {
-  let allTestResults = []; // Lưu trữ kết quả tạm thời
+  // let allTestResults = []; // Lưu trữ kết quả tạm thời
 
-  test.beforeAll(async () => {
-    await initExcel(); // Không cần truyền sheetName
-  });
+  // test.beforeAll(async () => {
+  //   await initExcel(); // Không cần truyền sheetName
+  // });
 
   const testCases = [
     {
@@ -505,19 +505,19 @@ test.describe("Products Page Tests", () => {
     });
   });
 
-  test.afterAll(async () => {
-    try {
-      // Ghi tất cả kết quả vào Excel sau khi tất cả test case hoàn thành
-      for (const result of allTestResults) {
-        await logTestResult(result);
-      }
+  // test.afterAll(async () => {
+  //   try {
+  //     // Ghi tất cả kết quả vào Excel sau khi tất cả test case hoàn thành
+  //     for (const result of allTestResults) {
+  //       await logTestResult(result);
+  //     }
 
-      // Chỉ lưu và mở Excel sau khi tất cả kết quả được ghi
-      await saveExcel();
-      await openExcelAfterSave();
-      console.log("Đã lưu kết quả vào Excel thành công!");
-    } catch (error) {
-      console.error("Lỗi khi lưu file Excel:", error);
-    }
-  });
+  //     // Chỉ lưu và mở Excel sau khi tất cả kết quả được ghi
+  //     await saveExcel();
+  //     await openExcelAfterSave();
+  //     console.log("Đã lưu kết quả vào Excel thành công!");
+  //   } catch (error) {
+  //     console.error("Lỗi khi lưu file Excel:", error);
+  //   }
+  // });
 });
