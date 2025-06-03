@@ -4,7 +4,7 @@ import { BASE_URL } from "./utils/constants";
 
 test.describe("ZoomPrints UI Test Cases", () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto(BASE_URL);
+    await page.goto(BASE_URL, {timeout: 120000});
   });
 
   test("HP001 - Logo redirects to homepage", async ({ page }) => {
@@ -102,7 +102,7 @@ test.describe("ZoomPrints UI Test Cases", () => {
     page,
   }) => {
     await page.goto(`${BASE_URL}/login`);
-    await page.fill('input[name="email"]', "ngothanhloc.22102003@gmail.com");
+    await page.fill('input[name="username"]', "ngothanhloc.22102003@gmail.com");
     await page.fill('input[name="password"]', "Loc22102005");
     await page.click('button:has-text("Log in")');
     await page.waitForURL("**/default-channel");

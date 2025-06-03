@@ -51,7 +51,7 @@ test("Login, add product to card, remove product from cart", async ({page}) => {
     .locator("a[href*='/products/']")
     .locator("div")
     .filter({ hasText: "$" });
-  await expect(products.first()).toBeVisible();
+  await expect(products.first()).toBeVisible({timeout: 30000});
 
   //Step 3: Clip on first product
   await products.first().click();

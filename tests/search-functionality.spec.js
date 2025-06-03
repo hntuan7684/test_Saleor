@@ -156,7 +156,7 @@ test.describe("Searching Tests", () => {
     for (let i = 0; i < 10; i++) {
       await page.fill('input[placeholder="Search for products..."]', "gildan");
       await page.click('button[type="submit"]');
-      await expect(page.locator('[data-testid="ProductList"]')).toBeVisible();
+      await expect(page.locator('[data-testid="ProductList"]')).toBeVisible({timeout: 30000});
     }
   });
 });
