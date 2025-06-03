@@ -1,6 +1,6 @@
 // utils/constants.js
-const BASE_URL = 'https://mypod.io.vn/default-channel';
-const MAILINATOR_BASE_URL = 'https://www.mailinator.com/v4/public/inboxes.jsp';
+const BASE_URL = "https://mypod.io.vn/default-channel";
+const MAILINATOR_BASE_URL = "https://www.mailinator.com/v4/public/inboxes.jsp";
 const PRODUCTS_URL = "https://mypod.io.vn/default-channel/products";
 const CART_URL = "https://mypod.io.vn/default-channel/cart";
 const LOGIN_URL = "https://mypod.io.vn/default-channel/login";

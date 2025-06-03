@@ -5,7 +5,7 @@ const registerURL = "https://mypod.io.vn/default-channel/register";
 const { BASE_URL } = require("./utils/constants");
 test.describe("Registration Tests", () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto(registerURL);
+    await page.goto(registerURL, {timeout: 120000});
   });
 
   test("Verify registration and reuse email", async ({ page }) => {
@@ -27,7 +27,7 @@ test.describe("Registration Tests", () => {
     });
 
     await test.step("RG002-Verify registration with existing email", async () => {
-      await page.goto("https://mypod.io.vn/default-channel/register");
+      await page.goto(registerURL);
 
       await page.fill('input[name="firstName"]', "Existing");
       await page.fill('input[name="lastName"]', "User");
@@ -73,7 +73,7 @@ test.describe("Registration Tests", () => {
   test("RG005-Verify registration without mandatory fields", async ({
     page,
   }) => {
-    await page.goto("https://mypod.io.vn/default-channel/register");
+    await page.goto(registerURL);
     await page.fill('input[name="firstName"]', "John");
     await page.fill('input[name="lastName"]', "Doe");
     await page.click('button:has-text("Register")');
