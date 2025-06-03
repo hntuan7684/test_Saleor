@@ -61,4 +61,13 @@ export class LoginPage {
     await error.waitFor({ state: 'visible', timeout: 5000 });
     return await error.isVisible();
   }
+
+  async clickGoogleLogin() {
+  await this.page.locator('#social-google').click();
+}
+
+async clickTwitterLogin() {
+  await this.page.locator('#social-twitter').click();
+}
+
 }

@@ -102,8 +102,8 @@ test.describe("ZoomPrints UI Test Cases", () => {
     page,
   }) => {
     await page.goto(`${BASE_URL}/login`);
-    await page.fill('input[name="email"]', "ngothanhloc.22102003@gmail.com");
-    await page.fill('input[name="password"]', "Loc22102005");
+    await page.fill('input[name="username"]', "testaccount455@mailinator.com");
+    await page.fill('input[name="password"]', "ValidPass123!");
     await page.click('button:has-text("Log in")');
     await page.waitForURL("**/default-channel");
     const loginLink = page.locator('a[href="/default-channel/login"]');

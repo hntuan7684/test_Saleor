@@ -1,23 +1,23 @@
 import { test, expect } from "@playwright/test";
 import { BASE_URL } from "./utils/constants.js";
-import {
-  initExcel,
-  logTestResult,
-  saveExcel,
-} from "./utils/testResultLogger.js";
+// import {
+//   initExcel,
+//   logTestResult,
+//   saveExcel,
+// } from "./utils/testResultLogger.js";
 
 test.describe("Đăng nhập và thêm sản phẩm vào giỏ hàng", () => {
-  test.beforeAll(async () => {
-    await initExcel();
-  });
+  // test.beforeAll(async () => {
+  //   await initExcel();
+  // });
 
-  test.afterAll(async () => {
-    await saveExcel();
-  });
+  // test.afterAll(async () => {
+  //   await saveExcel();
+  // });
 
   test("TC019 - Đăng nhập và thêm sản phẩm vào giỏ hàng", async ({ page }) => {
-    const email = "tuanhnt7684@gmail.com";
-    const password = "@hntTuan2023#";
+    const email = "testaccount455@mailinator.com";
+    const password = "ValidPass123!";
 
     let actual = "";
     let status = "Fail";
@@ -25,7 +25,7 @@ test.describe("Đăng nhập và thêm sản phẩm vào giỏ hàng", () => {
     try {
       // 1. Đăng nhập
       await page.goto(`${BASE_URL}/login`);
-      await page.fill('input[placeholder="Email"]', email);
+      await page.fill('input[name="username"]', email);
       await page.fill('input[placeholder="Password"]', password);
       await page.getByRole("button", { name: "Log In" }).click();
 
@@ -88,15 +88,6 @@ test.describe("Đăng nhập và thêm sản phẩm vào giỏ hàng", () => {
     } catch (e) {
       console.error("❌ Lỗi trong TC019:", e);
       actual = `Không thể hoàn tất quy trình thêm sản phẩm và xác minh giỏ hàng. Lỗi: ${e.message}`;
-    } finally {
-      await logTestResult({
-        id: "TC019",
-        description: "Đăng nhập và thêm sản phẩm vào giỏ hàng",
-        input: `email=${email}; sản phẩm=bella-3001; màu=WHITE; size=M`,
-        expected: "Sản phẩm được thêm và hiển thị trong giỏ hàng",
-        actual,
-        status,
-      });
-    }
+    } 
   });
 });
