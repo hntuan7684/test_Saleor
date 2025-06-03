@@ -213,14 +213,14 @@ test.describe("ZoomPrints UI Test Cases", () => {
     expect(fontFamily).toMatch(/sans-serif|Roboto|Inter|Work_Sans/);
   });
 
-  //   test("HP030 - Broken images show fallback content", async ({ page }) => {
-  //     await page.evaluate(() => {
-  //       document
-  //         .querySelectorAll("img")
-  //         .forEach((img) => (img.src = "broken-link.jpg"));
-  //     });
-  //     // Test for alt text or fallback display
-  //   });
+  test("HP030 - Broken images show fallback content", async ({ page }) => {
+    await page.evaluate(() => {
+      document
+        .querySelectorAll("img")
+        .forEach((img) => (img.src = "broken-link.jpg"));
+    });
+    // Test for alt text or fallback display
+  });
 
   //   test("HP031 - Layout handles narrow widths", async ({ page }) => {
   //     await page.setViewportSize({ width: 250, height: 800 });

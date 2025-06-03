@@ -1,60 +1,85 @@
-// import { test, expect } from "@playwright/test";
-// import { PRODUCTS_URL } from "./utils/constants";
-// import { CART_URL } from "./utils/constants";
-// import { LOGIN_URL } from "./utils/constants";
-// import {ORDERS_URL } from "./utils/constants";
+const { chromium } = require("playwright");
+import { test, expect } from "@playwright/test";
+import { PRODUCTS_URL } from "./utils/constants";
+import { CART_URL } from "./utils/constants";
+import { LOGIN_URL } from "./utils/constants";
+import { ORDERS_URL } from "./utils/constants";
+import createAndVerifyAccount from "./utils/createAccount";
+import { BASE_URL } from "./utils/constants";
+const { generateUniqueEmail } = require("./utils/testDataHelper");
 
-// test("Login, add product to card, remove product from cart", async ({
-//   page,
-// }) => {
-//   test.setTimeout(120000);
-//   // Step 1: Login
-//   await page.goto(LOGIN_URL, {
-//     waitUntil: "domcontentloaded",
-//   });
-//   await page.fill('input[name="username"]', "ngothanhloc.22102003@gmail.com");
-//   await page.fill('input[name="password"]', "Loc22102005");
-//   await page.click('button:has-text("Log in")');
-//   await page.waitForURL("**/default-channel");
+test("Login, add product to card, remove product from cart", async ({page}) => {
+  test.setTimeout(360000);
+  // Step 1: Create account
+  const firstName = "David";
+  const lastName = "John";
+  const email = generateUniqueEmail("mailinator.com");
+  const password = "Testuser12345";
+  console.log("Test email: ", email);
+  try {
+    await createAndVerifyAccount(page, {
+      firstName: firstName,
+      lastName: lastName,
+      email: email,
+      password: password,
+    });
+    console.log("Account is created and verify successfully!");
+  } catch (err) {
+    console.error("Error:", err);
+    throw err;
+  }
 
-//   //Step 2: Access product page
-//   await page.goto(PRODUCTS_URL, {
-//     waitUntil: "domcontentloaded",
-//   });
+  await page.goto(BASE_URL);
+  await page.locator('span:has-text("Log in")').click({ force: true });
 
-//   const products = page
-//     .locator("a[href*='/products/']")
-//     .locator("div")
-//     .filter({ hasText: "$" });
-//   await expect(products.first()).toBeVisible();
+  await page.screenshot({ path: "login-page.png", fullPage: true });
 
-//   //Step 3: Clip on first product
-//   await products.first().click();
+  console.log("email, password: ", email, password);
+  await page.getByPlaceholder("Email").fill(email);
+  await page.getByPlaceholder("Password").fill(password);
 
-//   //Step 4: Add product to cart
-//   const addToCartBtn = page.locator("button:has-text('Add to Cart')");
-//   await expect(addToCartBtn).toBeVisible({ timeout: 30000 });
-//   await addToCartBtn.click();
+  await page.click('button:has-text("Log In")');
+  await page.waitForLoadState("networkidle");
+  await expect(page).toHaveURL(BASE_URL);
 
-//   // Step 5: Wait for the cart to display the quantity
-//   const countText = await page.textContent(
-//     "div.bg-neutral-900.text-white.text-xs.font-medium"
-//   );
-//   const match = countText?.match(/\d+/);
-//   const itemCount = match ? Number(match[0]) : 0;
-//   expect(itemCount).toBeGreaterThan(0);
+  //Step 2: Access product page
+  await page.goto(PRODUCTS_URL, {
+    waitUntil: "domcontentloaded",
+  });
 
-//   console.log("Add product to cart successfully");
+  const products = page
+    .locator("a[href*='/products/']")
+    .locator("div")
+    .filter({ hasText: "$" });
+  await expect(products.first()).toBeVisible();
 
-//   //Step 6: Access the cart
-//   await page.click("a[href='/default-channel/cart']");
-//   await expect(page).toHaveURL(CART_URL);
+  //Step 3: Clip on first product
+  await products.first().click();
 
-//   //Step 7: Remove product from cart
-//   await page.locator("button >> text=Delete").first().click();
+  //Step 4: Add product to cart
+  const addToCartBtn = page.locator("button:has-text('Add to Cart')");
+  await expect(addToCartBtn).toBeVisible({ timeout: 30000 });
+  await addToCartBtn.click();
 
-//   console.log("Removed product from cart successfully");
-// });
+  // Step 5: Wait for the cart to display the quantity
+  const countText = await page.textContent(
+    "div.bg-neutral-900.text-white.text-xs.font-medium"
+  );
+  const match = countText?.match(/\d+/);
+  const itemCount = match ? Number(match[0]) : 0;
+  expect(itemCount).toBeGreaterThan(0);
+
+  console.log("Add product to cart successfully");
+
+  //Step 6: Access the cart
+  await page.click("a[href='/default-channel/cart']");
+  await expect(page).toHaveURL(CART_URL);
+
+  //Step 7: Remove product from cart
+  await page.locator("button >> text=Delete").first().click();
+
+  console.log("Removed product from cart successfully");
+});
 
 // test("Login, add product to cart, check total price, checkout", async ({
 //   page,

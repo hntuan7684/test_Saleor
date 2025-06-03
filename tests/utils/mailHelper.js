@@ -30,7 +30,7 @@ async function getVerificationLinkFromMailinator(page, emailAddress) {
     );
   }
 
-  const emailSubjectKeywords = ["Account confirmation e-mail"]; // Ensure this matches the actual email subject
+  const emailSubjectKeywords = ["emailVerificationSubject"]; // Ensure this matches the actual email subject
   let clickedEmail = false;
   for (const keyword of emailSubjectKeywords) {
     const specificEmailSelector = `//table[contains(@class, "table")]//tbody//tr/td[contains(text(), "${keyword}")]`;
@@ -82,7 +82,7 @@ async function getVerificationLinkFromMailinator(page, emailAddress) {
 
   // Adjust this locator if the link structure is different
   const verificationLinkLocator = iframeEmailBody.locator(
-    'a[href*="verify"], a[href*="confirm"], a[href*="activate"], a[href*="token"]'
+    'a[href*="verify"], a[href*="confirm"], a[href*="activate"], a[href*="token"], a[href*="linker"]'
   );
   try {
     await verificationLinkLocator
