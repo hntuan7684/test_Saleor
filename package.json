@@ -2,7 +2,10 @@
   "name": "playwright-register-test",
   "version": "1.0.0",
   "main": "index.js",
-  "scripts": {},
+  "scripts": {
+    "test": "playwright test",
+    "test:performance": "playwright test performance.spec.js"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
@@ -17,6 +20,8 @@
     "dotenv": "^16.5.0",
     "exceljs": "^4.4.0",
     "node-fetch": "^2.7.0",
-    "xlsx": "^0.18.5"
+    "xlsx": "^0.18.5",
+    "lighthouse": "^11.3.0",
+    "chrome-launcher": "^0.15.2"
   }
 }
