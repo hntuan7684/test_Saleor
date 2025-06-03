@@ -1,0 +1,569 @@
+[
+  {
+    "id": "11",
+    "description": "Verify Product Features list is displayed",
+    "input": "/default-channel/products/bella-3001",
+    "expected": "Should behave as described",
+    "actual": "Failed: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeGreaterThan\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: > \u001b[32m0\u001b[39m\nReceived:   \u001b[31m0\u001b[39m",
+    "status": "Fail",
+    "timestamp": "14:02:49, 16-05-2025"
+  },
+  {
+    "id": "12",
+    "description": "Verify Breadcrumb navigation works",
+    "input": "/default-channel/products/bella-3001",
+    "expected": "Should behave as described",
+    "actual": "Failed: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: locator('[data-testid=\"Breadcrumb\"] a').first()\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - expect.toBeVisible with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('[data-testid=\"Breadcrumb\"] a').first()\u001b[22m\n",
+    "status": "Fail",
+    "timestamp": "14:02:50, 16-05-2025"
+  },
+  {
+    "id": "13",
+    "description": "Verify Social Media Share buttons are displayed",
+    "input": "/default-channel/products/bella-3001",
+    "expected": "Should behave as described",
+    "actual": "Failed: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeGreaterThanOrEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: >= \u001b[32m3\u001b[39m\nReceived:    \u001b[31m0\u001b[39m",
+    "status": "Fail",
+    "timestamp": "14:02:50, 16-05-2025"
+  },
+  {
+    "id": "14",
+    "description": "Verify Product URL is SEO friendly",
+    "input": "/default-channel/products/bella-3001",
+    "expected": "Should behave as described",
+    "actual": "Failed: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoMatch\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected pattern: \u001b[32m/\\/products\\/[a-z0-9-]+$/i\u001b[39m\nReceived string:  \u001b[31m\"https://mypod.io.vn/default-channel/products\"\u001b[39m",
+    "status": "Fail",
+    "timestamp": "14:02:50, 16-05-2025"
+  },
+  {
+    "id": "15",
+    "description": "Verify Product Title with long text",
+    "input": "/default-channel/products/bella-3001",
+    "expected": "Should behave as described",
+    "actual": "Passed",
+    "status": "Pass",
+    "timestamp": "14:02:50, 16-05-2025"
+  },
+  {
+    "id": "16",
+    "description": "Verify Product Title with special characters",
+    "input": "https://mypod.io.vn/default-channel/products",
+    "expected": "Should behave as described",
+    "actual": "Failed: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: locator('h1').first()\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - expect.toBeVisible with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('h1').first()\u001b[22m\n",
+    "status": "Fail",
+    "timestamp": "14:02:54, 16-05-2025"
+  },
+  {
+    "id": "17",
+    "description": "Verify Product Title with Unicode characters",
+    "input": "https://mypod.io.vn/default-channel/products",
+    "expected": "Should behave as described",
+    "actual": "Failed: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: locator('h1').first()\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - expect.toBeVisible with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('h1').first()\u001b[22m\n",
+    "status": "Fail",
+    "timestamp": "14:02:54, 16-05-2025"
+  },
+  {
+    "id": "18",
+    "description": "Verify Product Image fails to load",
+    "input": "https://mypod.io.vn/default-channel/products",
+    "expected": "Should behave as described",
+    "actual": "Failed: locator.evaluate: Test timeout of 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('[data-testid=\"ProductImage\"] img').first()\u001b[22m\n",
+    "status": "Fail",
+    "timestamp": "14:02:54, 16-05-2025"
+  },
+  {
+    "id": "1",
+    "description": "Verify Product Title is displayed correctly",
+    "input": "/default-channel/products/bella-3001",
+    "expected": "Should behave as described",
+    "actual": "Failed: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: locator('h1').first()\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - expect.toBeVisible with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('h1').first()\u001b[22m\n",
+    "status": "Fail",
+    "timestamp": "14:02:55, 16-05-2025"
+  },
+  {
+    "id": "2",
+    "description": "Verify Product Image is displayed",
+    "input": "/default-channel/products/bella-3001",
+    "expected": "Should behave as described",
+    "actual": "Failed: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: locator('[data-testid=\"ProductImage\"] img').first()\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - expect.toBeVisible with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('[data-testid=\"ProductImage\"] img').first()\u001b[22m\n",
+    "status": "Fail",
+    "timestamp": "14:02:55, 16-05-2025"
+  },
+  {
+    "id": "3",
+    "description": "Verify Color options are displayed and selectable",
+    "input": "/default-channel/products/bella-3001",
+    "expected": "Should behave as described",
+    "actual": "Failed: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeGreaterThan\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: > \u001b[32m0\u001b[39m\nReceived:   \u001b[31m0\u001b[39m",
+    "status": "Fail",
+    "timestamp": "14:02:55, 16-05-2025"
+  },
+  {
+    "id": "4",
+    "description": "Verify Size options are displayed and selectable",
+    "input": "/default-channel/products/bella-3001",
+    "expected": "Should behave as described",
+    "actual": "Failed: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeGreaterThan\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: > \u001b[32m0\u001b[39m\nReceived:   \u001b[31m0\u001b[39m",
+    "status": "Fail",
+    "timestamp": "14:02:55, 16-05-2025"
+  },
+  {
+    "id": "5",
+    "description": "Verify Price is displayed correctly",
+    "input": "/default-channel/products/bella-3001",
+    "expected": "Should behave as described",
+    "actual": "Failed: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: locator('[data-testid=\"ProductPrice\"]')\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - expect.toBeVisible with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('[data-testid=\"ProductPrice\"]')\u001b[22m\n",
+    "status": "Fail",
+    "timestamp": "14:02:55, 16-05-2025"
+  },
+  {
+    "id": "6",
+    "description": "Verify Add to Cart button is clickable",
+    "input": "/default-channel/products/bella-3001",
+    "expected": "Should behave as described",
+    "actual": "Failed: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeEnabled\u001b[2m()\u001b[22m\n\nLocator: locator('[data-testid=\"AddToCartButton\"]')\nExpected: enabled\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - expect.toBeEnabled with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('[data-testid=\"AddToCartButton\"]')\u001b[22m\n",
+    "status": "Fail",
+    "timestamp": "14:02:59, 16-05-2025"
+  },
+  {
+    "id": "7",
+    "description": "Verify Quantity selector is working correctly",
+    "input": "/default-channel/products/bella-3001",
+    "expected": "Should behave as described",
+    "actual": "Failed: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: locator('[data-testid=\"QuantityInput\"]')\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - expect.toBeVisible with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('[data-testid=\"QuantityInput\"]')\u001b[22m\n",
+    "status": "Fail",
+    "timestamp": "14:02:59, 16-05-2025"
+  },
+  {
+    "id": "8",
+    "description": "Verify Product is added to Cart correctly",
+    "input": "/default-channel/products/bella-3001",
+    "expected": "Should behave as described",
+    "actual": "Failed: locator.click: Test timeout of 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('[data-testid=\"AddToCartButton\"]')\u001b[22m\n",
+    "status": "Fail",
+    "timestamp": "14:02:59, 16-05-2025"
+  },
+  {
+    "id": "27",
+    "description": "Verify Stock availability for each color/size",
+    "input": "/default-channel/products/bella-3001",
+    "expected": "Should behave as described",
+    "actual": "Failed: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: locator('[data-testid=\"StockInfo\"]')\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - expect.toBeVisible with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('[data-testid=\"StockInfo\"]')\u001b[22m\n",
+    "status": "Fail",
+    "timestamp": "14:03:10, 16-05-2025"
+  },
+  {
+    "id": "28",
+    "description": "Verify Product Description is displayed and formatted correctly",
+    "input": "/default-channel/products/bella-3001",
+    "expected": "Should behave as described",
+    "actual": "Failed: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: locator('[data-testid=\"ProductDescription\"]')\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - expect.toBeVisible with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('[data-testid=\"ProductDescription\"]')\u001b[22m\n",
+    "status": "Fail",
+    "timestamp": "14:03:10, 16-05-2025"
+  },
+  {
+    "id": "22",
+    "description": "Verify Size options with invalid values",
+    "input": "/default-channel/products/bella-3001",
+    "expected": "Should behave as described",
+    "actual": "Failed: locator.getAttribute: Test timeout of 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('[data-testid=\"SizeOption\"].invalid').first()\u001b[22m\n",
+    "status": "Fail",
+    "timestamp": "14:03:18, 16-05-2025"
+  },
+  {
+    "id": "19",
+    "description": "Verify Image Zoom functionality",
+    "input": "/default-channel/products/bella-3001",
+    "expected": "Should behave as described",
+    "actual": "Failed: locator.hover: Test timeout of 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('[data-testid=\"ProductImage\"]').first()\u001b[22m\n",
+    "status": "Fail",
+    "timestamp": "14:03:29, 16-05-2025"
+  },
+  {
+    "id": "9",
+    "description": "Verify Error message for invalid quantity",
+    "input": "/default-channel/products/bella-3001",
+    "expected": "Should behave as described",
+    "actual": "Failed: locator.fill: Test timeout of 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('[data-testid=\"QuantityInput\"]')\u001b[22m\n",
+    "status": "Fail",
+    "timestamp": "14:03:34, 16-05-2025"
+  },
+  {
+    "id": "10",
+    "description": "Verify Product Images Carousel works correctly",
+    "input": "/default-channel/products/bella-3001",
+    "expected": "Should behave as described",
+    "actual": "Failed: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: locator('[data-testid=\"ImageCarousel\"]')\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - expect.toBeVisible with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('[data-testid=\"ImageCarousel\"]')\u001b[22m\n",
+    "status": "Fail",
+    "timestamp": "14:03:46, 16-05-2025"
+  },
+  {
+    "id": "20",
+    "description": "Verify Image changes with color selection",
+    "input": "/default-channel/products/bella-3001",
+    "expected": "Should behave as described",
+    "actual": "Failed: locator.getAttribute: Test timeout of 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('[data-testid=\"ProductImage\"] img')\u001b[22m\n",
+    "status": "Fail",
+    "timestamp": "14:04:01, 16-05-2025"
+  },
+  {
+    "id": "23",
+    "description": "Verify Price with discount",
+    "input": "https://mypod.io.vn/default-channel/products",
+    "expected": "Should behave as described",
+    "actual": "Failed: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: locator('[data-testid=\"OriginalPrice\"]')\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - expect.toBeVisible with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('[data-testid=\"OriginalPrice\"]')\u001b[22m\n",
+    "status": "Fail",
+    "timestamp": "14:04:07, 16-05-2025"
+  },
+  {
+    "id": "24",
+    "description": "Verify Price in multiple currencies",
+    "input": "/default-channel/products/bella-3001",
+    "expected": "Should behave as described",
+    "actual": "Failed: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: locator('[data-testid=\"CurrencySelector\"]')\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - expect.toBeVisible with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('[data-testid=\"CurrencySelector\"]')\u001b[22m\n",
+    "status": "Fail",
+    "timestamp": "14:04:07, 16-05-2025"
+  },
+  {
+    "id": "25",
+    "description": "Verify Price with formatting (thousands separator)",
+    "input": "/default-channel/products/bella-3001",
+    "expected": "Should behave as described",
+    "actual": "Failed: locator.textContent: Test timeout of 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('[data-testid=\"ProductPrice\"]')\u001b[22m\n",
+    "status": "Fail",
+    "timestamp": "14:04:07, 16-05-2025"
+  },
+  {
+    "id": "11",
+    "description": "Verify Product Features list is displayed",
+    "input": "/default-channel/products/bella-3001",
+    "expected": "Should behave as described",
+    "actual": "Failed: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeGreaterThan\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: > \u001b[32m0\u001b[39m\nReceived:   \u001b[31m0\u001b[39m",
+    "status": "Fail",
+    "timestamp": "14:07:05, 16-05-2025"
+  },
+  {
+    "id": "12",
+    "description": "Verify Breadcrumb navigation works",
+    "input": "/default-channel/products/bella-3001",
+    "expected": "Should behave as described",
+    "actual": "Failed: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: locator('[data-testid=\"Breadcrumb\"] a').first()\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - expect.toBeVisible with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('[data-testid=\"Breadcrumb\"] a').first()\u001b[22m\n",
+    "status": "Fail",
+    "timestamp": "14:07:05, 16-05-2025"
+  },
+  {
+    "id": "13",
+    "description": "Verify Social Media Share buttons are displayed",
+    "input": "/default-channel/products/bella-3001",
+    "expected": "Should behave as described",
+    "actual": "Failed: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeGreaterThanOrEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: >= \u001b[32m3\u001b[39m\nReceived:    \u001b[31m0\u001b[39m",
+    "status": "Fail",
+    "timestamp": "14:07:05, 16-05-2025"
+  },
+  {
+    "id": "14",
+    "description": "Verify Product URL is SEO friendly",
+    "input": "/default-channel/products/bella-3001",
+    "expected": "Should behave as described",
+    "actual": "Failed: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoMatch\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected pattern: \u001b[32m/\\/products\\/[a-z0-9-]+$/i\u001b[39m\nReceived string:  \u001b[31m\"https://mypod.io.vn/default-channel/products\"\u001b[39m",
+    "status": "Fail",
+    "timestamp": "14:07:05, 16-05-2025"
+  },
+  {
+    "id": "15",
+    "description": "Verify Product Title with long text",
+    "input": "/default-channel/products/bella-3001",
+    "expected": "Should behave as described",
+    "actual": "Passed",
+    "status": "Pass",
+    "timestamp": "14:07:05, 16-05-2025"
+  },
+  {
+    "id": "1",
+    "description": "Verify Product Title is displayed correctly",
+    "input": "/default-channel/products/bella-3001",
+    "expected": "Should behave as described",
+    "actual": "Failed: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: locator('h1').first()\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - expect.toBeVisible with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('h1').first()\u001b[22m\n",
+    "status": "Fail",
+    "timestamp": "14:07:08, 16-05-2025"
+  },
+  {
+    "id": "2",
+    "description": "Verify Product Image is displayed",
+    "input": "/default-channel/products/bella-3001",
+    "expected": "Should behave as described",
+    "actual": "Failed: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: locator('[data-testid=\"ProductImage\"] img').first()\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - expect.toBeVisible with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('[data-testid=\"ProductImage\"] img').first()\u001b[22m\n",
+    "status": "Fail",
+    "timestamp": "14:07:08, 16-05-2025"
+  },
+  {
+    "id": "3",
+    "description": "Verify Color options are displayed and selectable",
+    "input": "/default-channel/products/bella-3001",
+    "expected": "Should behave as described",
+    "actual": "Failed: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeGreaterThan\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: > \u001b[32m0\u001b[39m\nReceived:   \u001b[31m0\u001b[39m",
+    "status": "Fail",
+    "timestamp": "14:07:08, 16-05-2025"
+  },
+  {
+    "id": "4",
+    "description": "Verify Size options are displayed and selectable",
+    "input": "/default-channel/products/bella-3001",
+    "expected": "Should behave as described",
+    "actual": "Failed: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeGreaterThan\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: > \u001b[32m0\u001b[39m\nReceived:   \u001b[31m0\u001b[39m",
+    "status": "Fail",
+    "timestamp": "14:07:08, 16-05-2025"
+  },
+  {
+    "id": "5",
+    "description": "Verify Price is displayed correctly",
+    "input": "/default-channel/products/bella-3001",
+    "expected": "Should behave as described",
+    "actual": "Failed: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: locator('[data-testid=\"ProductPrice\"]')\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - expect.toBeVisible with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('[data-testid=\"ProductPrice\"]')\u001b[22m\n",
+    "status": "Fail",
+    "timestamp": "14:07:08, 16-05-2025"
+  },
+  {
+    "id": "16",
+    "description": "Verify Product Title with special characters",
+    "input": "https://mypod.io.vn/default-channel/products",
+    "expected": "Should behave as described",
+    "actual": "Failed: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: locator('h1').first()\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - expect.toBeVisible with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('h1').first()\u001b[22m\n",
+    "status": "Fail",
+    "timestamp": "14:07:09, 16-05-2025"
+  },
+  {
+    "id": "17",
+    "description": "Verify Product Title with Unicode characters",
+    "input": "https://mypod.io.vn/default-channel/products",
+    "expected": "Should behave as described",
+    "actual": "Failed: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: locator('h1').first()\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - expect.toBeVisible with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('h1').first()\u001b[22m\n",
+    "status": "Fail",
+    "timestamp": "14:07:09, 16-05-2025"
+  },
+  {
+    "id": "18",
+    "description": "Verify Product Image fails to load",
+    "input": "https://mypod.io.vn/default-channel/products",
+    "expected": "Should behave as described",
+    "actual": "Failed: locator.evaluate: Test timeout of 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('[data-testid=\"ProductImage\"] img').first()\u001b[22m\n",
+    "status": "Fail",
+    "timestamp": "14:07:09, 16-05-2025"
+  },
+  {
+    "id": "6",
+    "description": "Verify Add to Cart button is clickable",
+    "input": "/default-channel/products/bella-3001",
+    "expected": "Should behave as described",
+    "actual": "Failed: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeEnabled\u001b[2m()\u001b[22m\n\nLocator: locator('[data-testid=\"AddToCartButton\"]')\nExpected: enabled\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - expect.toBeEnabled with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('[data-testid=\"AddToCartButton\"]')\u001b[22m\n",
+    "status": "Fail",
+    "timestamp": "14:07:15, 16-05-2025"
+  },
+  {
+    "id": "7",
+    "description": "Verify Quantity selector is working correctly",
+    "input": "/default-channel/products/bella-3001",
+    "expected": "Should behave as described",
+    "actual": "Failed: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: locator('[data-testid=\"QuantityInput\"]')\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - expect.toBeVisible with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('[data-testid=\"QuantityInput\"]')\u001b[22m\n",
+    "status": "Fail",
+    "timestamp": "14:07:15, 16-05-2025"
+  },
+  {
+    "id": "8",
+    "description": "Verify Product is added to Cart correctly",
+    "input": "/default-channel/products/bella-3001",
+    "expected": "Should behave as described",
+    "actual": "Failed: locator.click: Test timeout of 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('[data-testid=\"AddToCartButton\"]')\u001b[22m\n",
+    "status": "Fail",
+    "timestamp": "14:07:15, 16-05-2025"
+  },
+  {
+    "id": "27",
+    "description": "Verify Stock availability for each color/size",
+    "input": "/default-channel/products/bella-3001",
+    "expected": "Should behave as described",
+    "actual": "Failed: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: locator('[data-testid=\"StockInfo\"]')\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - expect.toBeVisible with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('[data-testid=\"StockInfo\"]')\u001b[22m\n",
+    "status": "Fail",
+    "timestamp": "14:07:24, 16-05-2025"
+  },
+  {
+    "id": "28",
+    "description": "Verify Product Description is displayed and formatted correctly",
+    "input": "/default-channel/products/bella-3001",
+    "expected": "Should behave as described",
+    "actual": "Failed: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: locator('[data-testid=\"ProductDescription\"]')\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - expect.toBeVisible with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('[data-testid=\"ProductDescription\"]')\u001b[22m\n",
+    "status": "Fail",
+    "timestamp": "14:07:24, 16-05-2025"
+  },
+  {
+    "id": "22",
+    "description": "Verify Size options with invalid values",
+    "input": "/default-channel/products/bella-3001",
+    "expected": "Should behave as described",
+    "actual": "Failed: locator.getAttribute: Test timeout of 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('[data-testid=\"SizeOption\"].invalid').first()\u001b[22m\n",
+    "status": "Fail",
+    "timestamp": "14:07:34, 16-05-2025"
+  },
+  {
+    "id": "19",
+    "description": "Verify Image Zoom functionality",
+    "input": "/default-channel/products/bella-3001",
+    "expected": "Should behave as described",
+    "actual": "Failed: locator.hover: Test timeout of 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('[data-testid=\"ProductImage\"]').first()\u001b[22m\n",
+    "status": "Fail",
+    "timestamp": "14:07:44, 16-05-2025"
+  },
+  {
+    "id": "9",
+    "description": "Verify Error message for invalid quantity",
+    "input": "/default-channel/products/bella-3001",
+    "expected": "Should behave as described",
+    "actual": "Failed: locator.fill: Test timeout of 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('[data-testid=\"QuantityInput\"]')\u001b[22m\n",
+    "status": "Fail",
+    "timestamp": "14:07:50, 16-05-2025"
+  },
+  {
+    "id": "10",
+    "description": "Verify Product Images Carousel works correctly",
+    "input": "/default-channel/products/bella-3001",
+    "expected": "Should behave as described",
+    "actual": "Failed: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: locator('[data-testid=\"ImageCarousel\"]')\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - expect.toBeVisible with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('[data-testid=\"ImageCarousel\"]')\u001b[22m\n",
+    "status": "Fail",
+    "timestamp": "14:08:04, 16-05-2025"
+  },
+  {
+    "id": "20",
+    "description": "Verify Image changes with color selection",
+    "input": "/default-channel/products/bella-3001",
+    "expected": "Should behave as described",
+    "actual": "Failed: locator.getAttribute: Test timeout of 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('[data-testid=\"ProductImage\"] img')\u001b[22m\n",
+    "status": "Fail",
+    "timestamp": "14:08:16, 16-05-2025"
+  },
+  {
+    "id": "23",
+    "description": "Verify Price with discount",
+    "input": "https://mypod.io.vn/default-channel/products",
+    "expected": "Should behave as described",
+    "actual": "Failed: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: locator('[data-testid=\"OriginalPrice\"]')\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - expect.toBeVisible with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('[data-testid=\"OriginalPrice\"]')\u001b[22m\n",
+    "status": "Fail",
+    "timestamp": "14:08:21, 16-05-2025"
+  },
+  {
+    "id": "24",
+    "description": "Verify Price in multiple currencies",
+    "input": "/default-channel/products/bella-3001",
+    "expected": "Should behave as described",
+    "actual": "Failed: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: locator('[data-testid=\"CurrencySelector\"]')\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - expect.toBeVisible with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('[data-testid=\"CurrencySelector\"]')\u001b[22m\n",
+    "status": "Fail",
+    "timestamp": "14:08:21, 16-05-2025"
+  },
+  {
+    "id": "25",
+    "description": "Verify Price with formatting (thousands separator)",
+    "input": "/default-channel/products/bella-3001",
+    "expected": "Should behave as described",
+    "actual": "Failed: locator.textContent: Test timeout of 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('[data-testid=\"ProductPrice\"]')\u001b[22m\n",
+    "status": "Fail",
+    "timestamp": "14:08:21, 16-05-2025"
+  },
+  {
+    "id": "1",
+    "description": "Verify Product Title is displayed correctly",
+    "input": "Open product detail page and verify title",
+    "expected": "Should behave as described",
+    "actual": "Failed: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: locator('h1').first()\nExpected: visible\nReceived: hidden\nCall log:\n\u001b[2m  - expect.toBeVisible with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('h1').first()\u001b[22m\n\u001b[2m    2 × locator resolved to <h1 class=\"text-[32px] font-bold md:hidden break-words leading-tight transition-all duration-200\">BELLA + CANVAS - Jersey Tee - 3001</h1>\u001b[22m\n\u001b[2m      - unexpected value \"hidden\"\u001b[22m\n",
+    "status": "Fail",
+    "timestamp": "09:33:23, 20-05-2025"
+  },
+  {
+    "id": "3",
+    "description": "Verify Add to Cart button is clickable",
+    "input": "Check Add to Cart button is enabled and triggers action",
+    "expected": "Should behave as described",
+    "actual": "Failed: locator.click: Error: strict mode violation: locator('button') resolved to 4 elements:\n    1) <button type=\"submit\" class=\"inline-flex aspect-square w-12 items-center justify-center text-[#8B3958] transition-colors hover:text-[#8B3958]/80 focus:text-[#8B3958]/80 group-invalid:pointer-events-none group-invalid:opacity-80\">…</button> aka getByRole('button', { name: 'search' })\n    2) <button aria-expanded=\"false\" aria-label=\"Open menu\" aria-controls=\"mobile-menu\" class=\"flex h-8 w-8 flex-col items-center justify-center gap-1.5 self-end self-center md:hidden\">…</button> aka getByLabel('Open menu')\n    3) <button type=\"button\" class=\"absolute right-3 top-1/2 -translate-y-1/2 text-neutral-500 hover:text-neutral-700\">…</button> aka getByRole('button').filter({ hasText: /^$/ })\n    4) <button type=\"submit\" class=\"mt-4 flex w-full items-center justify-center rounded bg-neutral-800 px-4 py-2 text-neutral-200 hover:bg-neutral-700 disabled:cursor-not-allowed disabled:opacity-70\">Log In</button> aka getByRole('button', { name: 'Log In' })\n\nCall log:\n\u001b[2m  - waiting for locator('button')\u001b[22m\n",
+    "status": "Fail",
+    "timestamp": "10:02:58, 20-05-2025"
+  },
+  {
+    "id": "3",
+    "description": "Verify Add to Cart button is clickable",
+    "input": "Check Add to Cart button is enabled and triggers action",
+    "expected": "Should behave as described",
+    "actual": "Failed: locator.click: Test timeout of 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('[data-testid=\"CartItemCount\"] div')\u001b[22m\n",
+    "status": "Fail",
+    "timestamp": "10:12:55, 20-05-2025"
+  },
+  {
+    "id": "1",
+    "description": "Verify Product Title is displayed correctly",
+    "input": "Open detail product BELLA + CANVAS - Jersey Tee - 3001",
+    "expected": "Should behave as described",
+    "actual": "Failed: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: locator('h1').first()\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - expect.toBeVisible with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('h1').first()\u001b[22m\n",
+    "status": "Fail",
+    "timestamp": "09:12:09, 28-05-2025"
+  },
+  {
+    "id": "2",
+    "description": "Verify Product Image is displayed",
+    "input": "Check if product image is visible and loaded",
+    "expected": "Should behave as described",
+    "actual": "Passed",
+    "status": "Pass",
+    "timestamp": "09:12:09, 28-05-2025"
+  },
+  {
+    "id": "3",
+    "description": "Verify Add to Cart button is clickable",
+    "input": "Check Add to Cart button is enabled and triggers action",
+    "expected": "Should behave as described",
+    "actual": "Failed: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeEnabled\u001b[2m()\u001b[22m\n\nLocator: locator('[id=\"add-to-cart-button\"]')\nExpected: enabled\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - expect.toBeEnabled with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('[id=\"add-to-cart-button\"]')\u001b[22m\n",
+    "status": "Fail",
+    "timestamp": "09:12:13, 28-05-2025"
+  },
+  {
+    "id": "4",
+    "description": "Verify Product Description is displayed",
+    "input": "Check description section with paragraphs and list",
+    "expected": "Should behave as described",
+    "actual": "Failed: \u001b[31mTimed out 5000ms waiting for \u001b[39m\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoBeVisible\u001b[2m()\u001b[22m\n\nLocator: locator('[data-testid=\"ProductDescription\"]')\nExpected: visible\nReceived: <element(s) not found>\nCall log:\n\u001b[2m  - expect.toBeVisible with timeout 5000ms\u001b[22m\n\u001b[2m  - waiting for locator('[data-testid=\"ProductDescription\"]')\u001b[22m\n",
+    "status": "Fail",
+    "timestamp": "09:12:13, 28-05-2025"
+  },
+  {
+    "id": "8",
+    "description": "Verify Size options are displayed and selectable",
+    "input": "Select size option and check selected state",
+    "expected": "Should behave as described",
+    "actual": "Failed: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeGreaterThan\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: > \u001b[32m0\u001b[39m\nReceived:   \u001b[31m0\u001b[39m",
+    "status": "Fail",
+    "timestamp": "09:12:25, 28-05-2025"
+  },
+  {
+    "id": "5",
+    "description": "Verify Color options are displayed and selectable",
+    "input": "Select first color option and check selected state",
+    "expected": "Should behave as described",
+    "actual": "Failed: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeGreaterThan\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected: > \u001b[32m0\u001b[39m\nReceived:   \u001b[31m0\u001b[39m",
+    "status": "Fail",
+    "timestamp": "09:12:29, 28-05-2025"
+  },
+  {
+    "id": "6",
+    "description": "Verify Color option is disabled when out of stock",
+    "input": "Check out-of-stock color option has disabled attribute",
+    "expected": "Should behave as described",
+    "actual": "Failed: locator.getAttribute: Test timeout of 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('[data-testid=\"ColorOption\"].out-of-stock').first()\u001b[22m\n",
+    "status": "Fail",
+    "timestamp": "09:12:29, 28-05-2025"
+  },
+  {
+    "id": "10",
+    "description": "Verify Add to Cart without selecting Size",
+    "input": "Try add to cart without selecting size, expect error",
+    "expected": "Should behave as described",
+    "actual": "Failed: locator.click: Test timeout of 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('[data-testid=\"AddToCartButton\"]')\u001b[22m\n",
+    "status": "Fail",
+    "timestamp": "09:12:52, 28-05-2025"
+  }
+]

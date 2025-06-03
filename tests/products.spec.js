@@ -1,9 +1,14 @@
 // products.spec.js
 import { test, expect } from "@playwright/test";
 import { BASE_URL } from "./utils/constants.js";
+// import {
+//   initExcel,
+//   logTestResult,
+//   saveExcel,
+// } from "./utils/testResultLogger.js";
 
 test.describe("Products Page Tests", () => {
-  let allTestResults = []; // Lưu trữ kết quả tạm thời
+  // let allTestResults = []; // Lưu trữ kết quả tạm thời
 
   // test.beforeAll(async () => {
   //   await initExcel(); // Không cần truyền sheetName
