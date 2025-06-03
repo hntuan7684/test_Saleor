@@ -11,7 +11,7 @@ test("Login, add product to card, remove product from cart", async ({
   await page.goto(LOGIN_URL, {
     waitUntil: "domcontentloaded",
   });
-  await page.fill('input[name="email"]', "ngothanhloc.22102003@gmail.com");
+  await page.fill('input[name="username"]', "ngothanhloc.22102003@gmail.com");
   await page.fill('input[name="password"]', "Loc22102005");
   await page.click('button:has-text("Log in")');
   await page.waitForURL("**/default-channel");
@@ -59,7 +59,7 @@ test("Login, add product to cart, check total price, checkout", async ({
   page,
 }) => {
   await page.goto(LOGIN_URL);
-  await page.fill('input[name="email"]', "ngothanhloc.22102003@gmail.com");
+  await page.fill('input[name="username"]', "ngothanhloc.22102003@gmail.com");
   await page.fill('input[name="password"]', "Loc22102005");
   await page.click('button:has-text("Log in")');
   await page.waitForURL("**/default-channel");
