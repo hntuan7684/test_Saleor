@@ -9,11 +9,14 @@
   "description": "",
   "devDependencies": {
     "@playwright/test": "^1.52.0",
-    "@types/node": "^22.15.17"
+    "@types/node": "^22.15.17",
+    "psi": "^4.1.0"
   },
   "dependencies": {
     "@types/xlsx": "^0.0.35",
+    "dotenv": "^16.5.0",
     "exceljs": "^4.4.0",
+    "node-fetch": "^2.7.0",
     "xlsx": "^0.18.5"
   }
 }

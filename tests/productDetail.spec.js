@@ -119,10 +119,6 @@ test.describe("Product Detail Page Tests", () => {
     await qtyInput.type("abc");
     await pd.page.locator('button:has-text("Add to Cart")').click();
 
-    // Kiểm tra nếu được chuyển hướng đến trang đăng nhập
-    // await expect(pd.page).toHaveURL(/\/login|signin/);
-
-    // Hoặc kiểm tra sự xuất hiện của modal yêu cầu đăng nhập
     const loginPrompt = pd.page.locator('text="Log In"');
     await expect(loginPrompt).toBeVisible();
   });

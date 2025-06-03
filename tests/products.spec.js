@@ -499,20 +499,4 @@ test.describe("Products Page Tests", () => {
       }
     });
   });
-
-  // test.afterAll(async () => {
-  //   try {
-  //     // Write all results to Excel after all test cases are completed
-  //     for (const result of allTestResults) {
-  //       await logTestResult(result);
-  //     }
-
-  //     // Only save and open Excel after all results are written
-  //     await saveExcel();
-  //     await openExcelAfterSave();
-  //     console.log("Successfully saved results to Excel!");
-  //   } catch (error) {
-  //     console.error("Error saving Excel file:", error);
-  //   }
-  // });
 });
