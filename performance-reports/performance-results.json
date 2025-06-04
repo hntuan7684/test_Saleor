@@ -52,5 +52,98 @@
       "cumulativeLayoutShift": true,
       "totalBlockingTime": true
     }
+  },
+  {
+    "timestamp": "2025-06-04T06:45:01.881Z",
+    "metrics": {
+      "domContentLoaded": null,
+      "load": null,
+      "firstContentfulPaint": 3984,
+      "largestContentfulPaint": null,
+      "cumulativeLayoutShift": 0,
+      "totalBlockingTime": 0
+    },
+    "thresholds": {
+      "load": 5000,
+      "domContentLoaded": 3000,
+      "firstContentfulPaint": 2000,
+      "largestContentfulPaint": 2500,
+      "cumulativeLayoutShift": 0.1,
+      "totalBlockingTime": 200,
+      "timeToInteractive": 3500,
+      "firstInputDelay": 100,
+      "resourceCount": 50,
+      "imageCount": 20
+    },
+    "status": {
+      "load": false,
+      "domContentLoaded": false,
+      "firstContentfulPaint": false,
+      "largestContentfulPaint": true,
+      "cumulativeLayoutShift": true,
+      "totalBlockingTime": true
+    }
+  },
+  {
+    "timestamp": "2025-06-04T12:26:41.854Z",
+    "metrics": {
+      "domContentLoaded": null,
+      "load": null,
+      "firstContentfulPaint": 8676,
+      "largestContentfulPaint": null,
+      "cumulativeLayoutShift": 0,
+      "totalBlockingTime": 0
+    },
+    "thresholds": {
+      "load": 5000,
+      "domContentLoaded": 3000,
+      "firstContentfulPaint": 2000,
+      "largestContentfulPaint": 2500,
+      "cumulativeLayoutShift": 0.1,
+      "totalBlockingTime": 200,
+      "timeToInteractive": 3500,
+      "firstInputDelay": 100,
+      "resourceCount": 50,
+      "imageCount": 20
+    },
+    "status": {
+      "load": false,
+      "domContentLoaded": false,
+      "firstContentfulPaint": false,
+      "largestContentfulPaint": true,
+      "cumulativeLayoutShift": true,
+      "totalBlockingTime": true
+    }
+  },
+  {
+    "timestamp": "2025-06-04T13:30:24.792Z",
+    "metrics": {
+      "domContentLoaded": null,
+      "load": null,
+      "firstContentfulPaint": 2308,
+      "largestContentfulPaint": null,
+      "cumulativeLayoutShift": 0,
+      "totalBlockingTime": 0
+    },
+    "thresholds": {
+      "load": 5000,
+      "domContentLoaded": 3000,
+      "firstContentfulPaint": 2000,
+      "largestContentfulPaint": 2500,
+      "cumulativeLayoutShift": 0.1,
+      "totalBlockingTime": 200,
+      "timeToInteractive": 3500,
+      "firstInputDelay": 100,
+      "resourceCount": 50,
+      "imageCount": 20
+    },
+    "status": {
+      "load": false,
+      "domContentLoaded": false,
+      "firstContentfulPaint": false,
+      "largestContentfulPaint": true,
+      "cumulativeLayoutShift": true,
+      "totalBlockingTime": true
+    }
   }
 ]

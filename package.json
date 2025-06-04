@@ -4,7 +4,8 @@
   "main": "index.js",
   "scripts": {
     "test": "playwright test",
-    "test:performance": "playwright test performance.spec.js"
+    "test:performance": "playwright test performance.spec.js",
+    "test:pagespeed": "playwright test pagespeed.spec.js"
   },
   "keywords": [],
   "author": "",
@@ -13,6 +14,8 @@
   "devDependencies": {
     "@playwright/test": "^1.52.0",
     "@types/node": "^22.15.17",
+    "chrome-launcher": "^1.2.0",
+    "lighthouse": "^12.6.1",
     "psi": "^4.1.0"
   },
   "dependencies": {
@@ -20,8 +23,6 @@
     "dotenv": "^16.5.0",
     "exceljs": "^4.4.0",
     "node-fetch": "^2.7.0",
-    "xlsx": "^0.18.5",
-    "lighthouse": "^11.3.0",
-    "chrome-launcher": "^0.15.2"
+    "xlsx": "^0.18.5"
   }
 }
