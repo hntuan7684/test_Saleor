@@ -7,7 +7,7 @@ test.describe('PageSpeed Insights Tests', () => {
 
   test('should pass PageSpeed Insights test for desktop', async () => {
     const result = await psi(baseUrl, {
-      key: 'AIzaSyDRd7_fmRNYc-B-2lkV-PHb3Hac2DSF9T0',
+      key: '',
       strategy: 'desktop',
       category: ['performance', 'accessibility', 'best-practices', 'seo']
     });
