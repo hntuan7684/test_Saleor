@@ -1,14 +1,7 @@
 import { test, expect } from "@playwright/test";
-import { initExcel, logTestResult, saveExcel } from "./utils/testResultLogger.js";
+
 
 test.describe("Thêm sản phẩm vào giỏ hàng", () => {
-  test.beforeAll(async () => {
-    await initExcel();
-  });
-
-  test.afterAll(async () => {
-    await saveExcel();
-  });
 
   test("TC018 - Chọn màu, size và thêm vào giỏ hàng", async ({ page }) => {
     let actual = "";
@@ -46,15 +39,6 @@ test.describe("Thêm sản phẩm vào giỏ hàng", () => {
       status = "Pass";
     } catch (e) {
       actual = "Không thêm được sản phẩm vào giỏ";
-    } finally {
-      await logTestResult({
-        id: "TC018",
-        description: "Chọn màu, size và thêm vào giỏ hàng",
-        input: "Chọn màu WHITE, size M",
-        expected: "Thêm sản phẩm vào giỏ thành công",
-        actual,
-        status,
-      });
-    }
+    } 
   });
 });

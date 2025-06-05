@@ -31,24 +31,29 @@ class CartPage {
     return await this.page.locator("li.flex.gap-x-2").count();
   }
 
-  async getSubtotal() {
-    const subtotalText = await this.page
-      .locator("text=Subtotal")
-      .last()
-      .innerText();
-    return parseFloat(subtotalText.replace(/[^0-9.]/g, ""));
+async getTotalItemPrices() {
+  const priceTexts = await this.page.locator('p.text-left.font-semibold').allTextContents();
+
+  const quantityInputs = await this.page.locator('input[type="number"]').evaluateAll(inputs =>
+    inputs.map(input => parseInt(input.value, 10))
+  );
+
+  let total = 0;
+  for (let i = 0; i < priceTexts.length; i++) {
+    const price = parseFloat(priceTexts[i].replace(/[^0-9.]/g, ""));
+    const quantity = quantityInputs[i];
+    total += price * quantity;
   }
 
-  async getTotalItemPrices() {
-    const itemPrices = this.page.locator("li.flex.gap-x-2 p:has-text('$')");
-    const count = await itemPrices.count();
-    let total = 0;
-    for (let i = 0; i < count; i++) {
-      const priceText = await itemPrices.nth(i).innerText();
-      total += parseFloat(priceText.replace("$", ""));
-    }
-    return total;
-  }
+  return parseFloat(total.toFixed(2));
+}
+
+
+async getSubtotal() {
+  const text = await this.page.locator('div.font-medium.text-neutral-900').first().textContent();
+  const match = text?.match(/\$([\d.]+)/);
+  return match ? parseFloat(match[1]) : 0;
+}
 
   // Clear all items
   async clearCart() {
