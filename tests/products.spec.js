@@ -5,10 +5,6 @@ import { BASE_URL } from "./utils/constants.js";
 test.describe("Products Page Tests", () => {
   let allTestResults = []; // Temporarily store test results
 
-  // test.beforeAll(async () => {
-  //   await initExcel(); // Không cần truyền sheetName
-  // });
-
   const testCases = [
     {
       id: "PR001",

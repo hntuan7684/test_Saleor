@@ -3,13 +3,6 @@ import { ForgotPasswordPage } from "./pageObjects/ForgotPasswordPage.js";
 import { generateUniqueEmail } from "./utils/testDataHelper.js";
 import { BASE_URL, MAILINATOR_URL } from "./utils/constants.js";
 
-// Excel logging utilities are disabled in this version
-// import {
-//   initExcel,
-//   logTestResult,
-//   saveExcel,
-// } from "./utils/testResultLogger.js";
-
 test.describe("Forgot Password Flow", () => {
   // test.beforeAll(async () => {
   //   await initExcel("ForgotPassword");
@@ -121,20 +114,6 @@ test.describe("Forgot Password Flow", () => {
         actual = `Exception: ${e.message}`;
         status = "Fail";
       }
-
-      // Result logging is currently disabled
-      // await logTestResult({
-      //   id: tc.id,
-      //   description: tc.desc,
-      //   input: tc.email || "N/A",
-      //   expected: tc.shouldPass ? "Success" : "Error or appropriate message",
-      //   actual,
-      //   status,
-      // });
     });
   }
-
-  // test.afterAll(async () => {
-  //   await saveExcel();
-  // });
 });

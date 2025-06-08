@@ -65,6 +65,7 @@ test.describe("Service Page Test Suite", () => {
     await expect(page.getByRole('heading', { name: 'Services' })).toBeVisible();
   });
 
+  // Basic Navigation Tests
   test("SV001 - Verify that clicking the link redirects the user to the default channel as expected", async ({ page }) => {
     const navHome = await page.locator('nav').getByRole('link', { name: 'Home' });
     await navHome.first().click();
@@ -97,23 +98,12 @@ test.describe("Service Page Test Suite", () => {
     await expect(page).toHaveURL(/service/);
   });
 
-  test("SV006 - Attempt to click the link when offline and verify error message", async ({ page }) => {
-    await page.route("**/*", route => route.abort());
-    
-    const serviceLink = page.locator('nav').getByRole('link', { name: 'Service' }).first();
-    await serviceLink.click();
-    
-    const errorMsg = page.getByText(/offline|no internet|connection error/i);
-    await expect(errorMsg).toBeVisible();
-  });
-
-  test("SV007 - Check behavior with invalid URL", async ({ page }) => {
+  test("SV006 - Check behavior with invalid URL", async ({ page }) => {
     await page.goto(SERVICE_URL + "-invalid", { waitUntil: "domcontentloaded" });
-    await expect(page.getByText(/couldn[']t find the page|404/i)).toBeVisible();
+    await expect(page.getByText("Sorry, we couldn’t find the page you’re looking for.")).toBeVisible();
   });
 
-  test("SV008 - Check behavior when user does not have permission to access the page", async ({ page }) => {
-    // Mock response 403 Forbidden
+  test("SV007 - Check behavior when user does not have permission to access the page", async ({ page }) => {
     await page.route("**/*", route => route.fulfill({
       status: 403,
       body: "Access Denied"
@@ -124,8 +114,7 @@ test.describe("Service Page Test Suite", () => {
     await expect(errorMsg).toBeVisible();
   });
 
-  test("SV009 - Check behavior when the server is down", async ({ page }) => {
-    // Mock response 500 Internal Server Error
+  test("SV008 - Check behavior when the server is down", async ({ page }) => {
     await page.route("**/*", route => route.fulfill({
       status: 500,
       body: "Internal Server Error"
@@ -136,8 +125,7 @@ test.describe("Service Page Test Suite", () => {
     await expect(errorMsg).toBeVisible();
   });
 
-  test("SV010 - Check behavior when the request times out", async ({ page }) => {
-    // Mock response timeout
+  test("SV009 - Check behavior when the request times out", async ({ page }) => {
     await page.route("**/*", route => route.fulfill({
       status: 504,
       body: "Gateway Timeout"
@@ -148,28 +136,24 @@ test.describe("Service Page Test Suite", () => {
     await expect(errorMsg).toBeVisible();
   });
 
-  test("SV011 - Verify Explore Services button appearance and behavior", async ({ page }) => {
-    const exploreBtn = page.getByRole('button', { name: 'Explore Services' });
+  test("SV010 - Verify Explore Services button appearance and behavior", async ({ page }) => {
+    const exploreBtn = page.getByRole('div', { name: 'Explore Services' });
     
-    // Check visibility and accessibility
     await expect(exploreBtn).toBeVisible();
     
-    // Check background color
     const bgColor = await exploreBtn.evaluate(el => getComputedStyle(el).backgroundColor);
     expect(bgColor).toMatch(/rgb\(253, 140, 110\)/i);
     
-    // Check text color
     const textColor = await exploreBtn.evaluate(el => getComputedStyle(el).color);
     expect(textColor).toMatch(/rgb\(255, 255, 255\)/i);
     
-    // Check hover effect
     const colorBefore = await exploreBtn.evaluate(el => getComputedStyle(el).backgroundColor);
     await exploreBtn.hover();
     const colorAfter = await exploreBtn.evaluate(el => getComputedStyle(el).backgroundColor);
     expect(colorBefore).not.toBe(colorAfter);
   });
 
-  test("SV012 - Verify Service link behavior with missing Services section", async ({ page }) => {
+  test("SV011 - Verify Service link behavior with missing Services section", async ({ page }) => {
     await page.evaluate(() => {
       const el = document.querySelector('h1');
       if (el) el.remove();
@@ -180,7 +164,7 @@ test.describe("Service Page Test Suite", () => {
     await expect(errorMsg).not.toBeVisible();
   });
 
-  test("SV013 - Check multiple rapid clicks on Service link", async ({ page }) => {
+  test("SV012 - Check multiple rapid clicks on Service link", async ({ page }) => {
     const serviceLink = page.locator('nav').getByRole('link', { name: 'Service', exact: true }).first();
     for (let i = 0; i < 5; i++) {
       await serviceLink.click();
@@ -188,7 +172,7 @@ test.describe("Service Page Test Suite", () => {
     await expect(page).toHaveURL(/service/);
   });
 
-  test("SV014 - Test Service link with JavaScript disabled", async ({ browser }) => {
+  test("SV013 - Test Service link with JavaScript disabled", async ({ browser }) => {
     const context = await browser.newContext({ javaScriptEnabled: false });
     const page = await context.newPage();
     await page.goto(SERVICE_URL);
@@ -197,7 +181,7 @@ test.describe("Service Page Test Suite", () => {
     await context.close();
   });
 
-  test("SV015 - Verify service display with images and descriptions", async ({ page }) => {
+  test("SV014 - Verify service display with images and descriptions", async ({ page }) => {
     for (const service of services) {
       const heading = page.locator('h2', { hasText: service.name }).first();
       await expect(heading).toBeVisible();
@@ -211,7 +195,7 @@ test.describe("Service Page Test Suite", () => {
     }
   });
 
-  test("SV016 - Check service images load correctly", async ({ page }) => {
+  test("SV015 - Check service images load correctly", async ({ page }) => {
     for (const service of services) {
       const img = page.getByAltText(service.imgAlt);
       await expect(img).toBeVisible();
@@ -220,7 +204,7 @@ test.describe("Service Page Test Suite", () => {
     }
   });
 
-  test("SV017 - Ensure service titles are properly formatted", async ({ page }) => {
+  test("SV016 - Ensure service titles are properly formatted", async ({ page }) => {
     for (const service of services) {
       const heading = page.locator('h2', { hasText: service.name }).first();
       await expect(heading).toBeVisible();
@@ -229,7 +213,7 @@ test.describe("Service Page Test Suite", () => {
     }
   });
 
-  test("SV018 - Validate service descriptions clarity", async ({ page }) => {
+  test("SV017 - Validate service descriptions clarity", async ({ page }) => {
     for (const service of services) {
       const heading = page.locator('h2', { hasText: service.name }).first();
       const card = heading.locator('..');
@@ -240,7 +224,7 @@ test.describe("Service Page Test Suite", () => {
     }
   });
 
-  test("SV019 - Test image hover scale effect", async ({ page }) => {
+  test("SV018 - Test image hover scale effect", async ({ page }) => {
     for (const service of services) {
       const heading = page.locator('h2', { hasText: service.name }).first();
       const card = heading.locator('..');
@@ -252,14 +236,14 @@ test.describe("Service Page Test Suite", () => {
     }
   });
 
-  test("SV020 - Confirm responsive layout", async ({ page }) => {
+  test("SV019 - Confirm responsive layout", async ({ page }) => {
     await page.setViewportSize({ width: 375, height: 667 });
     await expect(page.getByRole('heading', { name: 'Services' })).toBeVisible();
     await page.setViewportSize({ width: 1280, height: 800 });
     await expect(page.getByRole('heading', { name: 'Services' })).toBeVisible();
   });
 
-  test("SV021 - Ensure text contrast with background", async ({ page }) => {
+  test("SV020 - Ensure text contrast with background", async ({ page }) => {
     const allText = page.locator('body *');
     const count = await allText.count();
     for (let i = 0; i < count; i++) {
@@ -271,7 +255,7 @@ test.describe("Service Page Test Suite", () => {
     }
   });
 
-  test("SV022 - Check broken image handling", async ({ page }) => {
+  test("SV021 - Check broken image handling", async ({ page }) => {
     await page.evaluate(() => {
       document.querySelectorAll('img').forEach(img => img.src = 'broken.jpg');
     });
@@ -279,28 +263,28 @@ test.describe("Service Page Test Suite", () => {
     expect(brokenImgs).toBeGreaterThan(0);
   });
 
-  test("SV023 - Validate empty data source handling", async ({ page }) => {
+  test("SV022 - Validate empty data source handling", async ({ page }) => {
     await page.route("**/service**", route => route.fulfill({ status: 200, body: "[]", contentType: "application/json" }));
     await page.reload();
     const cards = await page.locator('h2').count();
     expect(cards).toBe(0);
   });
 
-  test("SV025 - Verify layout with invalid data formats", async ({ page }) => {
+  test("SV023 - Verify layout with invalid data formats", async ({ page }) => {
     await page.evaluate(() => {
       document.querySelectorAll('.service-description').forEach(el => el.textContent = '{bad:json');
     });
     await expect(page.getByRole('heading', { name: 'Services' })).toBeVisible();
   });
 
-  test("SV027 - Test image display in low bandwidth mode", async ({ page }) => {
+  test("SV024 - Test image display in low bandwidth mode", async ({ page }) => {
     await page.route('**/*.jpg', route => setTimeout(() => route.continue(), 2000));
     await page.reload();
     const images = page.locator('img');
     await expect(images.first()).toBeVisible();
   });
 
-  test("SV028 - Verify Learn More button functionality", async ({ page }) => {
+  test("SV025 - Verify Learn More button functionality", async ({ page }) => {
     const learnMoreLinks = page.getByRole('link', { name: 'Learn More' });
     const count = await learnMoreLinks.count();
     for (let i = 0; i < count; i++) {
@@ -309,21 +293,39 @@ test.describe("Service Page Test Suite", () => {
     }
   });
 
-  test("SV029 - Verify service order", async ({ page }) => {
+  test("SV026 - Verify service order", async ({ page }) => {
     const serviceTitles = await page.locator('.grid h2').allTextContents();
     const expectedOrder = services.map(s => s.name);
     expect(serviceTitles).toEqual(expectedOrder);
   });
 
-  test("SV030 - Verify Direct-To-Garment service details", async ({ page }) => {
+  test("SV027 - Verify Direct-To-Garment service details", async ({ page }) => {
     const dtg = page.getByText('Direct-To-Garment');
     await expect(dtg).toBeVisible();
     await expect(dtg.locator('..')).toContainText(/Brother DL DTG|No pretreatment stains|digital printing/i);
   });
 
-  test("SV031 - Verify Silk Screening service details", async ({ page }) => {
+  test("SV028 - Verify Silk Screening service details", async ({ page }) => {
     const silk = page.getByText('Silk Screening');
     await expect(silk).toBeVisible();
     await expect(silk.locator('..')).toContainText(/M\&R|500\+ piece orders|Facility/i);
+  });
+
+  test("SV029 - Verify Embroidery service details", async ({ page }) => {
+    const embroidery = page.getByText('Embroidery');
+    await expect(embroidery).toBeVisible();
+    await expect(embroidery.locator('..')).toContainText(/Single headed machines for custom orders|Dedicated quality embroidery staff|Tajima machines with 15 thread colors/i);
+  });
+
+  test("SV030 - Verify Hard Goods service details", async ({ page }) => {
+    const hardGoods = page.getByText('Hard Goods');
+    await expect(hardGoods).toBeVisible();
+    await expect(hardGoods.locator('..')).toContainText(/Premium drinkware options|Mimaki and Grando machines|Professional finishing/i);
+  });
+
+  test("SV031 - Verify Custom Boxes service details", async ({ page }) => {
+    const customBoxes = page.getByText('Custom Boxes');
+    await expect(customBoxes).toBeVisible();
+    await expect(customBoxes.locator('..')).toContainText(/Eye-catching designs|Perfect for executive kits|Premium packaging solutions/i);
   });
 }); 

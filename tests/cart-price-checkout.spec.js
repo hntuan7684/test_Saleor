@@ -3,6 +3,7 @@ import { PRODUCTS_URL } from "./utils/constants";
 import { CART_URL } from "./utils/constants";
 import { LOGIN_URL } from "./utils/constants";
 import {ORDERS_URL } from "./utils/constants";
+import { TEST_CREDENTIALS } from "./utils/testData";
 
 test("Login, add product to card, remove product from cart", async ({
   page,
@@ -11,8 +12,8 @@ test("Login, add product to card, remove product from cart", async ({
   await page.goto(LOGIN_URL, {
     waitUntil: "domcontentloaded",
   });
-  await page.fill('input[name="username"]', "ngothanhloc.22102003@gmail.com");
-  await page.fill('input[name="password"]', "Loc22102005");
+  await page.fill('input[name="username"]', TEST_CREDENTIALS.validUser.email);
+  await page.fill('input[name="password"]', TEST_CREDENTIALS.validUser.password);
   await page.click('button:has-text("Log in")');
   await page.waitForURL("**/default-channel");
 
@@ -21,21 +22,17 @@ test("Login, add product to card, remove product from cart", async ({
     waitUntil: "domcontentloaded",
   });
 
-  const products = page
-    .locator("a[href*='/products/']")
-    .locator("div")
-    .filter({ hasText: "$" });
-  await expect(products.first()).toBeVisible();
+  const firstProduct = page.locator('li[data-testid="ProductElement"] a').first();
+  await expect(firstProduct).toBeVisible({ timeout: 30000 });
+  await firstProduct.click();
+  await page.pause();
 
-  //Step 3: Clip on first product
-  await products.first().click();
-
-  //Step 4: Add product to cart
+  //Step 3: Add product to cart
   const addToCartBtn = page.locator("button:has-text('Add to Cart')");
   await expect(addToCartBtn).toBeVisible({ timeout: 30000 });
   await addToCartBtn.click();
 
-  // Step 5: Wait for the cart to display the quantity
+  // Step 4: Wait for the cart to display the quantity
   const countText = await page.textContent(
     "div.bg-neutral-900.text-white.text-xs.font-medium"
   );
@@ -45,11 +42,11 @@ test("Login, add product to card, remove product from cart", async ({
 
   console.log("Add product to cart successfully");
 
-  //Step 6: Access the cart
+  //Step 5: Access the cart
   await page.click("a[href='/default-channel/cart']");
   await expect(page).toHaveURL(CART_URL);
 
-  //Step 7: Remove product from cart
+  //Step 6: Remove product from cart
   await page.locator("button >> text=Delete").first().click();
 
   console.log("Removed product from cart successfully");
@@ -59,13 +56,14 @@ test("Login, add product to cart, check total price, checkout", async ({
   page,
 }) => {
   await page.goto(LOGIN_URL);
-  await page.fill('input[name="username"]', "ngothanhloc.22102003@gmail.com");
-  await page.fill('input[name="password"]', "Loc22102005");
+  await page.fill('input[name="username"]', TEST_CREDENTIALS.validUser.email);
+  await page.fill('input[name="password"]', TEST_CREDENTIALS.validUser.password);
   await page.click('button:has-text("Log in")');
   await page.waitForURL("**/default-channel");
 
   await page.goto(PRODUCTS_URL);
   await page.locator("a[href*='/products/']").first().click();
+  await page.pause();
   await page.locator("button:has-text('Add to Cart')").click();
   await page.click("a[href='/default-channel/cart']");
 
@@ -100,7 +98,7 @@ test("Login, add product to cart, check total price, checkout", async ({
     .locator('[data-testid="totalOrderPrice"]')
     .nth(1)
     .textContent();
-  console.log(`Tổng giá: ${totalPrice}`);
+  console.log(`Total price: ${totalPrice}`);
 
   await page.click('button:has-text("Place Order")');
 

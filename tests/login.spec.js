@@ -1,28 +1,16 @@
 import { test, expect } from "@playwright/test";
 import { LoginPage } from "./pageObjects/LoginPage.js";
 import { BASE_URL } from "./utils/constants.js";
-import {
-  initExcel,
-  logTestResult,
-  saveExcel,
-  openExcelAfterSave,
-} from "./utils/testResultLogger.js";
 
 test.describe("Login Flow", () => {
-  test.beforeAll(async () => {
-    await initExcel("Login"); // Initialize Excel with Login sheet
-  });
-
-  test.afterAll(async () => {
-    await saveExcel();
-    // await openExcelAfterSave();
-  });
-
   const loginTestCases = [
     {
       id: "LG001",
       description: "Login with valid credentials",
-      input: { email: "tuanhnt7684@gmail.com", password: "@hntTuan2023#" },
+      input: {
+        email: "testaccount123@mailinator.com",
+        password: "ValidPass123!",
+      },
       expected:
         "User should be logged in successfully and redirected to the home page",
       shouldPass: true,
@@ -188,7 +176,6 @@ test.describe("Login Flow", () => {
       await loginPage.navigate();
 
       let actual = "";
-      let status = "Fail";
 
       try {
         await loginPage.login(testCase.input.email, testCase.input.password);
@@ -198,30 +185,60 @@ test.describe("Login Flow", () => {
           await expect(page)
             .locator("h1", { hasText: "Welcome to ZoomPrints" })
             .toBeVisible();
-          await expect(page).toHaveURL(`${BASE_URL}`);
+          await expect(page).toHaveURL("https://mypod.io.vn/default-channel");
 
           actual = "User successfully logged in and redirected to home page";
-          status = "Pass";
         } else {
           // Check for error message
           const errorLocator = page.locator(`text=${testCase.expectedError}`);
           await expect(errorLocator).toBeVisible();
 
           actual = `Error message displayed: '${testCase.expectedError}'`;
-          status = "Pass";
         }
       } catch (e) {
         actual = `Exception: ${e.message}`;
-      } finally {
-        await logTestResult({
-          id: testCase.id,
-          description: testCase.description,
-          input: `email=${testCase.input.email}; password=${testCase.input.password}`,
-          expected: testCase.expected,
-          actual,
-          status,
-        });
       }
     });
+
+    
   });
+
+test("LG021 - Login with Google (Keycloak Broker)", async ({ page }) => {
+  const loginPage = new LoginPage(page);
+  await loginPage.navigate();
+
+  await loginPage.clickGoogleLogin();
+
+  // Ensure redirect to Google
+  await expect.poll(() => page.url(), { timeout: 10000 }).toMatch(/accounts\.google\.com/);
+
+  // Fill in email
+  const emailInput = page.getByRole('textbox', { name: /email or phone/i });
+  await expect(emailInput).toBeVisible({ timeout: 10000 });
+  await emailInput.fill("trungdt1718@gmail.com");
+
+  // Click Next
+  const nextButton = page.getByRole("button", { name: /next/i });
+  await expect(nextButton).toBeVisible();
+  await nextButton.click();
+
+  // ✅ Optional: Add password input step if needed (or OTP verification)
+
+  // Wait for email verification after redirect
+  const emailVerifyHeading = page.getByRole("heading", { name: /email verification/i });
+  await expect(emailVerifyHeading).toBeVisible({ timeout: 15000 });
+});
+
+test("LG022 - Login with Twitter (Keycloak Broker)", async ({ page }) => {
+  const loginPage = new LoginPage(page);
+  await loginPage.navigate();
+
+  await loginPage.clickTwitterLogin();
+
+  // ✅ Check URL redirects to Twitter or X OAuth
+  await expect.poll(() => page.url(), {
+    timeout: 10000,
+  }).toMatch(/(api\.twitter\.com|api\.x\.com)/);
+});
+
 });

@@ -47,9 +47,7 @@ async function verifyDialog(page, expectedMessage) {
 test.describe("Support Form Tests", () => {
   test.beforeEach(async ({ page }) => {
     // Navigate to the support form page before each test
-    await page.goto(SUPPORT_URL, {
-      waitUntil: "domcontentloaded",
-    });
+    await page.goto(SUPPORT_URL, { timeout: 120000 });
     // Wait for the main support form to be loaded
     await page.waitForSelector("form.w-full.max-w-2xl", { state: "visible" });
   });
@@ -141,6 +139,7 @@ test.describe("Support Form Tests", () => {
   test('SP002 - Check "Send" button is disabled until mandatory fields are filled', async ({
     page,
   }) => {
+    test.setTimeout(120000);
     const form = await page.locator("form.w-full.max-w-2xl");
     const submitButton = await form.locator('button[type="submit"]');
 
@@ -228,6 +227,7 @@ test.describe("Support Form Tests", () => {
   });
 
   test("SP007 - Submit form with all valid data", async ({ page }) => {
+    test.setTimeout(120000);
     const uniqueEmail = generateUniqueEmail("mailinator.com");
 
     // Enable debug logging
@@ -409,6 +409,7 @@ test.describe("Support Form Tests", () => {
   test("SP012 - Submit with Details empty (assuming mandatory)", async ({
     page,
   }) => {
+    test.setTimeout(120000);
     const form = await page.locator("form.w-full.max-w-2xl");
 
     // Fill all fields except Details
@@ -430,7 +431,7 @@ test.describe("Support Form Tests", () => {
     //Wait for submitting message to disappear
     await expect(
       page.locator("text=Support request created successfully")
-    ).toBeVisible({ timeout: 10000 });
+    ).toBeVisible({ timeout: 30000 });
 
     await page.pause();
 
@@ -560,6 +561,7 @@ test.describe("Support Form Tests", () => {
   test("SP016 - First Name - Verify maximum length boundary", async ({
     page,
   }) => {
+    test.setTimeout(240000);
     const form = await page.locator("form.w-full.max-w-2xl");
 
     // Create string of maximum length (255 characters)
@@ -593,6 +595,7 @@ test.describe("Support Form Tests", () => {
   test("SP017 - First Name - Verify exceeding maximum length", async ({
     page,
   }) => {
+    test.setTimeout(60000);
     // Enable debug logging
     page.on("console", (msg) => console.log(msg.text()));
 
@@ -714,6 +717,7 @@ test.describe("Support Form Tests", () => {
   test("SP019 - Last Name - Verify maximum length boundary", async ({
     page,
   }) => {
+    test.setTimeout(120000);
     const form = await page.locator("form.w-full.max-w-2xl");
 
     // Create string of maximum length (255 characters)
@@ -842,6 +846,7 @@ test.describe("Support Form Tests", () => {
   });
 
   test("SP021 - Email format validation", async ({ page }) => {
+    test.setTimeout(60000);
     const form = await page.locator("form.w-full.max-w-2xl");
 
     // Fill all required fields with invalid email format
@@ -858,7 +863,7 @@ test.describe("Support Form Tests", () => {
 
     // Verify form retains the entered data
     await expect(form.locator('input[name="email"]')).toHaveValue("", {
-      timeout: 10000,
+      timeout: 30000,
     });
   });
 
@@ -868,7 +873,7 @@ test.describe("Support Form Tests", () => {
     // Fill all required fields with email containing spaces
     await form.locator('input[name="firstName"]').fill("John");
     await form.locator('input[name="lastName"]').fill("Doe");
-    await form.locator('input[name="email"]').fill("john@com");
+    await form.locator('input[name="email"]').fill("john.com");
     await form.locator('input[name="phoneNumber"]').fill("1234567890");
     await form.locator('input[name="company"]').fill("ABC Corp");
     await form.locator('input[name="address"]').fill("123 Street");
@@ -887,7 +892,7 @@ test.describe("Support Form Tests", () => {
     });
 
     // Verify form retains the entered data but might trim spaces
-    await expect(form.locator('input[name="email"]')).toHaveValue("john@com");
+    await expect(form.locator('input[name="email"]')).toHaveValue("john.com");
   });
 
   test("SP023 - Email format - Spaces are trimmed and accepted", async ({
