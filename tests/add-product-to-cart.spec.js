@@ -29,6 +29,7 @@ test.describe("Add Product to Cart", () => {
       const firstProduct = page.locator('li[data-testid="ProductElement"] a').first();
       await expect(firstProduct).toBeVisible({ timeout: 5000 });
       await firstProduct.click();
+      await page.pause();
 
       // Select color (button with title attribute)
       const colorButton = page.locator('button[title^="WHITE"]'); // or select any color

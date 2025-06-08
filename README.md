@@ -22,10 +22,25 @@ This test automation suite covers the following key areas of the Saleor applicat
 │   ├── pageObjects/           # Page Object Models
 │   ├── utils/                 # Utility functions
 │   ├── performance/           # Performance test cases
-│   └── performance-reports/   # Performance test results
-├── test-results/             # Test execution results
+│   ├── performance-reports/   # Performance test results
+│   ├── register.spec.js       # User registration tests
+│   ├── login.spec.js          # User login tests
+│   ├── forgot-password.spec.js # Password recovery tests
+│   ├── products.spec.js       # Product listing tests
+│   ├── product-detail.spec.js # Product details tests
+│   ├── search-functionality.spec.js # Search feature tests
+│   ├── shopping-cart.spec.js  # Cart management tests
+│   ├── add-product-to-cart.spec.js # Add to cart tests
+│   ├── cart-price-checkout.spec.js # Checkout tests
+│   ├── homepage.spec.js       # Homepage tests
+│   ├── support-form.spec.js   # Support system tests
+│   ├── service-page.spec.js   # Service page tests
+│   └── design-page.spec.js    # Design page tests
+├── results/                   # Test execution results
 ├── playwright-report/        # HTML test reports
-└── performance-reports/      # Performance analysis reports
+├── performance-reports/      # Performance analysis reports
+├── playwright.config.js      # Playwright configuration
+└── package.json             # Project dependencies
 ```
 
 ## Test Cases
@@ -48,7 +63,7 @@ The project includes the following test suites:
    - `cart-price-checkout.spec.js`: Price calculation and checkout
 
 4. **Performance Tests**
-   - `pagespeed-api.spec.js`: Google PageSpeed Insights metrics
+   - Located in `tests/performance/` directory
    - Performance metrics include:
      - Page load time
      - First Contentful Paint (FCP)
@@ -121,17 +136,11 @@ npx playwright test tests/register.spec.js
 npm run test:performance
 ```
 
-### Run PageSpeed Tests
-
-```bash
-npm run test:pagespeed
-```
-
 ## Test Reports
 
 - HTML reports are generated in the `playwright-report` directory
 - Performance reports are stored in `performance-reports`
-- Test results are exported to Excel format in `test-results`
+- Test results are stored in `results` directory
 
 ## Browser Support
 

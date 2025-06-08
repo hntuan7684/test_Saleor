@@ -1,14 +1,14 @@
 const { test, expect } = require('@playwright/test');
 const psi = require('psi');
 import { LoginPage } from "../pageObjects/LoginPage";
-// require('dotenv').config();
+require('dotenv').config();
 
 test.describe('PS001 - Home Page Performance Tests', () => {
   const baseUrl = 'https://mypod.io.vn/default-channel';
 
   test('should pass PageSpeed Insights test for desktop', async () => {
     const result = await psi(baseUrl, {
-      key: 'AIzaSyB4Ja9_0bP3YuVsFY_HoNzBSeyRJHlOmNU',
+      key: process.env.PAGESPEED_API_KEY,
       strategy: 'desktop',
       category: ['performance', 'accessibility', 'best-practices', 'seo']
     });
@@ -28,7 +28,7 @@ test.describe('PS001 - Home Page Performance Tests', () => {
 
   test('should pass PageSpeed Insights test for mobile', async () => {
     const result = await psi(baseUrl, {
-      key: 'AIzaSyB4Ja9_0bP3YuVsFY_HoNzBSeyRJHlOmNU',
+      key: process.env.PAGESPEED_API_KEY,
       strategy: 'mobile',
       category: ['performance', 'accessibility', 'best-practices', 'seo']
     });
@@ -52,7 +52,7 @@ test.describe('PS002 - Service Page Performance Tests', () => {
 
   test('should pass PageSpeed Insights test for desktop', async () => {
     const result = await psi(serviceUrl, {
-      key: 'AIzaSyB4Ja9_0bP3YuVsFY_HoNzBSeyRJHlOmNU',
+      key: process.env.PAGESPEED_API_KEY,
       strategy: 'desktop',
       category: ['performance', 'accessibility', 'best-practices', 'seo']
     });
@@ -72,7 +72,7 @@ test.describe('PS002 - Service Page Performance Tests', () => {
 
   test('should pass PageSpeed Insights test for mobile', async () => {
     const result = await psi(serviceUrl, {
-      key: 'AIzaSyB4Ja9_0bP3YuVsFY_HoNzBSeyRJHlOmNU',
+      key: process.env.PAGESPEED_API_KEY,
       strategy: 'mobile',
       category: ['performance', 'accessibility', 'best-practices', 'seo']
     });
@@ -96,7 +96,7 @@ test.describe('PS003 - Products Page Performance Tests', () => {
 
   test('should pass PageSpeed Insights test for desktop', async () => {
     const result = await psi(productsUrl, {
-      key: 'AIzaSyB4Ja9_0bP3YuVsFY_HoNzBSeyRJHlOmNU',
+      key: process.env.PAGESPEED_API_KEY,
       strategy: 'desktop',
       category: ['performance', 'accessibility', 'best-practices', 'seo']
     });
@@ -116,7 +116,7 @@ test.describe('PS003 - Products Page Performance Tests', () => {
 
   test('should pass PageSpeed Insights test for mobile', async () => {
     const result = await psi(productsUrl, {
-      key: 'AIzaSyB4Ja9_0bP3YuVsFY_HoNzBSeyRJHlOmNU',
+      key: process.env.PAGESPEED_API_KEY,
       strategy: 'mobile',
       category: ['performance', 'accessibility', 'best-practices', 'seo']
     });
@@ -140,7 +140,7 @@ test.describe('PS004 - Support Page Performance Tests', () => {
 
   test('should pass PageSpeed Insights test for desktop', async () => {
     const result = await psi(supportUrl, {
-      key: 'AIzaSyB4Ja9_0bP3YuVsFY_HoNzBSeyRJHlOmNU',
+      key: process.env.PAGESPEED_API_KEY,
       strategy: 'desktop',
       category: ['performance', 'accessibility', 'best-practices', 'seo']
     });
@@ -160,7 +160,7 @@ test.describe('PS004 - Support Page Performance Tests', () => {
 
   test('should pass PageSpeed Insights test for mobile', async () => {
     const result = await psi(supportUrl, {
-      key: 'AIzaSyB4Ja9_0bP3YuVsFY_HoNzBSeyRJHlOmNU',
+      key: process.env.PAGESPEED_API_KEY,
       strategy: 'mobile',
       category: ['performance', 'accessibility', 'best-practices', 'seo']
     });
@@ -184,7 +184,7 @@ test.describe('PS005 - Login Page Performance Tests', () => {
 
   test('should pass PageSpeed Insights test for desktop', async () => {
     const result = await psi(loginUrl, {
-      key: 'AIzaSyB4Ja9_0bP3YuVsFY_HoNzBSeyRJHlOmNU',
+      key: process.env.PAGESPEED_API_KEY,
       strategy: 'desktop',
       category: ['performance', 'accessibility', 'best-practices', 'seo']
     });
@@ -204,7 +204,7 @@ test.describe('PS005 - Login Page Performance Tests', () => {
 
   test('should pass PageSpeed Insights test for mobile', async () => {
     const result = await psi(loginUrl, {
-      key: 'AIzaSyB4Ja9_0bP3YuVsFY_HoNzBSeyRJHlOmNU',
+      key: process.env.PAGESPEED_API_KEY,
       strategy: 'mobile',
       category: ['performance', 'accessibility', 'best-practices', 'seo']
     });
@@ -224,72 +224,6 @@ test.describe('PS005 - Login Page Performance Tests', () => {
 }); 
 
 test.describe('PS006 - Authenticated Product Detail Page Performance Tests', () => {
-  // test.beforeEach(async ({ page }) => {
-  //   // Login before running test
-  //   const loginPage = new LoginPage(page);
-  //   await loginPage.navigate();
-  //   await loginPage.login("trungdt1718@gmail.com", "123456Aa@");
-  //   await expect(
-  //     page.getByRole("heading", { name: /Welcome to ZoomPrints/i })
-  //   ).toBeVisible({ timeout: 60000 });
-
-  //   // Verify successful login
-  //   // await expect(page).toHaveURL("https://mypod.io.vn/default-channel");
-  // }, 60000);
-
-  // const productDetailUrl = 'https://mypod.io.vn/default-channel/products/bella-3001';
-
-  // test('should pass PageSpeed Insights test for authenticated product detail page (desktop)', async ({ page }) => {
-  //   // Now run PSI for product detail page
-  //   const result = await psi(productDetailUrl, {
-  //     key: 'AIzaSyB4Ja9_0bP3YuVsFY_HoNzBSeyRJHlOmNU',
-  //     strategy: 'desktop',
-  //     category: ['performance', 'accessibility', 'best-practices', 'seo']
-  //   });
-  //   console.log(result);
-
-  // Check overall scores
-  //   expect(result.data.lighthouseResult.categories.performance.score).toBeGreaterThanOrEqual(0.8);
-  //   expect(result.data.lighthouseResult.categories.accessibility.score).toBeGreaterThanOrEqual(0.8);
-  //   expect(result.data.lighthouseResult.categories['best-practices'].score).toBeGreaterThanOrEqual(0.8);
-  //   expect(result.data.lighthouseResult.categories.seo.score).toBeGreaterThanOrEqual(0.8);
-
-  //   // Save detailed results
-  //   console.log('Authenticated Product Detail Page - Desktop Performance Score:', result.data.lighthouseResult.categories.performance.score);
-  //   console.log('Authenticated Product Detail Page - Desktop Accessibility Score:', result.data.lighthouseResult.categories.accessibility.score);
-  //   console.log('Authenticated Product Detail Page - Desktop Best Practices Score:', result.data.lighthouseResult.categories['best-practices'].score);
-  //   console.log('Authenticated Product Detail Page - Desktop SEO Score:', result.data.lighthouseResult.categories.seo.score);
-  // }, 300000);
-
-  // test('should pass PageSpeed Insights test for authenticated product detail page (mobile)', async ({ page }) => {
-  //   // Login before running test (reuse logic from addToCart.spec.js)
-  //   const loginPage = new LoginPage(page);
-  //   await loginPage.navigate();
-  //   await loginPage.login(email, password);
-  //   await expect(
-  //     page.getByRole("heading", { name: /Welcome to ZoomPrints/i })
-  //   ).toBeVisible({ timeout: 30000 });
-  //   await expect(page).toHaveURL(appUrl);
-
-  //   // Now run PSI for product detail page
-  //   const result = await psi(productDetailUrl, {
-  //     key: 'AIzaSyB4Ja9_0bP3YuVsFY_HoNzBSeyRJHlOmNU',
-  //     strategy: 'mobile',
-  //     category: ['performance', 'accessibility', 'best-practices', 'seo']
-  //   });
-
-  //   // Check overall scores
-  //   expect(result.data.lighthouseResult.categories.performance.score).toBeGreaterThanOrEqual(0.8);
-  //   expect(result.data.lighthouseResult.categories.accessibility.score).toBeGreaterThanOrEqual(0.8);
-  //   expect(result.data.lighthouseResult.categories['best-practices'].score).toBeGreaterThanOrEqual(0.8);
-  //   expect(result.data.lighthouseResult.categories.seo.score).toBeGreaterThanOrEqual(0.8);
-
-  //   // Save detailed results
-  //   console.log('Authenticated Product Detail Page - Mobile Performance Score:', result.data.lighthouseResult.categories.performance.score);
-  //   console.log('Authenticated Product Detail Page - Mobile Accessibility Score:', result.data.lighthouseResult.categories.accessibility.score);
-  //   console.log('Authenticated Product Detail Page - Mobile Best Practices Score:', result.data.lighthouseResult.categories['best-practices'].score);
-  //   console.log('Authenticated Product Detail Page - Mobile SEO Score:', result.data.lighthouseResult.categories.seo.score);
-  // }, 30000);
   test.beforeEach(async ({ page }) => {
     // Login before running test
     const loginPage = new LoginPage(page);
@@ -312,7 +246,7 @@ test.describe('PS006 - Authenticated Product Detail Page Performance Tests', () 
     page.pause();
 
     const result = await psi("https://mypod.io.vn/default-channel/products/bella-3001", {
-      key: 'AIzaSyB4Ja9_0bP3YuVsFY_HoNzBSeyRJHlOmNU',
+      key: process.env.PAGESPEED_API_KEY,
       strategy: 'desktop',
       category: ['performance', 'accessibility', 'best-practices', 'seo']
     }, 60000);
