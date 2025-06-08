@@ -18,29 +18,29 @@ This test automation suite covers the following key areas of the Saleor applicat
 ## Project Structure
 
 ```
-├── tests/                      # Test files
-│   ├── pageObjects/           # Page Object Models
-│   ├── utils/                 # Utility functions
-│   ├── performance/           # Performance test cases
-│   ├── performance-reports/   # Performance test results
-│   ├── register.spec.js       # User registration tests
-│   ├── login.spec.js          # User login tests
-│   ├── forgot-password.spec.js # Password recovery tests
-│   ├── products.spec.js       # Product listing tests
-│   ├── product-detail.spec.js # Product details tests
-│   ├── search-functionality.spec.js # Search feature tests
-│   ├── shopping-cart.spec.js  # Cart management tests
-│   ├── add-product-to-cart.spec.js # Add to cart tests
-│   ├── cart-price-checkout.spec.js # Checkout tests
-│   ├── homepage.spec.js       # Homepage tests
-│   ├── support-form.spec.js   # Support system tests
-│   ├── service-page.spec.js   # Service page tests
-│   └── design-page.spec.js    # Design page tests
-├── results/                   # Test execution results
-├── playwright-report/        # HTML test reports
-├── performance-reports/      # Performance analysis reports
-├── playwright.config.js      # Playwright configuration
-└── package.json             # Project dependencies
+├── tests/                               # Test files
+│   ├── pageObjects/                     # Page Object Models
+│   ├── utils/                           # Utility functions
+│   ├── performance/                     # Performance test cases
+│   ├── performance-reports/             # Performance test results
+│   ├── register.spec.js                 # User registration tests
+│   ├── login.spec.js                    # User login tests
+│   ├── forgot-password.spec.js          # Password recovery tests
+│   ├── products.spec.js                 # Product listing tests
+│   ├── product-detail.spec.js           # Product details tests
+│   ├── search-functionality.spec.js     # Search feature tests
+│   ├── shopping-cart.spec.js            # Cart management tests
+│   ├── add-product-to-cart.spec.js      # Add to cart tests
+│   ├── cart-price-checkout.spec.js      # Checkout tests
+│   ├── homepage.spec.js                 # Homepage tests
+│   ├── support-form.spec.js             # Support system tests
+│   ├── service-page.spec.js             # Service page tests
+│   └── design-page.spec.js              # Design page tests
+├── results/                             # Test execution results
+├── playwright-report/                   # HTML test reports
+├── performance-reports/                 # Performance analysis reports
+├── playwright.config.js                 # Playwright configuration
+└── package.json                         # Project dependencies
 ```
 
 ## Test Cases
