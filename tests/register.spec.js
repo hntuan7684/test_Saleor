@@ -1,4 +1,5 @@
-const { test, expect } = require("@playwright/test");
+import { test } from './global-test';
+const { expect } = require("@playwright/test");
 const { generateUniqueEmail } = require("./utils/testDataHelper");
 
 const registerURL = "https://mypod.io.vn/default-channel/register";
@@ -8,17 +9,17 @@ test.describe("Registration Tests", () => {
     await page.goto(registerURL, {timeout: 120000});
   });
 
-  test("Verify registration and reuse email", async ({ page }) => {
+  test("RG001-Verify registration and reuse email", async ({ page }) => {
     const uniqueEmail = generateUniqueEmail("mailinator.com");
     console.log(`Test email first: ${uniqueEmail}`);
-    await test.step("RG001-Verify successful registration with valid data", async () => {
+    await test.step("Verify successful registration with valid data", async () => {
       await page.fill('input[name="firstName"]', "John");
       await page.fill('input[name="lastName"]', "Doe");
       await page.fill('input[name="email"]', uniqueEmail);
       await page.fill('input[name="password"]', "Password123!");
       await page.fill('input[name="confirmPassword"]', "Password123!");
       await page.click('button:has-text("Register")');
-      // Kiểm tra URL chuyển hướng sau khi đăng ký thành công
+      // Check redirect URL after successful registration
       await expect(page).toHaveURL(
         `https://mypod.io.vn/default-channel/login?email=${uniqueEmail}`,
         { timeout: 300000 }
@@ -26,7 +27,7 @@ test.describe("Registration Tests", () => {
       console.log("✅ Redirected to login page with email after registration.");
     });
 
-    await test.step("RG002-Verify registration with existing email", async () => {
+    await test.step("Verify registration with existing email", async () => {
       await page.goto(registerURL);
 
       await page.fill('input[name="firstName"]', "Existing");
@@ -37,7 +38,7 @@ test.describe("Registration Tests", () => {
 
       await page.click('button:has-text("Register")');
 
-      // Kiểm tra thông báo lỗi (có thể là tiếng Việt)
+      // Check error message
       const errorMessage = page.locator(
         "text=User with this Email already exists."
       );
@@ -47,9 +48,7 @@ test.describe("Registration Tests", () => {
     });
   });
 
-  test("RG003-Verify registration with invalid email format", async ({
-    page,
-  }) => {
+  test("RG002-Verify registration with invalid email format", async ({ page }) => {
     await page.fill('input[name="firstName"]', "John");
     await page.fill('input[name="lastName"]', "Doe");
     await page.fill('input[name="email"]', "invalidemail");
@@ -58,7 +57,7 @@ test.describe("Registration Tests", () => {
     await expect(page.locator("text=Invalid email")).toBeVisible();
   });
 
-  test("RG004-Verify registration with weak password", async ({ page }) => {
+  test("RG003-Verify registration with weak password", async ({ page }) => {
     const uniqueEmail = generateUniqueEmail("mailinator.com");
     await page.fill('input[name="firstName"]', "John");
     await page.fill('input[name="lastName"]', "Doe");
@@ -70,9 +69,7 @@ test.describe("Registration Tests", () => {
     ).toBeVisible();
   });
 
-  test("RG005-Verify registration without mandatory fields", async ({
-    page,
-  }) => {
+  test("RG004-Verify registration without mandatory fields", async ({ page }) => {
     await page.goto(registerURL);
     await page.fill('input[name="firstName"]', "John");
     await page.fill('input[name="lastName"]', "Doe");
@@ -89,7 +86,7 @@ test.describe("Registration Tests", () => {
     ).toBeVisible();
   });
 
-  test("RG006-Verify registration with password mismatch", async ({ page }) => {
+  test("RG005-Verify registration with password mismatch", async ({ page }) => {
     const uniqueEmail = generateUniqueEmail("mailinator.com");
     await page.fill('input[name="firstName"]', "John");
     await page.fill('input[name="lastName"]', "Doe");
@@ -97,12 +94,12 @@ test.describe("Registration Tests", () => {
     await page.fill('input[name="password"]', "Password123!");
     await page.fill('input[name="confirmPassword"]', "Password321!");
 
-    await page.click('button:has-text("Register")'); // Đảm bảo form được submit để hiện lỗi
+    await page.click('button:has-text("Register")'); // Ensure form is submitted to show error
 
     await expect(page.locator("text=Passwords must match")).toBeVisible();
   });
 
-  test("RG007-Verify UI of registration page", async ({ page }) => {
+  test("RG006-Verify UI of registration page", async ({ page }) => {
     await expect(page.locator('input[name="firstName"]')).toBeVisible();
     await expect(page.locator('input[name="lastName"]')).toBeVisible();
     await expect(page.locator('input[name="email"]')).toBeVisible();
@@ -111,9 +108,7 @@ test.describe("Registration Tests", () => {
     await expect(page.locator('button:has-text("Register")')).toBeVisible();
   });
 
-  test("RG010-Verify registration with password containing special characters", async ({
-    page,
-  }) => {
+  test("RG007-Verify registration with password containing special characters", async ({ page }) => {
     const specialEmail = generateUniqueEmail("mailinator.com");
     await page.fill('input[name="firstName"]', "John");
     await page.fill('input[name="lastName"]', "Doe");
@@ -128,9 +123,7 @@ test.describe("Registration Tests", () => {
     ).toBeVisible();
   });
 
-  test("RG011-Verify registration with password less than 8 characters", async ({
-    page,
-  }) => {
+  test("RG008-Verify registration with password less than 8 characters", async ({ page }) => {
     const uniqueEmail = generateUniqueEmail("mailinator.com");
     await page.fill('input[name="firstName"]', "John");
     await page.fill('input[name="lastName"]', "Doe");
@@ -142,17 +135,13 @@ test.describe("Registration Tests", () => {
     ).toBeVisible();
   });
 
-  test("RG012-Verify registration with invalid email containing spaces", async ({
-    page,
-  }) => {
+  test("RG009-Verify registration with invalid email containing spaces", async ({ page }) => {
     await page.fill('input[name="email"]', "test mail@mailinator.com");
     await page.click('button:has-text("Register")');
     await expect(page.locator("text=Invalid email")).toBeVisible();
   });
 
-  test("RG013-Verify registration with valid email and password but blank name", async ({
-    page,
-  }) => {
+  test("RG010-Verify registration with valid email and password but blank name", async ({ page }) => {
     const uniqueEmail = generateUniqueEmail("mailinator.com");
     await page.fill('input[name="firstName"]', "");
     await page.fill('input[name="lastName"]', "");

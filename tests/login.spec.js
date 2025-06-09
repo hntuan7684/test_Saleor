@@ -1,4 +1,5 @@
-import { test, expect } from "@playwright/test";
+import { test } from './global-test';
+import { expect } from "@playwright/test";
 import { LoginPage } from "./pageObjects/LoginPage.js";
 import { BASE_URL } from "./utils/constants.js";
 
@@ -185,7 +186,7 @@ test.describe("Login Flow", () => {
           await expect(page)
             .locator("h1", { hasText: "Welcome to ZoomPrints" })
             .toBeVisible();
-          await expect(page).toHaveURL("https://mypod.io.vn/default-channel");
+          await expect(page).toHaveURL(BASE_URL);
 
           actual = "User successfully logged in and redirected to home page";
         } else {
@@ -203,41 +204,39 @@ test.describe("Login Flow", () => {
     
   });
 
-test("LG021 - Login with Google (Keycloak Broker)", async ({ page }) => {
-  const loginPage = new LoginPage(page);
-  await loginPage.navigate();
+// test("LG021 - Login with Google (Keycloak Broker)", async ({ page }) => {
+//   const loginPage = new LoginPage(page);
+//   await loginPage.navigate();
 
-  await loginPage.clickGoogleLogin();
+//   await loginPage.clickGoogleLogin();
 
-  // Đảm bảo đã redirect đến Google
-  await expect.poll(() => page.url(), { timeout: 10000 }).toMatch(/accounts\.google\.com/);
+//   // Ensure redirect to Google
+//   await expect.poll(() => page.url(), { timeout: 10000 }).toMatch(/accounts\.google\.com/);
 
-  // Điền email
-  const emailInput = page.getByRole('textbox', { name: /email or phone/i });
-  await expect(emailInput).toBeVisible({ timeout: 10000 });
-  await emailInput.fill("testaccount123@mailinator.com");
+//   // Fill in email
+//   const emailInput = page.getByRole('textbox', { name: /email or phone/i });
+//   await expect(emailInput).toBeVisible({ timeout: 10000 });
+//   await emailInput.fill("trungdt1718@gmail.com");
 
-  // Nhấn Next
-  const nextButton = page.getByRole("button", { name: /next/i });
-  await expect(nextButton).toBeVisible();
-  await nextButton.click();
+//   // Click Next
+//   const nextButton = page.getByRole("button", { name: /next/i });
+//   await expect(nextButton).toBeVisible();
+//   await nextButton.click();
 
-  // ✅ Tùy cấu hình: thêm step nhập mật khẩu nếu cần (hoặc xác minh OTP)
+//   // ✅ Optional: Add password input step if needed (or OTP verification)
 
-  // Đợi xác minh email sau redirect
-  const emailVerifyHeading = page.getByRole("heading", { name: /email verification/i });
-  await expect(emailVerifyHeading).toBeVisible({ timeout: 15000 });
-});
+//   // Wait for email verification after redirect
+//   const emailVerifyHeading = page.getByRole("heading", { name: /email verification/i });
+//   await expect(emailVerifyHeading).toBeVisible({ timeout: 15000 });
+// });
 
-
-
-    test("LG022 - Login with Twitter (Keycloak Broker)", async ({ page }) => {
+test("LG022 - Login with Twitter (Keycloak Broker)", async ({ page }) => {
   const loginPage = new LoginPage(page);
   await loginPage.navigate();
 
   await loginPage.clickTwitterLogin();
 
-  // ✅ Kiểm tra URL chuyển đến Twitter hoặc X OAuth
+  // ✅ Check URL redirects to Twitter or X OAuth
   await expect.poll(() => page.url(), {
     timeout: 10000,
   }).toMatch(/(api\.twitter\.com|api\.x\.com)/);

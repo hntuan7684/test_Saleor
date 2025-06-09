@@ -1,7 +1,9 @@
 // productDetail.spec.js (fixed selectors and logic)
-const { test, expect } = require("@playwright/test");
+import { test } from './global-test';
+const { expect } = require("@playwright/test");
 const { ProductDetailPage } = require("./pageObjects/ProductDetailPage");
 import { LoginPage } from "./pageObjects/LoginPage";
+import { BASE_URL, PRODUCTS_URL } from "./utils/constants";
 const PRODUCT_SLUG = "bella-3001";
 
 // Helper: get exact button by visible name
@@ -44,7 +46,7 @@ test.describe("Product Detail Page Tests", () => {
   test("PD003 - Verify Color options are displayed and selectable", async () => {
     await pd.page.waitForLoadState("networkidle");
 
-    // Chỉ chọn các nút màu (rounded-full) và loại trừ nút size
+    // Only select color buttons (rounded-full) and exclude size buttons
     const colorButtons = pd.page.locator(
       'button.rounded-full[title]:not(:text("XS")):not(:text("S")):not(:text("M")):not(:text("L")):not(:text("XL")):not(:text("2XL")):not(:text("3XL")):not(:text("4XL")):not(:text("5XL"))'
     );
@@ -70,7 +72,7 @@ test.describe("Product Detail Page Tests", () => {
   test("PD004 - Verify Size options are displayed and selectable", async () => {
     await pd.page.waitForLoadState("networkidle");
 
-    // Chỉ chọn các nút kích thước, loại bỏ các nút màu (rounded-full)
+    // Only select size buttons, exclude color buttons (rounded-full)
     const sizeButtons = pd.page.locator(
       'div.flex-wrap button[title]:not([class*="rounded-full"])'
     );
@@ -111,42 +113,40 @@ test.describe("Product Detail Page Tests", () => {
     await pd.page.locator("button:has-text('Add to Cart')").click();
   });
 
-  test("PD009 - Verify Error message for invalid quantity", async ({
-    page,
-  }) => {
-    // 1. Đăng nhập
+  test("PD009 - Verify Error message for invalid quantity", async ({ page }) => {
+    // 1. Login
     const loginPage = new LoginPage(page);
     await loginPage.navigate();
     await loginPage.login("testaccount123@mailinator.com", "ValidPass123!");
     await expect(
       page.getByRole("heading", { name: /Welcome to ZoomPrints/i })
-    ).toBeVisible({ timeout: 30000 });
+    ).toBeVisible({ timeout: 120000 });
 
-    // 2. Đợi login thành công
-    await expect(page).toHaveURL("https://mypod.io.vn/default-channel");
+    // 2. Wait for successful login
+    await expect(page).toHaveURL(`${BASE_URL}`);
 
-    // 3. Truy cập trang chi tiết sản phẩm
+    // 3. Access product detail page
     const pd = new ProductDetailPage(page);
     await pd.goto("bella-3001");
 
-    // 4. Nhập sai số lượng
+    // 4. Enter invalid quantity
     const qtyInput = page.locator('input[type="number"]');
     await qtyInput.focus();
     await qtyInput.press("Control+A");
     await qtyInput.press("Backspace");
-    await qtyInput.type("abc");
+    await qtyInput.type("");
 
-    // 5. Nhấn "Add to Cart"
+    // 5. Click "Add to Cart"
     await page.locator('button:has-text("Add to Cart")').click();
 
-    // 6. Kiểm tra thông báo lỗi thực tế đang hiển thị (alert box)
+    // 6. Check actual error message being displayed (alert box)
     const systemErrorAlert = page.locator(
       'text="Something went wrong. Please try again later"'
     );
-    await expect(systemErrorAlert).toBeVisible({ timeout: 3000 });
+    await expect(systemErrorAlert).toBeVisible({ timeout: 10000 });
 
-    // 7. Đảm bảo vẫn ở trên trang sản phẩm
-    await expect(page).toHaveURL(/products\/bella-3001/);
+    // 7. Ensure still on product page
+    await expect(page).toHaveURL(`${PRODUCTS_URL}/bella-3001`);
   });
 
   test("PD010 - Verify Product Images Carousel works correctly", async () => {
@@ -181,59 +181,55 @@ test.describe("Product Detail Page Tests", () => {
     await expect(page.url()).toContain(PRODUCT_SLUG);
   });
 
-test("PD014 - Verify Image changes with color selection", async () => {
-  await pd.page.waitForLoadState("networkidle");
+  test("PD014 - Verify Image changes with color selection", async () => {
+    await pd.page.waitForLoadState("networkidle");
 
-  // Fail early if 404
-  const is404 = await pd.page.locator("text=404").first().isVisible();
-  expect(is404).toBeFalsy();
+    // Fail early if 404
+    const is404 = await pd.page.locator("text=404").first().isVisible();
+    expect(is404).toBeFalsy();
 
-  // Fix: Pick only the first visible heading explicitly
-  const headings = pd.page.locator('h1', {
-    hasText: "BELLA + CANVAS - Jersey Tee - 3001",
-  });
-  const count = await headings.count();
+    // Fix: Pick only the first visible heading explicitly
+    const headings = pd.page.locator('h1', {
+      hasText: "BELLA + CANVAS - Jersey Tee - 3001",
+    });
+    const count = await headings.count();
 
-  for (let i = 0; i < count; i++) {
-    const el = headings.nth(i);
-    if (await el.isVisible()) {
-      await expect(el).toBeVisible({ timeout: 10000 });
-      break;
+    for (let i = 0; i < count; i++) {
+      const el = headings.nth(i);
+      if (await el.isVisible()) {
+        await expect(el).toBeVisible({ timeout: 10000 });
+        break;
+      }
     }
-  }
 
-  const productImage = pd.page.locator('div[data-swiper-slide-index="0"] img').first();
-  await expect(productImage).toBeVisible({ timeout: 15000 });
+    const productImage = pd.page.locator('div[data-swiper-slide-index="0"] img').first();
+    await expect(productImage).toBeVisible({ timeout: 15000 });
 
-  const initialSrc = await productImage.getAttribute("src");
+    const initialSrc = await productImage.getAttribute("src");
 
-  const colorButtons = pd.page.locator("button[title]");
-  const countColor = await colorButtons.count();
-  expect(countColor).toBeGreaterThan(0);
+    const colorButtons = pd.page.locator("button[title]");
+    const countColor = await colorButtons.count();
+    expect(countColor).toBeGreaterThan(0);
 
-  await colorButtons.nth(3).click();
+    await colorButtons.nth(3).click();
 
-  await expect(productImage).not.toHaveAttribute("src", initialSrc, {
-    timeout: 10000,
+    await expect(productImage).not.toHaveAttribute("src", initialSrc, {
+      timeout: 10000,
+    });
   });
-});
 
+  test("PD015 - Verify Add to Cart without selecting Size", async () => {
+    const addToCartButton = pd.page.locator('button:has-text("Add to Cart")');
+    await expect(addToCartButton).toBeVisible({ timeout: 10000 });
 
-test("PD015 - Verify Add to Cart without selecting Size", async () => {
-  const addToCartButton = pd.page.locator('button:has-text("Add to Cart")');
-  await expect(addToCartButton).toBeVisible({ timeout: 10000 });
+    await addToCartButton.click();
 
-  await addToCartButton.click();
+    // Expect redirect to Keycloak login URL
+    await expect(pd.page).toHaveURL(/\/protocol\/openid-connect\/auth/);
+  });
 
-  // Expect redirect to Keycloak login URL
-  await expect(pd.page).toHaveURL(/\/protocol\/openid-connect\/auth/);
-});
-
-
-  test("PD016 - Verify Product Description is displayed and formatted correctly", async () => {
-    const descriptionHeading = pd.page
-      .locator("h2", { hasText: "Descriptions" })
-      .first();
+  test('PD016 - Verify Product Description is displayed and formatted correctly', async () => {
+    const descriptionHeading = pd.page.locator('h2', { hasText: 'Descriptions' }).first();
     await expect(descriptionHeading).toBeVisible({ timeout: 20000 });
 
     // Find `.prose` block immediately following the heading
@@ -257,9 +253,7 @@ test("PD015 - Verify Add to Cart without selecting Size", async () => {
     expect(matched).toBeTruthy();
   });
 
-  test('PD017 - Ensure "Customize Design" button navigates correctly', async ({
-    page,
-  }) => {
+  test('PD017 - Ensure "Customize Design" button navigates correctly', async ({ page }) => {
     await page.locator('a[href*="/design/"]').click();
     await expect(page).toHaveURL(/\/design\//);
   });

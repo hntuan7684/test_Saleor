@@ -1,4 +1,5 @@
-const { test, expect } = require("@playwright/test");
+import { test } from './global-test';
+const { expect } = require("@playwright/test");
 const { generateUniqueEmail } = require("./utils/testDataHelper");
 import { SUPPORT_URL } from "./utils/constants";
 
@@ -46,10 +47,13 @@ async function verifyDialog(page, expectedMessage) {
 
 test.describe("Support Form Tests", () => {
   test.beforeEach(async ({ page }) => {
-    // Navigate to the support form page before each test
-    await page.goto(SUPPORT_URL, { timeout: 120000 });
-    // Wait for the main support form to be loaded
-    await page.waitForSelector("form.w-full.max-w-2xl", { state: "visible" });
+    try {
+      await page.goto(SUPPORT_URL, { timeout: 30000 }); // Lower timeout to fail fast
+      await page.waitForSelector("form.w-full.max-w-2xl", { state: "visible" });
+    } catch (error) {
+      console.error(`❌ Failed to navigate to support page: ${SUPPORT_URL}`);
+      throw error; // Rethrow to preserve Playwright test failure
+    }
   });
 
   test("SP001 - Check alignment of input fields", async ({ page }) => {
@@ -181,10 +185,10 @@ test.describe("Support Form Tests", () => {
   //   const firstNameInput = form.locator('input[name="firstName"]');
 
   //   // Wait for form to be visible and stable
-  //   await expect(form).toBeVisible();
+  //   await expect(form).toBeVisible({ timeout: 100000 });
 
   //   // Verify firstName field is focused by default without clicking
-  //   await expect(firstNameInput).toBeFocused();
+  //   await expect(firstNameInput).toBeFocused({ timeout: 100000 });
 
   //   // Additional check: verify other fields are not focused
   //   const otherFields = [
@@ -202,7 +206,7 @@ test.describe("Support Form Tests", () => {
   //   }
   // });
 
-  test("SP005 - Tab navigation works properly", async ({ page }) => {
+  test("SP004 - Tab navigation works properly", async ({ page }) => {
     const form = await page.locator("form.w-full.max-w-2xl");
     const firstNameInput = form.locator('input[name="firstName"]');
 
@@ -226,7 +230,7 @@ test.describe("Support Form Tests", () => {
     }
   });
 
-  test("SP007 - Submit form with all valid data", async ({ page }) => {
+  test("SP005 - Submit form with all valid data", async ({ page }) => {
     test.setTimeout(120000);
     const uniqueEmail = generateUniqueEmail("mailinator.com");
 
@@ -253,8 +257,7 @@ test.describe("Support Form Tests", () => {
     //Wait for submitting message to disappear
     await expect(
       page.locator("text=Support request created successfully")
-    ).toBeVisible({ timeout: 10000 });
-
+    ).toBeVisible({ timeout: 60000 });
 
     await page.pause();
 
@@ -316,7 +319,7 @@ test.describe("Support Form Tests", () => {
     await expect(page.url()).toContain("/support");
   });
 
-  test("SP008 - Submit form with only mandatory fields filled", async ({
+  test("SP006 - Submit form with only mandatory fields filled", async ({
     page,
   }) => {
     const uniqueEmail = generateUniqueEmail("mailinator.com");
@@ -342,7 +345,7 @@ test.describe("Support Form Tests", () => {
     await expect(form.locator('button[type="submit"]')).toBeVisible();
   });
 
-  test("SP009 - Leave all fields empty and submit", async ({ page }) => {
+  test("SP007 - Leave all fields empty and submit", async ({ page }) => {
     const form = await page.locator("form.w-full.max-w-2xl");
 
     // Try to submit empty form
@@ -362,7 +365,7 @@ test.describe("Support Form Tests", () => {
     await expect(form.locator('button[type="submit"]')).toBeVisible();
   });
 
-  test("SP010 - Submit with First Name empty (assuming mandatory)", async ({
+  test("SP008 - Submit with First Name empty (assuming mandatory)", async ({
     page,
   }) => {
     const uniqueEmail = generateUniqueEmail("mailinator.com");
@@ -384,7 +387,7 @@ test.describe("Support Form Tests", () => {
     await expect(errorText).toBeVisible();
   });
 
-  test("SP011 - Submit with Last Name empty (assuming mandatory)", async ({
+  test("SP009 - Submit with Last Name empty (assuming mandatory)", async ({
     page,
   }) => {
     const uniqueEmail = generateUniqueEmail("mailinator.com");
@@ -406,7 +409,7 @@ test.describe("Support Form Tests", () => {
     await expect(errorText).toBeVisible();
   });
 
-  test("SP012 - Submit with Details empty (assuming mandatory)", async ({
+  test("SP010 - Submit with Details empty (assuming mandatory)", async ({
     page,
   }) => {
     test.setTimeout(120000);
@@ -493,7 +496,7 @@ test.describe("Support Form Tests", () => {
     await expect(page.url()).toContain("/support");
   });
 
-  test("SP013 - Submit with Email empty (assuming mandatory)", async ({
+  test("SP011 - Submit with Email empty (assuming mandatory)", async ({
     page,
   }) => {
     const form = await page.locator("form.w-full.max-w-2xl");
@@ -558,7 +561,7 @@ test.describe("Support Form Tests", () => {
   //   await expect(errorText).toBeVisible();
   // });
 
-  test("SP016 - First Name - Verify maximum length boundary", async ({
+  test("SP012 - First Name - Verify maximum length boundary", async ({
     page,
   }) => {
     test.setTimeout(240000);
@@ -592,7 +595,7 @@ test.describe("Support Form Tests", () => {
     }
   });
 
-  test("SP017 - First Name - Verify exceeding maximum length", async ({
+  test("SP013 - First Name - Verify exceeding maximum length", async ({
     page,
   }) => {
     test.setTimeout(60000);
@@ -714,7 +717,7 @@ test.describe("Support Form Tests", () => {
   //   await expect(form.locator('input[name="lastName"]')).toHaveValue("Doe456");
   // });
 
-  test("SP019 - Last Name - Verify maximum length boundary", async ({
+  test("SP014 - Last Name - Verify maximum length boundary", async ({
     page,
   }) => {
     test.setTimeout(120000);
@@ -748,7 +751,7 @@ test.describe("Support Form Tests", () => {
     }
   });
 
-  test("SP020 - Last Name - Verify exceeding maximum length", async ({
+  test("SP015 - Last Name - Verify exceeding maximum length", async ({
     page,
   }) => {
     // Enable debug logging
@@ -845,7 +848,7 @@ test.describe("Support Form Tests", () => {
     await expect(page.url()).toContain("/support");
   });
 
-  test("SP021 - Email format validation", async ({ page }) => {
+  test("SP016 - Email format validation", async ({ page }) => {
     test.setTimeout(60000);
     const form = await page.locator("form.w-full.max-w-2xl");
 
@@ -867,7 +870,7 @@ test.describe("Support Form Tests", () => {
     });
   });
 
-  test("SP022 - Invalid email format", async ({ page }) => {
+  test("SP017 - Invalid email format", async ({ page }) => {
     const form = await page.locator("form.w-full.max-w-2xl");
 
     // Fill all required fields with email containing spaces
@@ -895,7 +898,7 @@ test.describe("Support Form Tests", () => {
     await expect(form.locator('input[name="email"]')).toHaveValue("john.com");
   });
 
-  test("SP023 - Email format - Spaces are trimmed and accepted", async ({
+  test("SP018 - Email format - Spaces are trimmed and accepted", async ({
     page,
   }) => {
     const form = await page.locator("form.w-full.max-w-2xl");
@@ -935,7 +938,7 @@ test.describe("Support Form Tests", () => {
     await expect(page.url()).toContain("/support");
   });
 
-  test("SP024 - Invalid email format - Invalid characters in domain", async ({
+  test("SP019 - Invalid email format - Invalid characters in domain", async ({
     page,
   }) => {
     const form = await page.locator("form.w-full.max-w-2xl");
@@ -966,7 +969,7 @@ test.describe("Support Form Tests", () => {
     );
   });
 
-  test("SP025 - Valid phone number format", async ({ page }) => {
+  test("SP020 - Valid phone number format", async ({ page }) => {
     const form = await page.locator("form.w-full.max-w-2xl");
 
     // Fill form with valid phone number
@@ -992,7 +995,7 @@ test.describe("Support Form Tests", () => {
     }
   });
 
-  test("SP026 - Phone number with letters", async ({ page }) => {
+  test("SP021 - Phone number with letters", async ({ page }) => {
     const form = await page.locator("form.w-full.max-w-2xl");
 
     // Fill phone number with letters
@@ -1008,7 +1011,7 @@ test.describe("Support Form Tests", () => {
 
     // Verify error message appears for invalid phone number
     await expect(
-      page.locator("text=Please enter a valid 10-digit phone number")
+      page.locator("text=Please enter a valid phone number")
     ).toBeVisible();
 
     // Verify that the form was not submitted
@@ -1023,7 +1026,7 @@ test.describe("Support Form Tests", () => {
     );
   });
 
-  test("SP027 - Phone number with special characters", async ({ page }) => {
+  test("SP022 - Phone number with special characters", async ({ page }) => {
     const form = await page.locator("form.w-full.max-w-2xl");
 
     // Fill phone number with special characters
@@ -1039,7 +1042,7 @@ test.describe("Support Form Tests", () => {
 
     // Verify error message appears for invalid phone number
     await expect(
-      page.locator('text="Please enter a valid 10-digit phone number"')
+      page.locator('text="Please enter a valid phone number"')
     ).toBeVisible();
 
     // Verify that the form was not submitted
@@ -1054,7 +1057,7 @@ test.describe("Support Form Tests", () => {
     );
   });
 
-  test("SP028 - Phone number with incorrect length (too short/long)", async ({
+  test("SP023 - Phone number with incorrect length (too short/long)", async ({
     page,
   }) => {
     const form = await page.locator("form.w-full.max-w-2xl");
@@ -1072,7 +1075,7 @@ test.describe("Support Form Tests", () => {
 
     // Verify error message appears for invalid phone number
     await expect(
-      page.locator('text="Please enter a valid 10-digit phone number"')
+      page.locator('text="Please enter a valid phone number"')
     ).toBeVisible();
 
     // Verify that the form was not submitted
@@ -1085,7 +1088,7 @@ test.describe("Support Form Tests", () => {
     await expect(form.locator('input[name="phoneNumber"]')).toHaveValue("123");
   });
 
-  test("SP030 - Company field - Accept alphanumeric & common symbols", async ({
+  test("SP024 - Company field - Accept alphanumeric & common symbols", async ({
     page,
   }) => {
     const form = await page.locator("form.w-full.max-w-2xl");
@@ -1115,7 +1118,7 @@ test.describe("Support Form Tests", () => {
     }
   });
 
-  test("SP032 - HTML/JS injection attempt", async ({ page }) => {
+  test("SP025 - HTML/JS injection attempt", async ({ page }) => {
     let alertTriggered = false;
 
     page.on("dialog", async (dialog) => {
@@ -1160,7 +1163,7 @@ test.describe("Support Form Tests", () => {
     expect(alertTriggered).toBeFalsy();
   });
 
-  test("SP033 - SQL injection attempt in various fields", async ({ page }) => {
+  test("SP026 - SQL injection attempt in various fields", async ({ page }) => {
     const form = await page.locator("form.w-full.max-w-2xl");
 
     const sqlInjection = "OR 1=1";

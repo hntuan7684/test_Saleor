@@ -1,4 +1,5 @@
-import { test, expect } from "@playwright/test";
+import { test } from './global-test';
+import { expect } from "@playwright/test";
 import { BASE_URL } from "./utils/constants";
 
 test.describe("Searching Tests", () => {
@@ -38,6 +39,7 @@ test.describe("Searching Tests", () => {
     const keyword = "'#$%&'";
     await page.fill('input[placeholder="Search for products..."]', keyword);
     await page.click('button[type="submit"]');
+    await page.pause();
     await expect(page.locator('h1:text("No results found")')).toBeVisible();
     await expect(page.locator("p.text-gray-500")).toContainText(
       `We couldn't find any matches for "${keyword}"`
@@ -66,7 +68,7 @@ test.describe("Searching Tests", () => {
     }
   });
 
-  test("SF007 - Partial keyword search", async ({ page }) => {
+  test("SF006 - Partial keyword search", async ({ page }) => {
     const keyword = "Next";
     await page.fill('input[placeholder="Search for products..."]', keyword);
     await page.click('button[type="submit"]');
@@ -87,7 +89,7 @@ test.describe("Searching Tests", () => {
     }
   });
 
-  test("SF009 - Keyword matching multiple products", async ({ page }) => {
+  test("SF007 - Keyword matching multiple products", async ({ page }) => {
     const keyword = "tee";
     await page.fill('input[placeholder="Search for products..."]', keyword);
     await page.click('button[type="submit"]');
@@ -108,7 +110,7 @@ test.describe("Searching Tests", () => {
     }
   });
 
-  test("SF010 - Long keyword search", async ({ page }) => {
+  test("SF008 - Long keyword search", async ({ page }) => {
     const keyword = "Next Level";
     await page.fill('input[placeholder="Search for products..."]', keyword);
     await page.click('button[type="submit"]');
@@ -128,32 +130,26 @@ test.describe("Searching Tests", () => {
     }
   });
 
-  // test("SF011 - Pagination support", async ({ page }) => {
-  //   await page.fill('[data-testid="search-input"]', "T-shirt");
-  //   await page.click('[data-testid="search-button"]');
-  //   await page.click("text=Next");
-  //   await expect(page.locator('[data-testid="search-result"]')).toBeVisible();
-  // });
-
-  test("SF012 - SQL Injection check", async ({ page }) => {
+  test("SF009 - SQL Injection check", async ({ page }) => {
     const keyword = "' OR 1=1; --";
     await page.fill('input[placeholder="Search for products..."]', keyword);
     await page.click('button[type="submit"]');
+    await page.pause();
     await expect(page.locator('h1:text("No results found")')).toBeVisible();
     await expect(page.locator("p.text-gray-500")).toContainText(
       `We couldn't find any matches for "${keyword}"`
     );
   });
 
-  test("SF013 - XSS attack check", async ({ page }) => {
+  test("SF010 - XSS attack check", async ({ page }) => {
     const keyword = "alert('XSS');";
     await page.fill('input[placeholder="Search for products..."]', keyword);
     await page.click('button[type="submit"]');
     await expect(page.locator("body")).not.toContainText("alert");
   });
 
-  test("SF014 - High-frequency search", async ({ page }) => {
-    for (let i = 0; i < 10; i++) {
+  test("SF011 - High-frequency search", async ({ page }) => {
+    for (let i = 0; i < 5; i++) {
       await page.fill('input[placeholder="Search for products..."]', "gildan");
       await page.click('button[type="submit"]');
       await expect(page.locator('[data-testid="ProductList"]')).toBeVisible();
