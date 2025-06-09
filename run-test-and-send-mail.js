@@ -11,7 +11,7 @@ const pdfReportPath = "error-report.pdf";
 
 // 1. Run Playwright test and export to JSON
 exec(
-  `npx playwright test tests/register.spec.js --reporter=json > ${jsonReportPath}`,
+  `npx playwright test --reporter=json > ${jsonReportPath}`,
   async (err) => {
     if (err) {
       console.error("❌ Test failed to execute:", err);
@@ -91,7 +91,7 @@ exec(
 
     const mailOptions = {
       from: `"Playwright Auto Report" <${process.env.MAIL_USER}>`,
-      to: "locb2111935@student.ctu.edu.vn", // Thay địa chỉ người nhận tại đây
+      to: "locb2111935@student.ctu.edu.vn",
       subject: "🧪 Playwright Test Error Report",
       text: "Please find attached the error report from the test.",
       html: "<h2>🛑 Lỗi trong quá trình test</h2><p>Xem chi tiết trong file đính kèm.</p>",

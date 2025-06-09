@@ -8,15 +8,11 @@ import { BASE_URL } from "./utils/constants.js";
 // } from "./utils/testResultLogger.js";
 
 test.describe("Products Page Tests", () => {
-  // let allTestResults = []; // Lưu trữ kết quả tạm thời
-
-  // test.beforeAll(async () => {
-  //   await initExcel(); // Không cần truyền sheetName
-  // });
+  let allTestResults = []; // Temporarily store test results
 
   const testCases = [
     {
-      // id: "PR001",
+      id: "PR001",
       description: "Verify Home link navigates to default channel",
       inputData: "Click 'Home' link in breadcrumb",
       run: async (page) => {
@@ -27,7 +23,7 @@ test.describe("Products Page Tests", () => {
       },
     },
     {
-      // id: "PR002",
+      id: "PR002",
       description: "'Products' label is visible and correct",
       inputData: "Open /products page",
       run: async (page) => {
@@ -37,7 +33,7 @@ test.describe("Products Page Tests", () => {
       },
     },
     {
-      // id: "PR003",
+      id: "PR003",
       description: "Home link has hover effect",
       inputData: "Hover over 'Home' link and check transform style",
       run: async (page) => {
@@ -56,7 +52,7 @@ test.describe("Products Page Tests", () => {
       },
     },
     {
-      // id: "PR004",
+      id: "PR004",
       description: "Icons next to Home and Products are displayed",
       inputData: "Open /products page and check breadcrumb icons",
       run: async (page) => {
@@ -67,7 +63,7 @@ test.describe("Products Page Tests", () => {
       },
     },
     {
-      // id: "PR005",
+      id: "PR005",
       description: "Breadcrumb order is correct: Home > Products",
       inputData: "Open /products page and get breadcrumb text contents",
       run: async (page) => {
@@ -83,7 +79,7 @@ test.describe("Products Page Tests", () => {
       },
     },
     {
-      // id: "PR006",
+      id: "PR006",
       description: "Clicking Home while offline",
       inputData: "Set page offline, then click 'Home' link",
       run: async (page) => {
@@ -95,7 +91,7 @@ test.describe("Products Page Tests", () => {
       },
     },
     {
-      // id: "PR007",
+      id: "PR007",
       description: "Product list has ARIA label for accessibility",
       inputData: "Check aria-label attribute for each product element",
       run: async (page) => {
@@ -110,7 +106,7 @@ test.describe("Products Page Tests", () => {
       },
     },
     {
-      // id: "PR008",
+      id: "PR008",
       description: "'Products' label does not trigger action",
       inputData: "Click breadcrumb text 'Products', expect no navigation",
       run: async (page) => {
@@ -122,7 +118,7 @@ test.describe("Products Page Tests", () => {
       },
     },
     {
-      // id: "PR009",
+      id: "PR009",
       description: "No unexpected popup on Home hover",
       inputData: "Hover 'Home' breadcrumb and check for modal/popup/tooltip",
       run: async (page) => {
@@ -134,7 +130,7 @@ test.describe("Products Page Tests", () => {
       },
     },
     {
-      // id: "PR010",
+      id: "PR010",
       description: "Product list displays at least one product",
       inputData: "Open /products page and count product elements",
       run: async (page) => {
@@ -145,7 +141,7 @@ test.describe("Products Page Tests", () => {
     },
 
     {
-      // id: "PR011",
+      id: "PR011",
       description: "Each product shows name and price correctly",
       inputData:
         "Open /products and check product name 'BELLA + CANVAS' and price format",
@@ -170,7 +166,7 @@ test.describe("Products Page Tests", () => {
       },
     },
     {
-      // id: "PR012",
+      id: "PR012",
       description: "Click product name navigates to detail page",
       inputData: "Click first product name and check detail page title",
       run: async (page) => {
@@ -195,7 +191,7 @@ test.describe("Products Page Tests", () => {
       },
     },
     {
-      // id: "PR013",
+      id: "PR013",
       description: "Product image loads correctly",
       inputData: "Check first product image visibility and load status",
       run: async (page) => {
@@ -215,7 +211,7 @@ test.describe("Products Page Tests", () => {
       },
     },
     {
-      // id: "PR014",
+      id: "PR014",
       description: "Price format is correct (e.g. From: $10.0)",
       inputData: "Check text content of first product price range",
       run: async (page) => {
@@ -230,7 +226,7 @@ test.describe("Products Page Tests", () => {
       },
     },
     {
-      // id: "PR015",
+      id: "PR015",
       description: "Hover on product enlarges card",
       inputData: "Hover over product card with 'BELLA + CANVAS'",
       run: async (page) => {
@@ -247,7 +243,7 @@ test.describe("Products Page Tests", () => {
       },
     },
     {
-      // id: "PR016",
+      id: "PR016",
       description: "Products are displayed in a grid layout",
       inputData: "Check grid display style and column count on /products",
       run: async (page) => {
@@ -273,7 +269,7 @@ test.describe("Products Page Tests", () => {
       },
     },
     {
-      // id: "PR017",
+      id: "PR017",
       description: "No broken product links",
       inputData:
         "Loop all product links and validate href is not 'undefined' or 'null'",
@@ -288,7 +284,7 @@ test.describe("Products Page Tests", () => {
       },
     },
     {
-      // id: "PR018",
+      id: "PR018",
       description: "No products displayed when list is empty",
       inputData: "Open /products?test=empty and expect zero ProductElement",
       run: async (page) => {
@@ -298,7 +294,7 @@ test.describe("Products Page Tests", () => {
       },
     },
     {
-      // id: "PR019",
+      id: "PR019",
       description: "Product page is responsive on mobile",
       inputData: "Set viewport to 375x812 and open /products",
       run: async (page) => {
@@ -309,7 +305,7 @@ test.describe("Products Page Tests", () => {
       },
     },
     {
-      // id: "PR020",
+      id: "PR020",
       description: "'Products' label has correct font size and color",
       inputData: "Check computed style of breadcrumb label 'Products'",
       run: async (page) => {
@@ -326,7 +322,7 @@ test.describe("Products Page Tests", () => {
 
     // Passed
     {
-      // id: "PR021",
+      id: "PR021",
       description: "Hover on Home does not affect unrelated elements",
       inputData:
         "Hover on Home link and check bounding box of unrelated product",
@@ -345,7 +341,7 @@ test.describe("Products Page Tests", () => {
     },
 
     {
-      // id: "PR022",
+      id: "PR022",
       description: "Product image has alt attribute",
       inputData: "Check 'alt' attribute for all product images",
       run: async (page) => {
@@ -360,7 +356,7 @@ test.describe("Products Page Tests", () => {
     },
 
     {
-      // id: "PR023",
+      id: "PR023",
       description: "Keyboard navigation works on product cards",
       inputData:
         "Press Tab 10 times and check if a product card receives focus",
@@ -394,7 +390,7 @@ test.describe("Products Page Tests", () => {
     },
 
     {
-      // id: "PR024",
+      id: "PR024",
       description: "Product cards are focusable via keyboard (tabindex)",
       inputData: "Check tabindex attribute for each product card",
       run: async (page) => {
@@ -408,7 +404,7 @@ test.describe("Products Page Tests", () => {
     },
 
     {
-      // id: "PR025",
+      id: "PR025",
       description: "Product grid handles window resize properly",
       inputData:
         "Resize window from desktop to tablet and compare gridTemplateColumns",
@@ -421,7 +417,7 @@ test.describe("Products Page Tests", () => {
         console.log("ProductGrid elements count:", gridsCount);
 
         if (gridsCount === 0) {
-          throw new Error("Không tìm thấy phần tử ProductGrid trên trang");
+          throw new Error("ProductGrid element not found on the page");
         }
 
         const getGridColumns = async () => {
@@ -445,7 +441,7 @@ test.describe("Products Page Tests", () => {
     },
 
     {
-      // id: "PR026",
+      id: "PR026",
       description: "Broken image fallback is handled",
       inputData: "Open /products?test=broken-image and validate image loads",
       run: async (page) => {
@@ -458,7 +454,7 @@ test.describe("Products Page Tests", () => {
     },
 
     {
-      // id: "PR027",
+      id: "PR027",
       description:
         "'No products found' message appears when search yields no results",
       inputData:
@@ -476,7 +472,7 @@ test.describe("Products Page Tests", () => {
   ];
 
   testCases.forEach((testCase, index) => {
-    test(`${index + 1} - ${testCase.description}`, async ({ page }) => {
+    test(`${testCase.id} - ${testCase.description}`, async ({ page }) => {
       let actual = "";
       let status = "Fail";
       let testResult = {};
@@ -491,33 +487,17 @@ test.describe("Products Page Tests", () => {
 
       try {
         testResult = {
-          id: `${index + 1}`,
+          id: testCase.id,
           description: testCase.description,
           input: testCase.inputData || BASE_URL + "/products",
           expected: "Should behave as described",
           actual,
           status,
         };
-        allTestResults.push(testResult); // Thêm vào mảng tạm thời
+        allTestResults.push(testResult); // Add to temporary array
       } catch (err) {
-        console.error("Lỗi khi chuẩn bị kết quả:", err);
+        console.error("Error preparing result:", err);
       }
     });
   });
-
-  // test.afterAll(async () => {
-  //   try {
-  //     // Ghi tất cả kết quả vào Excel sau khi tất cả test case hoàn thành
-  //     for (const result of allTestResults) {
-  //       await logTestResult(result);
-  //     }
-
-  //     // Chỉ lưu và mở Excel sau khi tất cả kết quả được ghi
-  //     await saveExcel();
-  //     await openExcelAfterSave();
-  //     console.log("Đã lưu kết quả vào Excel thành công!");
-  //   } catch (error) {
-  //     console.error("Lỗi khi lưu file Excel:", error);
-  //   }
-  // });
 });

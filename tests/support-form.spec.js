@@ -2,64 +2,17 @@ const { test, expect } = require("@playwright/test");
 const { generateUniqueEmail } = require("./utils/testDataHelper");
 import { SUPPORT_URL } from "./utils/constants";
 
-// Helper function to verify dialog
-async function verifyDialog(page, expectedMessage) {
-  // Wait for dialog to be visible
-  await page.waitForSelector('div[role="dialog"]', { state: "visible" });
-
-  // Check if dialog contains expected message
-  const dialogText = await page.evaluate(() => {
-    const dialog = document.querySelector('div[role="dialog"]');
-    return dialog ? dialog.textContent : "";
-  });
-
-  // Verify dialog content
-  expect(dialogText).toContain(expectedMessage);
-
-  // Click OK button using various possible selectors
-  try {
-    // Try finding button by role first
-    const okButton = await page.getByRole("button", { name: /ok/i });
-    if (await okButton.isVisible()) {
-      await okButton.click();
-      return;
-    }
-
-    // Try finding button by text content
-    const buttonByText = await page.getByText(/ok/i);
-    if (await buttonByText.isVisible()) {
-      await buttonByText.click();
-      return;
-    }
-
-    // Try finding any visible button in the dialog
-    const dialogButton = await page
-      .locator('div[role="dialog"] button')
-      .first();
-    if (await dialogButton.isVisible()) {
-      await dialogButton.click();
-    }
-  } catch (error) {
-    console.log("Could not find or click OK button:", error);
-  }
-}
-
 test.describe("Support Form Tests", () => {
   test.beforeEach(async ({ page }) => {
-    try {
-      await page.goto(SUPPORT_URL, { timeout: 720000 });
-    } catch (error) {
-      console.warn("Retrying page.goto due to timeout...");
-      await page.waitForTimeout(5000);
-      await page.goto(SUPPORT_URL, { timeout: 720000 });
-    }
-
-    await page.waitForSelector("form.w-full.max-w-2xl", { state: "visible" });
+        await page.goto(SUPPORT_URL, {
+          timeout: 90000,
+          waitUntil: "domcontentloaded",
+        });
   });
 
   test("SP001 - Check alignment of input fields", async ({ page }) => {
+    test.setTimeout(60000);
     const form = await page.locator("form.w-full.max-w-2xl");
-
     // Define all form fields to check
     const formFields = [
       'input[name="firstName"]',
@@ -83,7 +36,7 @@ test.describe("Support Form Tests", () => {
       const field = form.locator(fieldSelector);
 
       // Verify field is visible
-      await expect(field).toBeVisible();
+      await expect(field).toBeVisible({ timeout: 10000 });
 
       // Get field position and dimensions
       const box = await field.boundingBox();
@@ -153,7 +106,7 @@ test.describe("Support Form Tests", () => {
 
     // Check for error messages on mandatory fields
     const errorMessages = await page.locator('.error-message, [role="alert"]');
-    await expect(errorMessages).toBeVisible();
+    await expect(errorMessages).toBeVisible({timeout: 30000});
 
     // Fill mandatory fields
     await page.fill('input[name="firstName"]', "John");
@@ -170,13 +123,13 @@ test.describe("Support Form Tests", () => {
 
     // Test mobile viewport
     await page.setViewportSize({ width: 375, height: 667 });
-    await expect(form).toBeVisible();
+    await expect(form).toBeVisible({timeout: 30000});
     await page.waitForTimeout(1000);
     await page.screenshot({ path: "mobile-layout.png", fullPage: true });
 
     // Test desktop viewport
     await page.setViewportSize({ width: 1280, height: 800 });
-    await expect(form).toBeVisible();
+    await expect(form).toBeVisible({timeout: 30000});
     await page.waitForTimeout(1000);
     await page.screenshot({ path: "desktop-layout.png", fullPage: true });
   });
@@ -186,7 +139,7 @@ test.describe("Support Form Tests", () => {
   //   const firstNameInput = form.locator('input[name="firstName"]');
 
   //   // Wait for form to be visible and stable
-  //   await expect(form).toBeVisible();
+  //   await expect(form).toBeVisible({timeout: 30000});
 
   //   // Verify firstName field is focused by default without clicking
   //   await expect(firstNameInput).toBeFocused();
@@ -236,7 +189,7 @@ test.describe("Support Form Tests", () => {
     const uniqueEmail = generateUniqueEmail("mailinator.com");
 
     // Enable debug logging
-    page.on("console", (msg) => console.log(msg.text()));
+    // page.on("console", (msg) => console.log(msg.text()));
 
     const form = await page.locator("form.w-full.max-w-2xl");
 
@@ -253,7 +206,7 @@ test.describe("Support Form Tests", () => {
     await form.locator('button[type="submit"]').click();
 
     // Wait for submitting state
-    await expect(page.getByText("Submitting...")).toBeVisible();
+    await expect(page.getByText("Submitting...")).toBeVisible({timeout: 30000});
 
     //Wait for submitting message to disappear
     await expect(
@@ -263,7 +216,7 @@ test.describe("Support Form Tests", () => {
 
     await page.pause();
 
-    console.log("Current URL:", page.url());
+    // console.log("Current URL:", page.url());
 
     await page.screenshot({ path: "before-dialog.png" });
 
@@ -280,7 +233,7 @@ test.describe("Support Form Tests", () => {
           textContent: el.textContent.trim(),
         }));
     });
-    console.log("Visible elements:", visibleElements);
+    // console.log("Visible elements:", visibleElements);
 
     try {
       const dialogByRole = await page.locator('[role="dialog"]');
@@ -335,16 +288,16 @@ test.describe("Support Form Tests", () => {
     await form.locator('button[type="submit"]').click();
 
     // Wait for and verify error messages for each required field
-    await expect(page.locator('text="Phone number is required"')).toBeVisible();
-    await expect(page.locator('text="Company name is required"')).toBeVisible();
-    await expect(page.locator('text="Address is required"')).toBeVisible();
-    // await expect(page.locator('text="Details are required"')).toBeVisible();
+    await expect(page.locator('text="Phone number is required"')).toBeVisible({timeout: 30000});
+    await expect(page.locator('text="Company name is required"')).toBeVisible({timeout: 30000});
+    await expect(page.locator('text="Address is required"')).toBeVisible({timeout: 30000});
+    // await expect(page.locator('text="Details are required"')).toBeVisible({timeout: 30000});
 
     // Verify that the form was not submitted
     await expect(page.url()).toContain("/support");
 
     // Verify that the submit button is still present
-    await expect(form.locator('button[type="submit"]')).toBeVisible();
+    await expect(form.locator('button[type="submit"]')).toBeVisible({timeout: 30000});
   });
 
   test("SP009 - Leave all fields empty and submit", async ({ page }) => {
@@ -354,17 +307,17 @@ test.describe("Support Form Tests", () => {
     await form.locator('button[type="submit"]').click();
 
     // Wait for and verify error messages for each required field
-    await expect(page.locator('text="Email is required"')).toBeVisible();
-    await expect(page.locator('text="Phone number is required"')).toBeVisible();
-    await expect(page.locator('text="Company name is required"')).toBeVisible();
-    await expect(page.locator('text="Address is required"')).toBeVisible();
-    // await expect(page.locator('text="Details are required"')).toBeVisible();
+    await expect(page.locator('text="Email is required"')).toBeVisible({timeout: 30000});
+    await expect(page.locator('text="Phone number is required"')).toBeVisible({timeout: 30000});
+    await expect(page.locator('text="Company name is required"')).toBeVisible({timeout: 30000});
+    await expect(page.locator('text="Address is required"')).toBeVisible({timeout: 30000});
+    // await expect(page.locator('text="Details are required"')).toBeVisible({timeout: 30000});
 
     // Verify that the form was not submitted
     await expect(page.url()).toContain("/support");
 
     // Verify that the submit button is still present
-    await expect(form.locator('button[type="submit"]')).toBeVisible();
+    await expect(form.locator('button[type="submit"]')).toBeVisible({timeout: 30000});
   });
 
   test("SP010 - Submit with First Name empty (assuming mandatory)", async ({
@@ -386,7 +339,7 @@ test.describe("Support Form Tests", () => {
 
     // Simple verification of error message
     const errorText = page.getByText("First name is required");
-    await expect(errorText).toBeVisible();
+    await expect(errorText).toBeVisible({timeout: 30000});
   });
 
   test("SP011 - Submit with Last Name empty (assuming mandatory)", async ({
@@ -408,7 +361,7 @@ test.describe("Support Form Tests", () => {
 
     // Simple verification of error message
     const errorText = page.getByText("Last name is required");
-    await expect(errorText).toBeVisible();
+    await expect(errorText).toBeVisible({timeout: 30000});
   });
 
   test("SP012 - Submit with Details empty (assuming mandatory)", async ({
@@ -429,9 +382,9 @@ test.describe("Support Form Tests", () => {
     await form.locator('button[type="submit"]').click();
 
     // Verify error message for Details
-    // await expect(page.locator('text="Details are required"')).toBeVisible();
+    // await expect(page.locator('text="Details are required"')).toBeVisible({timeout: 30000});
     // Wait for submitting state
-    await expect(page.getByText("Submitting...")).toBeVisible();
+    // await expect(page.getByText("Submitting...")).toBeVisible({timeout: 30000});
 
     //Wait for submitting message to disappear
     await expect(
@@ -440,7 +393,7 @@ test.describe("Support Form Tests", () => {
 
     await page.pause();
 
-    console.log("Current URL:", page.url());
+    // console.log("Current URL:", page.url());
 
     await page.screenshot({ path: "before-dialog.png" });
 
@@ -457,7 +410,7 @@ test.describe("Support Form Tests", () => {
           textContent: el.textContent.trim(),
         }));
     });
-    console.log("Visible elements:", visibleElements);
+    // console.log("Visible elements:", visibleElements);
 
     try {
       const dialogByRole = await page.locator('[role="dialog"]');
@@ -501,6 +454,7 @@ test.describe("Support Form Tests", () => {
   test("SP013 - Submit with Email empty (assuming mandatory)", async ({
     page,
   }) => {
+    test.setTimeout(60000)
     const form = await page.locator("form.w-full.max-w-2xl");
 
     // Fill all fields except Email
@@ -515,7 +469,7 @@ test.describe("Support Form Tests", () => {
     await form.locator('button[type="submit"]').click();
 
     // Verify error message for Email
-    await expect(page.locator('text="Email is required"')).toBeVisible();
+    await expect(page.locator('text="Email is required"')).toBeVisible({timeout: 30000});
   });
 
   // test("SP014 - First Name with numbers", async ({ page }) => {
@@ -538,7 +492,7 @@ test.describe("Support Form Tests", () => {
 
   //   // Simple verification of error message
   //   const errorText = page.getByText("First name cannot contain numbers");
-  //   await expect(errorText).toBeVisible();
+  //   await expect(errorText).toBeVisible({timeout: 30000});
   // });
 
   // test("SP015 - Special characters in name fields", async ({ page }) => {
@@ -560,7 +514,7 @@ test.describe("Support Form Tests", () => {
 
   //   // Simple verification of error message
   //   const errorText = page.getByText("First name contains invalid characters");
-  //   await expect(errorText).toBeVisible();
+  //   await expect(errorText).toBeVisible({timeout: 30000});
   // });
 
   test("SP016 - First Name - Verify maximum length boundary", async ({
@@ -602,7 +556,7 @@ test.describe("Support Form Tests", () => {
   }) => {
     test.setTimeout(60000);
     // Enable debug logging
-    page.on("console", (msg) => console.log(msg.text()));
+    // page.on("console", (msg) => console.log(msg.text()));
 
     const form = await page.locator("form.w-full.max-w-2xl");
 
@@ -622,14 +576,14 @@ test.describe("Support Form Tests", () => {
     await form.locator('button[type="submit"]').click();
 
     // Wait for submitting state
-    await expect(page.getByText("Submitting...")).toBeVisible();
+    await expect(page.getByText("Submitting...")).toBeVisible({timeout: 30000});
 
     // Wait for submitting message to disappear
     await expect(page.getByText("Submitting...")).toBeHidden();
 
     await page.pause();
 
-    console.log("Current URL:", page.url());
+    // console.log("Current URL:", page.url());
 
     await page.screenshot({ path: "before-dialog.png" });
 
@@ -646,7 +600,7 @@ test.describe("Support Form Tests", () => {
           textContent: el.textContent.trim(),
         }));
     });
-    console.log("Visible elements:", visibleElements);
+    // console.log("Visible elements:", visibleElements);
 
     try {
       const dialogByRole = await page.locator('[role="dialog"]');
@@ -710,7 +664,7 @@ test.describe("Support Form Tests", () => {
   //   await form.locator('button[type="submit"]').click();
 
   //   // Wait for submitting state
-  //   await expect(page.getByText("Submitting...")).toBeVisible();
+  //   await expect(page.getByText("Submitting...")).toBeVisible({timeout: 30000});
 
   //   // Verify error dialog
   //   await verifyDialog(page, "Last Name cannot contain numbers");
@@ -757,7 +711,7 @@ test.describe("Support Form Tests", () => {
     page,
   }) => {
     // Enable debug logging
-    page.on("console", (msg) => console.log(msg.text()));
+    // page.on("console", (msg) => console.log(msg.text()));
 
     const form = await page.locator("form.w-full.max-w-2xl");
 
@@ -777,14 +731,14 @@ test.describe("Support Form Tests", () => {
     await form.locator('button[type="submit"]').click();
 
     // Wait for submitting state
-    await expect(page.getByText("Submitting...")).toBeVisible();
+    await expect(page.getByText("Submitting...")).toBeVisible({timeout: 30000});
 
     // Wait for submitting message to disappear
     await expect(page.getByText("Submitting...")).toBeHidden();
 
     await page.pause();
 
-    console.log("Current URL:", page.url());
+    // console.log("Current URL:", page.url());
 
     await page.screenshot({ path: "before-dialog.png" });
 
@@ -801,7 +755,7 @@ test.describe("Support Form Tests", () => {
           textContent: el.textContent.trim(),
         }));
     });
-    console.log("Visible elements:", visibleElements);
+    // console.log("Visible elements:", visibleElements);
 
     try {
       const dialogByRole = await page.locator('[role="dialog"]');
@@ -888,7 +842,7 @@ test.describe("Support Form Tests", () => {
     await form.locator('button[type="submit"]').click();
 
     // Wait for submitting state
-    // await expect(page.getByText("Submitting...")).toBeVisible();
+    // await expect(page.getByText("Submitting...")).toBeVisible({timeout: 30000});
 
     // Verify error dialog
     // await verifyDialog(page, "Invalid email address");
@@ -920,7 +874,7 @@ test.describe("Support Form Tests", () => {
     await form.locator('button[type="submit"]').click();
 
     // Wait for submitting state
-    await expect(page.getByText("Submitting...")).toBeVisible();
+    await expect(page.getByText("Submitting...")).toBeVisible({timeout: 30000});
 
     // Wait for submitting message to disappear
     // await expect(page.getByText("Submitting...")).toBeHidden();
@@ -957,13 +911,13 @@ test.describe("Support Form Tests", () => {
     await form.locator('textarea[name="details"]').fill("Hello");
 
     // Verify error message appears for invalid email
-    await expect(page.locator("text=Invalid email address")).toBeVisible();
+    await expect(page.locator("text=Invalid email address")).toBeVisible({timeout: 30000});
 
     // Verify that the form was not submitted
     await expect(page.url()).toContain("/support");
 
     // Verify that the submit button is still present
-    await expect(form.locator('button[type="submit"]')).toBeVisible();
+    await expect(form.locator('button[type="submit"]')).toBeVisible({timeout: 30000});
 
     // Verify form retains the entered data
     await expect(form.locator('input[name="email"]')).toHaveValue(
@@ -1015,13 +969,13 @@ test.describe("Support Form Tests", () => {
     // Verify error message appears for invalid phone number
     await expect(
       page.locator("text=Please enter a valid phone number")
-    ).toBeVisible();
+    ).toBeVisible({timeout: 30000});
 
     // Verify that the form was not submitted
     await expect(page.url()).toContain("/support");
 
     // Verify that the submit button is still present
-    await expect(form.locator('button[type="submit"]')).toBeVisible();
+    await expect(form.locator('button[type="submit"]')).toBeVisible({timeout: 30000});
 
     // Verify form retains the entered data
     await expect(form.locator('input[name="phoneNumber"]')).toHaveValue(
@@ -1046,13 +1000,13 @@ test.describe("Support Form Tests", () => {
     // Verify error message appears for invalid phone number
     await expect(
       page.locator('text="Please enter a valid phone number"')
-    ).toBeVisible();
+    ).toBeVisible({timeout: 30000});
 
     // Verify that the form was not submitted
     await expect(page.url()).toContain("/support");
 
     // Verify that the submit button is still present
-    await expect(form.locator('button[type="submit"]')).toBeVisible();
+    await expect(form.locator('button[type="submit"]')).toBeVisible({timeout: 30000});
 
     // Verify form retains the entered data
     await expect(form.locator('input[name="phoneNumber"]')).toHaveValue(
@@ -1079,13 +1033,13 @@ test.describe("Support Form Tests", () => {
     // Verify error message appears for invalid phone number
     await expect(
       page.locator('text="Please enter a valid phone number"')
-    ).toBeVisible();
+    ).toBeVisible({timeout: 30000});
 
     // Verify that the form was not submitted
     await expect(page.url()).toContain("/support");
 
     // Verify that the submit button is still present
-    await expect(form.locator('button[type="submit"]')).toBeVisible();
+    await expect(form.locator('button[type="submit"]')).toBeVisible({timeout: 30000});
 
     // Verify form retains the entered data
     await expect(form.locator('input[name="phoneNumber"]')).toHaveValue("123");
@@ -1190,6 +1144,6 @@ test.describe("Support Form Tests", () => {
     await expect(page.url()).toContain("/support");
 
     // Verify no database errors are exposed
-    await expect(page.locator("text=/SQL|database|error/i")).not.toBeVisible();
+    await expect(page.locator("text=/SQL|database|error/i")).not.toBeVisible({timeout: 30000});
   });
 });

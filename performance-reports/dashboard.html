@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Performance Dashboard</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body { font-family: Arial, sans-serif; }
+    h1 { font-size: 2.5em; }
+    table { border-collapse: collapse; margin-top: 30px; }
+    th, td { border: 1px solid #ccc; padding: 6px 12px; text-align: center; }
+    th { background: #f0f0f0; }
+    .pass { background: #d4edda; color: #155724; }
+    .fail { background: #f8d7da; color: #721c24; }
+  </style>
+</head>
+<body>
+  <h1>Performance Metrics Dashboard</h1>
+  <canvas id="metricsChart" width="1100" height="400"></canvas>
+  <div id="thresholdsInfo"></div>
+  <div id="tableContainer"></div>
+  <script>
+    // Recommended thresholds (should be synchronized with the test file)
+    const THRESHOLDS = {
+      load: 5000,
+      domContentLoaded: 3000,
+      firstContentfulPaint: 2000,
+      largestContentfulPaint: 2500,
+      cumulativeLayoutShift: 0.1,
+      totalBlockingTime: 200
+    };
+    const UNITS = {
+      load: 'ms',
+      domContentLoaded: 'ms',
+      firstContentfulPaint: 'ms',
+      largestContentfulPaint: 'ms',
+      cumulativeLayoutShift: '',
+      totalBlockingTime: 'ms'
+    };
+    fetch('performance-results.json')
+      .then(res => res.json())
+      .then(data => {
+        const labels = data.map(r => r.timestamp);
+        const metricsKeys = [
+          'load', 'domContentLoaded', 'firstContentfulPaint',
+          'largestContentfulPaint', 'cumulativeLayoutShift', 'totalBlockingTime'
+        ];
+        const colors = ['blue', 'green', 'orange', 'red', 'purple', 'brown'];
+        // Create datasets and highlight points that exceed the threshold
+        const datasets = metricsKeys.map((key, i) => {
+          return {
+            label: key + (UNITS[key] ? ' (' + UNITS[key] + ')' : ''),
+            data: data.map(r => r.metrics[key]),
+            borderColor: colors[i],
+            backgroundColor: data.map(r => (r.metrics[key] > THRESHOLDS[key]) ? 'rgba(255,0,0,0.7)' : colors[i]),
+            pointRadius: 5,
+            pointBackgroundColor: data.map(r => (r.metrics[key] > THRESHOLDS[key]) ? 'red' : colors[i]),
+            fill: false,
+            tension: 0.2
+          };
+        });
+        // Add threshold lines for each metric
+        metricsKeys.forEach((key, i) => {
+          datasets.push({
+            label: key + ' threshold',
+            data: Array(data.length).fill(THRESHOLDS[key]),
+            borderColor: colors[i],
+            borderDash: [8, 6],
+            pointRadius: 0,
+            fill: false,
+            borderWidth: 1,
+            tension: 0.2
+          });
+        });
+        new Chart(document.getElementById('metricsChart'), {
+          type: 'line',
+          data: { labels, datasets },
+          options: {
+            responsive: false,
+            plugins: {
+              legend: { display: true, position: 'top' },
+              tooltip: {
+                callbacks: {
+                  label: function(context) {
+                    let label = context.dataset.label || '';
+                    if (label.includes('threshold')) return label + ': ' + context.parsed.y + (UNITS[label.split(' ')[0]] || '');
+                    return label + ': ' + context.parsed.y + (UNITS[label.split(' ')[0]] || '');
+                  }
+                }
+              }
+            },
+            scales: {
+              y: { beginAtZero: true }
+            }
+          }
+        });
+        // Display PASS/FAIL table
+        let tableHtml = '<table><tr><th>Timestamp</th>';
+        metricsKeys.forEach(key => {
+          tableHtml += `<th>${key} (${UNITS[key]})</th><th>Status</th>`;
+        });
+        tableHtml += '</tr>';
+        data.forEach(r => {
+          tableHtml += `<tr><td>${r.timestamp}</td>`;
+          metricsKeys.forEach(key => {
+            const value = r.metrics[key];
+            const pass = value <= THRESHOLDS[key];
+            tableHtml += `<td>${value !== null && value !== undefined ? value : '-'}</td>`;
+            tableHtml += `<td class="${pass ? 'pass' : 'fail'}">${pass ? 'PASS' : 'FAIL'}</td>`;
+          });
+          tableHtml += '</tr>';
+        });
+        tableHtml += '</table>';
+        document.getElementById('tableContainer').innerHTML = tableHtml;
+        // Display threshold info
+        let thresholdsInfo = '<b>Thresholds:</b> ';
+        thresholdsInfo += metricsKeys.map(key => `${key}: ${THRESHOLDS[key]}${UNITS[key]}`).join(' | ');
+        document.getElementById('thresholdsInfo').innerHTML = thresholdsInfo;
+      });
+  </script>
+</body>
+</html> 
