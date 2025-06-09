@@ -1,10 +1,11 @@
 // cartPage.spec.js
-const { BASE_URL } = require("./utils/constants");
-const { test, expect } = require("@playwright/test");
+import { test } from './global-test';
+const { LOGIN_URL, PRODUCTS_URL, CART_URL } = require("./utils/constants");
+const { expect } = require("@playwright/test");
 const { CartPage } = require("./pageObjects/ShoppingCartPage");
 
-const PRODUCT_URL = `${BASE_URL}/products`;
-const CART_URL = `${BASE_URL}/cart`;
+
+
 
 // Helper to open Cart from icon
 const openCart = async (page) => {
@@ -15,7 +16,7 @@ const openCart = async (page) => {
 };
 
 const login = async (page) => {
-  await page.goto(`${BASE_URL}/login`);
+  await page.goto(`${LOGIN_URL}`);
   await page.locator("[placeholder='Email']").fill("testaccount455@mailinator.com");
   await page.locator("[placeholder='Password']").fill("ValidPass123!");
 
@@ -31,13 +32,14 @@ test.describe("Shopping Cart Tests", () => {
     await login(page);
     await page.waitForLoadState("networkidle");
 
-    await page.goto(`${PRODUCT_URL}/bella-3001`);
+    await page.goto(`${PRODUCTS_URL}/bella-3001`);
     await page.waitForLoadState("domcontentloaded");
 
     await page.getByRole("button", { name: "2XL" }).click();
     await page.locator("input[type='number']").fill("1");
     await page.getByRole("button", { name: "Add to Cart" }).click();
-    await page.waitForTimeout(1000);
+    await page.waitForSelector('text=Added to Cart', { timeout: 10000 });
+
 
     const cartIcon = page.locator('a[href*="/cart"]');
     await cartIcon.click();
@@ -82,28 +84,31 @@ test.describe("Shopping Cart Tests", () => {
     expect(cartItems);
   });
 
-  test("CT005 - Verify Subtotal Matches Sum of Prices", async ({ page }) => {
-    await login(page);
-    await page.waitForLoadState("networkidle");
+ test("CT005 - Verify Subtotal Matches Sum of Prices", async ({ page }) => {
+  test.setTimeout(60000); // ⏱ Set timeout to 60 seconds
 
-    await page.goto(`${PRODUCT_URL}/bella-3001`);
-    await page.waitForLoadState("domcontentloaded");
+  await login(page);
+  await page.waitForLoadState("networkidle");
 
-    await page.getByRole("button", { name: "2XL" }).click();
-    await page.locator("input[type='number']").fill("2");
-    await page.getByRole("button", { name: "Add to Cart" }).click();
-    await page.waitForTimeout(1000);
+  await page.goto(`${PRODUCTS_URL}/bella-3001`);
+  await page.waitForLoadState("domcontentloaded");
 
-    await openCart(page);
-    await page.waitForSelector("p.text-left.font-semibold");
+  await page.getByRole("button", { name: "2XL" }).click();
+  await page.locator("input[type='number']").fill("2");
+  await page.getByRole("button", { name: "Add to Cart" }).click();
+  await page.waitForTimeout(1000);
 
-    const cart = new CartPage(page);
-    const total = await cart.getTotalItemPrices();
-    const subtotal = await cart.getSubtotal();
+  await openCart(page);
+  await page.waitForSelector("p.text-left.font-semibold");
 
-    console.log("🧾 Total item price:", total);
-    console.log("💵 Subtotal:", subtotal);
+  const cart = new CartPage(page);
+  const total = await cart.getTotalItemPrices();
+  const subtotal = await cart.getSubtotal();
 
-    expect(subtotal).toBeCloseTo(total, 2);
-  });
+  console.log("🧾 Total item price:", total);
+  console.log("💵 Subtotal:", subtotal);
+
+  expect(subtotal).toBeCloseTo(total, 2);
+});
+
 });

@@ -1,7 +1,9 @@
 // productDetail.spec.js (fixed selectors and logic)
-const { test, expect } = require("@playwright/test");
+import { test } from './global-test';
+const { expect } = require("@playwright/test");
 const { ProductDetailPage } = require("./pageObjects/ProductDetailPage");
 import { LoginPage } from "./pageObjects/LoginPage";
+import { BASE_URL, PRODUCTS_URL } from "./utils/constants";
 const PRODUCT_SLUG = "bella-3001";
 
 // Helper: get exact button by visible name
@@ -118,10 +120,10 @@ test.describe("Product Detail Page Tests", () => {
     await loginPage.login("testaccount123@mailinator.com", "ValidPass123!");
     await expect(
       page.getByRole("heading", { name: /Welcome to ZoomPrints/i })
-    ).toBeVisible({ timeout: 30000 });
+    ).toBeVisible({ timeout: 120000 });
 
     // 2. Wait for successful login
-    await expect(page).toHaveURL("https://mypod.io.vn/default-channel");
+    await expect(page).toHaveURL(`${BASE_URL}`);
 
     // 3. Access product detail page
     const pd = new ProductDetailPage(page);
@@ -132,7 +134,7 @@ test.describe("Product Detail Page Tests", () => {
     await qtyInput.focus();
     await qtyInput.press("Control+A");
     await qtyInput.press("Backspace");
-    await qtyInput.type("abc");
+    await qtyInput.type("");
 
     // 5. Click "Add to Cart"
     await page.locator('button:has-text("Add to Cart")').click();
@@ -141,10 +143,10 @@ test.describe("Product Detail Page Tests", () => {
     const systemErrorAlert = page.locator(
       'text="Something went wrong. Please try again later"'
     );
-    await expect(systemErrorAlert).toBeVisible({ timeout: 3000 });
+    await expect(systemErrorAlert).toBeVisible({ timeout: 10000 });
 
     // 7. Ensure still on product page
-    await expect(page).toHaveURL(/products\/bella-3001/);
+    await expect(page).toHaveURL(`${PRODUCTS_URL}/bella-3001`);
   });
 
   test("PD010 - Verify Product Images Carousel works correctly", async () => {

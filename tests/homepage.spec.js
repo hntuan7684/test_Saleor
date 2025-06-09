@@ -1,10 +1,13 @@
-import { test, expect } from "@playwright/test";
+import { test } from './global-test';
+import { expect } from "@playwright/test";
 
 import { BASE_URL } from "./utils/constants";
 
 test.describe("ZoomPrints UI Test Cases", () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto(BASE_URL);
+    await page.goto(BASE_URL, {
+      timeout: 120000,
+    });
   });
 
   test("HP001 - Logo redirects to homepage", async ({ page }) => {

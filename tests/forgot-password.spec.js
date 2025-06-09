@@ -1,4 +1,5 @@
-import { test, expect } from "@playwright/test";
+import { test } from './global-test';
+import { expect } from "@playwright/test";
 import { ForgotPasswordPage } from "./pageObjects/ForgotPasswordPage.js";
 import { generateUniqueEmail } from "./utils/testDataHelper.js";
 import { BASE_URL, MAILINATOR_URL } from "./utils/constants.js";

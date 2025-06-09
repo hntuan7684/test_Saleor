@@ -1,4 +1,5 @@
-import { test, expect } from "@playwright/test";
+import { test } from './global-test';
+import { expect } from "@playwright/test";
 import { PRODUCTS_URL } from "./utils/constants";
 import { CART_URL } from "./utils/constants";
 import { LOGIN_URL } from "./utils/constants";
@@ -40,7 +41,7 @@ test("Login, add product to card, remove product from cart", async ({
   const itemCount = match ? Number(match[0]) : 0;
   expect(itemCount).toBeGreaterThan(0);
 
-  console.log("Add product to cart successfully");
+  // console.log("Add product to cart successfully");
 
   //Step 5: Access the cart
   await page.click("a[href='/default-channel/cart']");
@@ -49,7 +50,7 @@ test("Login, add product to card, remove product from cart", async ({
   //Step 6: Remove product from cart
   await page.locator("button >> text=Delete").first().click();
 
-  console.log("Removed product from cart successfully");
+  // console.log("Removed product from cart successfully");
 });
 
 test("Login, add product to cart, check total price, checkout", async ({
@@ -77,7 +78,7 @@ test("Login, add product to cart, check total price, checkout", async ({
   const totalValue = parseFloat(match[1]);
   expect(totalValue).toBeGreaterThan(0);
 
-  console.log(`Total price: $${totalValue}`);
+  // console.log(`Total price: $${totalValue}`);
 
   // Click Checkout button
   const checkoutBtn = page.locator("text=/.*Checkout.*/i");
@@ -98,7 +99,7 @@ test("Login, add product to cart, check total price, checkout", async ({
     .locator('[data-testid="totalOrderPrice"]')
     .nth(1)
     .textContent();
-  console.log(`Total price: ${totalPrice}`);
+  // console.log(`Total price: ${totalPrice}`);
 
   await page.click('button:has-text("Place Order")');
 

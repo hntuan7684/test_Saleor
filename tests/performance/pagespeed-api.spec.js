@@ -1,13 +1,14 @@
 const { test, expect } = require('@playwright/test');
 const psi = require('psi');
 import { LoginPage } from "../pageObjects/LoginPage";
+import { BASE_URL, LOGIN_URL, PRODUCTS_URL, SERVICE_URL, SUPPORT_URL } from "../utils/constants";
 require('dotenv').config();
 
 test.describe('PS001 - Home Page Performance Tests', () => {
-  const baseUrl = 'https://mypod.io.vn/default-channel';
+  // const baseUrl = 'https://mypod.io.vn/default-channel';
 
   test('should pass PageSpeed Insights test for desktop', async () => {
-    const result = await psi(baseUrl, {
+    const result = await psi(BASE_URL, {
       key: process.env.PAGESPEED_API_KEY,
       strategy: 'desktop',
       category: ['performance', 'accessibility', 'best-practices', 'seo']
@@ -27,7 +28,7 @@ test.describe('PS001 - Home Page Performance Tests', () => {
   }, 60000);
 
   test('should pass PageSpeed Insights test for mobile', async () => {
-    const result = await psi(baseUrl, {
+    const result = await psi(BASE_URL, {
       key: process.env.PAGESPEED_API_KEY,
       strategy: 'mobile',
       category: ['performance', 'accessibility', 'best-practices', 'seo']
@@ -48,10 +49,10 @@ test.describe('PS001 - Home Page Performance Tests', () => {
 }); 
 
 test.describe('PS002 - Service Page Performance Tests', () => {
-  const serviceUrl = 'https://mypod.io.vn/default-channel/service';
+  // const serviceUrl = 'https://mypod.io.vn/default-channel/service';
 
   test('should pass PageSpeed Insights test for desktop', async () => {
-    const result = await psi(serviceUrl, {
+    const result = await psi(SERVICE_URL, {
       key: process.env.PAGESPEED_API_KEY,
       strategy: 'desktop',
       category: ['performance', 'accessibility', 'best-practices', 'seo']
@@ -71,7 +72,7 @@ test.describe('PS002 - Service Page Performance Tests', () => {
   }, 60000);
 
   test('should pass PageSpeed Insights test for mobile', async () => {
-    const result = await psi(serviceUrl, {
+    const result = await psi(SERVICE_URL, {
       key: process.env.PAGESPEED_API_KEY,
       strategy: 'mobile',
       category: ['performance', 'accessibility', 'best-practices', 'seo']
@@ -92,10 +93,10 @@ test.describe('PS002 - Service Page Performance Tests', () => {
 }); 
 
 test.describe('PS003 - Products Page Performance Tests', () => {
-  const productsUrl = 'https://mypod.io.vn/default-channel/products';
+  // const productsUrl = 'https://mypod.io.vn/default-channel/products';
 
   test('should pass PageSpeed Insights test for desktop', async () => {
-    const result = await psi(productsUrl, {
+    const result = await psi(PRODUCTS_URL, {
       key: process.env.PAGESPEED_API_KEY,
       strategy: 'desktop',
       category: ['performance', 'accessibility', 'best-practices', 'seo']
@@ -136,10 +137,10 @@ test.describe('PS003 - Products Page Performance Tests', () => {
 }); 
 
 test.describe('PS004 - Support Page Performance Tests', () => {
-  const supportUrl = 'https://mypod.io.vn/default-channel/support';
+  // const supportUrl = 'https://mypod.io.vn/default-channel/support';
 
   test('should pass PageSpeed Insights test for desktop', async () => {
-    const result = await psi(supportUrl, {
+    const result = await psi(SUPPORT_URL, {
       key: process.env.PAGESPEED_API_KEY,
       strategy: 'desktop',
       category: ['performance', 'accessibility', 'best-practices', 'seo']
@@ -159,7 +160,7 @@ test.describe('PS004 - Support Page Performance Tests', () => {
   }, 60000);
 
   test('should pass PageSpeed Insights test for mobile', async () => {
-    const result = await psi(supportUrl, {
+    const result = await psi(SUPPORT_URL, {
       key: process.env.PAGESPEED_API_KEY,
       strategy: 'mobile',
       category: ['performance', 'accessibility', 'best-practices', 'seo']
@@ -180,10 +181,10 @@ test.describe('PS004 - Support Page Performance Tests', () => {
 }); 
 
 test.describe('PS005 - Login Page Performance Tests', () => {
-  const loginUrl = 'https://accounts.mypodsoftware.io.vn/realms/keycloak/protocol/openid-connect/auth?response_type=code&client_id=zoomprints-saleor-client&redirect_uri=https%3A%2F%2Fmypod.io.vn%2Fdefault-channel%2Fauth%2Fkeycloak-callback&scope=openid+profile+email+offline_access&state=eyJyZWRpcmVjdFVyaSI6Imh0dHBzOi8vbXlwb2QuaW8udm4vZGVmYXVsdC1jaGFubmVsL2F1dGgva2V5Y2xvYWstY2FsbGJhY2sifQ%3A1uNoRN%3AfvsuqZVfKRWhkYTiKvbmrR8XcsFatTBJ9VGlYACaFz0';
+  // const loginUrl = 'https://accounts.mypodsoftware.io.vn/realms/keycloak/protocol/openid-connect/auth?response_type=code&client_id=zoomprints-saleor-client&redirect_uri=https%3A%2F%2Fmypod.io.vn%2Fdefault-channel%2Fauth%2Fkeycloak-callback&scope=openid+profile+email+offline_access&state=eyJyZWRpcmVjdFVyaSI6Imh0dHBzOi8vbXlwb2QuaW8udm4vZGVmYXVsdC1jaGFubmVsL2F1dGgva2V5Y2xvYWstY2FsbGJhY2sifQ%3A1uNoRN%3AfvsuqZVfKRWhkYTiKvbmrR8XcsFatTBJ9VGlYACaFz0';
 
   test('should pass PageSpeed Insights test for desktop', async () => {
-    const result = await psi(loginUrl, {
+    const result = await psi(LOGIN_URL, {
       key: process.env.PAGESPEED_API_KEY,
       strategy: 'desktop',
       category: ['performance', 'accessibility', 'best-practices', 'seo']
@@ -203,7 +204,7 @@ test.describe('PS005 - Login Page Performance Tests', () => {
   }, 60000);
 
   test('should pass PageSpeed Insights test for mobile', async () => {
-    const result = await psi(loginUrl, {
+    const result = await psi(LOGIN_URL, {
       key: process.env.PAGESPEED_API_KEY,
       strategy: 'mobile',
       category: ['performance', 'accessibility', 'best-practices', 'seo']
@@ -234,18 +235,18 @@ test.describe('PS006 - Authenticated Product Detail Page Performance Tests', () 
     ).toBeVisible({ timeout: 60000 });
 
     // Verify successful login
-    await expect(page).toHaveURL("https://mypod.io.vn/default-channel");
+    await expect(page).toHaveURL(BASE_URL);
   });
 
   test("should pass PageSpeed Insights test for authenticated product detail page (desktop)", async ({ page }) => {
-    await page.goto("https://mypod.io.vn/default-channel/products/bella-3001", { timeout: 60000 });
+    await page.goto(`${PRODUCTS_URL}/bella-3001`, { timeout: 60000 });
 
     const priceLocator = page.locator("div", { hasText: "$" }).nth(0);
     await expect(priceLocator).toBeVisible({ timeout: 20000 });
 
     page.pause();
 
-    const result = await psi("https://mypod.io.vn/default-channel/products/bella-3001", {
+    const result = await psi(`${PRODUCTS_URL}/bella-3001`, {
       key: process.env.PAGESPEED_API_KEY,
       strategy: 'desktop',
       category: ['performance', 'accessibility', 'best-practices', 'seo']

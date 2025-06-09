@@ -1,4 +1,4 @@
-import { BASE_URL } from "../utils/constants.js";
+import { LOGIN_URL } from "../utils/constants.js";
 
 export class LoginPage {
   /**
@@ -16,7 +16,7 @@ export class LoginPage {
    * Navigate to the login page
    */
   async navigate() {
-    await this.page.goto(`${BASE_URL}/login`);
+    await this.page.goto(`${LOGIN_URL}`);
   }
 
   /**

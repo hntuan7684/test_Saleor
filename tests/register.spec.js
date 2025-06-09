@@ -1,4 +1,5 @@
-const { test, expect } = require("@playwright/test");
+import { test } from './global-test';
+const { expect } = require("@playwright/test");
 const { generateUniqueEmail } = require("./utils/testDataHelper");
 
 const registerURL = "https://mypod.io.vn/default-channel/register";

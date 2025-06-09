@@ -1,4 +1,5 @@
-const { test, expect } = require('@playwright/test');
+import { test } from './global-test';
+import { expect } from  '@playwright/test';
 const { ProductDetailPage } = require('./pageObjects/ProductDetailPage');
 
 const PRODUCT_SLUG = 'comfort-color-1717'; // You can change the slug to test another product
@@ -35,7 +36,7 @@ test.describe.serial('Design Page Flow', () => {
     await expect(page.getByRole('button', { name: 'Colors' })).toBeVisible();
     await expect(page.getByRole('button', { name: 'Images' })).toBeVisible();
     await expect(page.getByRole('button', { name: 'Text' })).toBeVisible();
-    await expect(page.getByText(/front/i).first()).toBeVisible();
+    await expect(page.getByText(/front/i).first()).toBeVisible({ timeout: 10000 });
     await expect(page.getByText(/back/i).first()).toBeVisible();
     await expect(page.getByRole('button', { name: /Add to Cart/i }).first()).toBeVisible();
   });

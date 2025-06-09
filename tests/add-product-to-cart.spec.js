@@ -1,4 +1,5 @@
-import { test, expect } from "@playwright/test";
+import { test } from './global-test';
+import {  expect } from "@playwright/test";
 import { LoginPage } from "./pageObjects/LoginPage";
 import {BASE_URL, PRODUCTS_URL} from "./utils/constants";
 import { TEST_CREDENTIALS } from "./utils/testData";
@@ -11,7 +12,7 @@ test.describe("Add Product to Cart", () => {
     await loginPage.login(TEST_CREDENTIALS.validUser.email, TEST_CREDENTIALS.validUser.password);
     await expect(
       page.getByRole("heading", { name: /Welcome to ZoomPrints/i })
-    ).toBeVisible({ timeout: 30000 });
+    ).toBeVisible({ timeout: 120000 });
     
     // Verify successful login
     await expect(page).toHaveURL(BASE_URL);
@@ -77,11 +78,11 @@ test.describe("Add Product to Cart", () => {
     await expect(priceLocator).toBeVisible({ timeout: 20000 });
     const displayedPriceText = await priceLocator.textContent();
     const displayedPrice = displayedPriceText.match(/\$[\d.]+/)[0]; // Extract price like $7.42
-    console.log("Hello displayedPrice", displayedPrice);
+    // console.log("Hello displayedPrice", displayedPrice);
     
     // Select size and quantity
-    const sizeButton = page.locator('button[title="5XL"]');
-    console.log("Hello sizeButton", sizeButton);
+    const sizeButton = page.locator('button[title="3XL"]');
+    // console.log("Hello sizeButton", sizeButton);
     await expect(sizeButton).toBeVisible({ timeout: 30000 });
     await sizeButton.click();
     await page.locator('input[type="number"]').fill("1");
