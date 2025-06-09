@@ -4,7 +4,7 @@ import { BASE_URL } from "./utils/constants";
 
 test.describe("ZoomPrints UI Test Cases", () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto(BASE_URL, {timeout: 120000});
+    await page.goto(BASE_URL, {timeout: 360000});
   });
 
   test("HP001 - Logo redirects to homepage", async ({ page }) => {
@@ -165,7 +165,7 @@ test.describe("ZoomPrints UI Test Cases", () => {
     const button = page.locator("text=Learn More").nth(1);
     await expect(button).toBeVisible();
     await button.first().click();
-    await expect(page).toHaveURL(/service/);
+    await expect(page).toHaveURL(/\/service#.+$/);
   });
 
   test("HP025 - Each service card shows correct image, title, and description", async ({

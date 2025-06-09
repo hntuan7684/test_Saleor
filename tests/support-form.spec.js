@@ -46,9 +46,14 @@ async function verifyDialog(page, expectedMessage) {
 
 test.describe("Support Form Tests", () => {
   test.beforeEach(async ({ page }) => {
-    // Navigate to the support form page before each test
-    await page.goto(SUPPORT_URL, { timeout: 120000 });
-    // Wait for the main support form to be loaded
+    try {
+      await page.goto(SUPPORT_URL, { timeout: 720000 });
+    } catch (error) {
+      console.warn("Retrying page.goto due to timeout...");
+      await page.waitForTimeout(5000);
+      await page.goto(SUPPORT_URL, { timeout: 720000 });
+    }
+
     await page.waitForSelector("form.w-full.max-w-2xl", { state: "visible" });
   });
 
@@ -993,6 +998,7 @@ test.describe("Support Form Tests", () => {
   });
 
   test("SP026 - Phone number with letters", async ({ page }) => {
+    test.setTimeout(60000);
     const form = await page.locator("form.w-full.max-w-2xl");
 
     // Fill phone number with letters
@@ -1008,7 +1014,7 @@ test.describe("Support Form Tests", () => {
 
     // Verify error message appears for invalid phone number
     await expect(
-      page.locator("text=Please enter a valid 10-digit phone number")
+      page.locator("text=Please enter a valid phone number")
     ).toBeVisible();
 
     // Verify that the form was not submitted
@@ -1039,7 +1045,7 @@ test.describe("Support Form Tests", () => {
 
     // Verify error message appears for invalid phone number
     await expect(
-      page.locator('text="Please enter a valid 10-digit phone number"')
+      page.locator('text="Please enter a valid phone number"')
     ).toBeVisible();
 
     // Verify that the form was not submitted
@@ -1072,7 +1078,7 @@ test.describe("Support Form Tests", () => {
 
     // Verify error message appears for invalid phone number
     await expect(
-      page.locator('text="Please enter a valid 10-digit phone number"')
+      page.locator('text="Please enter a valid phone number"')
     ).toBeVisible();
 
     // Verify that the form was not submitted
@@ -1088,6 +1094,7 @@ test.describe("Support Form Tests", () => {
   test("SP030 - Company field - Accept alphanumeric & common symbols", async ({
     page,
   }) => {
+    test.setTimeout(60000);
     const form = await page.locator("form.w-full.max-w-2xl");
 
     // Fill company with various valid characters

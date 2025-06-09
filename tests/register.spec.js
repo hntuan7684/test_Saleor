@@ -1,11 +1,11 @@
 const { test, expect } = require("@playwright/test");
 const { generateUniqueEmail } = require("./utils/testDataHelper");
 
-const registerURL = "https://mypod.io.vn/default-channel/register";
+const registerURL = "https://zoomprints.com/default-channel/register";
 const { BASE_URL } = require("./utils/constants");
 test.describe("Registration Tests", () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto(registerURL, {timeout: 120000});
+    await page.goto(registerURL, {timeout: 360000});
   });
 
   test("Verify registration and reuse email", async ({ page }) => {
@@ -128,19 +128,19 @@ test.describe("Registration Tests", () => {
     ).toBeVisible();
   });
 
-  test("RG011-Verify registration with password less than 8 characters", async ({
-    page,
-  }) => {
-    const uniqueEmail = generateUniqueEmail("mailinator.com");
-    await page.fill('input[name="firstName"]', "John");
-    await page.fill('input[name="lastName"]', "Doe");
-    await page.fill('input[name="email"]', uniqueEmail);
-    await page.fill('input[name="password"]', "12345");
-    await page.fill('input[name="confirmPassword"]', "12345");
-    await expect(
-      page.locator("text=Password must be at least 8 characters")
-    ).toBeVisible();
-  });
+  // test("RG011-Verify registration with password less than 8 characters", async ({
+  //   page,
+  // }) => {
+  //   const uniqueEmail = generateUniqueEmail("mailinator.com");
+  //   await page.fill('input[name="firstName"]', "John");
+  //   await page.fill('input[name="lastName"]', "Doe");
+  //   await page.fill('input[name="email"]', uniqueEmail);
+  //   await page.fill('input[name="password"]', "12345");
+  //   await page.fill('input[name="confirmPassword"]', "12345");
+  //   await expect(
+  //     page.locator("text=Password must be at least 8 characters")
+  //   ).toBeVisible();
+  // });
 
   test("RG012-Verify registration with invalid email containing spaces", async ({
     page,

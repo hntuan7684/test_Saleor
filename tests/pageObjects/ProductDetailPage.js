@@ -18,7 +18,7 @@ class ProductDetailPage {
   }
 
   async goto(productSlug = 'bella-3001') {
-    await this.page.goto(`https://mypod.io.vn/default-channel/products/${productSlug}`);
+    await this.page.goto(`https://zoomprints.com/default-channel/products/${productSlug}`);
   }
 
   async verifyProductDetails() {

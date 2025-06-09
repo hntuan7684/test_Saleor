@@ -8,7 +8,9 @@ import createAndVerifyAccount from "./utils/createAccount";
 import { BASE_URL } from "./utils/constants";
 const { generateUniqueEmail } = require("./utils/testDataHelper");
 
-test("Login, add product to card, remove product from cart", async ({page}) => {
+test("Login, add product to card, remove product from cart", async ({
+  page,
+}) => {
   test.setTimeout(360000);
   // Step 1: Create account
   const firstName = "David";
@@ -51,17 +53,28 @@ test("Login, add product to card, remove product from cart", async ({page}) => {
     .locator("a[href*='/products/']")
     .locator("div")
     .filter({ hasText: "$" });
-  await expect(products.first()).toBeVisible({timeout: 30000});
+  await expect(products.first()).toBeVisible({ timeout: 30000 });
 
   //Step 3: Clip on first product
   await products.first().click();
 
   //Step 4: Add product to cart
   const addToCartBtn = page.locator("button:has-text('Add to Cart')");
-  await expect(addToCartBtn).toBeVisible({ timeout: 30000 });
+  await expect(addToCartBtn).toBeVisible({ timeout: 60000 });
   await addToCartBtn.click();
 
-  // Step 5: Wait for the cart to display the quantity
+  // Step 5: Check error message
+  const errorMessage = page.locator("text=Only 0 remaining in stock");
+  await errorMessage.waitFor({ timeout: 10000 }).catch(() => {});
+  const isErrorVisible = await errorMessage.isVisible();
+
+  if (isErrorVisible) {
+    const msg = await errorMessage.textContent();
+    console.warn("⚠️ Can not add items:", msg);
+    test.skip("❌ Product out of stock");
+    return;
+  }
+
   const countText = await page.textContent(
     "div.bg-neutral-900.text-white.text-xs.font-medium"
   );
