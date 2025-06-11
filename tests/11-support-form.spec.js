@@ -234,9 +234,6 @@ test.describe("Support Form Tests", () => {
     test.setTimeout(120000);
     const uniqueEmail = generateUniqueEmail("mailinator.com");
 
-    // Enable debug logging
-    page.on("console", (msg) => console.log(msg.text()));
-
     const form = await page.locator("form.w-full.max-w-2xl");
 
     // Fill all fields with valid data
@@ -261,8 +258,6 @@ test.describe("Support Form Tests", () => {
 
     await page.pause();
 
-    console.log("Current URL:", page.url());
-
     await page.screenshot({ path: "before-dialog.png" });
 
     const visibleElements = await page.evaluate(() => {
@@ -278,7 +273,6 @@ test.describe("Support Form Tests", () => {
           textContent: el.textContent.trim(),
         }));
     });
-    console.log("Visible elements:", visibleElements);
 
     try {
       const dialogByRole = await page.locator('[role="dialog"]');
@@ -438,8 +432,6 @@ test.describe("Support Form Tests", () => {
 
     await page.pause();
 
-    console.log("Current URL:", page.url());
-
     await page.screenshot({ path: "before-dialog.png" });
 
     const visibleElements = await page.evaluate(() => {
@@ -455,7 +447,6 @@ test.describe("Support Form Tests", () => {
           textContent: el.textContent.trim(),
         }));
     });
-    console.log("Visible elements:", visibleElements);
 
     try {
       const dialogByRole = await page.locator('[role="dialog"]');
@@ -599,8 +590,6 @@ test.describe("Support Form Tests", () => {
     page,
   }) => {
     test.setTimeout(60000);
-    // Enable debug logging
-    page.on("console", (msg) => console.log(msg.text()));
 
     const form = await page.locator("form.w-full.max-w-2xl");
 
@@ -627,8 +616,6 @@ test.describe("Support Form Tests", () => {
 
     await page.pause();
 
-    console.log("Current URL:", page.url());
-
     await page.screenshot({ path: "before-dialog.png" });
 
     const visibleElements = await page.evaluate(() => {
@@ -644,7 +631,6 @@ test.describe("Support Form Tests", () => {
           textContent: el.textContent.trim(),
         }));
     });
-    console.log("Visible elements:", visibleElements);
 
     try {
       const dialogByRole = await page.locator('[role="dialog"]');
@@ -754,8 +740,6 @@ test.describe("Support Form Tests", () => {
   test("SP015 - Last Name - Verify exceeding maximum length", async ({
     page,
   }) => {
-    // Enable debug logging
-    page.on("console", (msg) => console.log(msg.text()));
 
     const form = await page.locator("form.w-full.max-w-2xl");
 
@@ -782,8 +766,6 @@ test.describe("Support Form Tests", () => {
 
     await page.pause();
 
-    console.log("Current URL:", page.url());
-
     await page.screenshot({ path: "before-dialog.png" });
 
     const visibleElements = await page.evaluate(() => {
@@ -799,7 +781,6 @@ test.describe("Support Form Tests", () => {
           textContent: el.textContent.trim(),
         }));
     });
-    console.log("Visible elements:", visibleElements);
 
     try {
       const dialogByRole = await page.locator('[role="dialog"]');
