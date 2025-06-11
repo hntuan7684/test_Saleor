@@ -1,5 +1,5 @@
 // products.spec.js
-import { test } from './global-test';
+import { test } from './global-test.js';
 import { expect } from "@playwright/test";
 import { BASE_URL } from "./utils/constants.js";
 // import {

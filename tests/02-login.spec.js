@@ -1,4 +1,4 @@
-import { test } from './global-test';
+import { test } from './global-test.js';
 import { expect } from "@playwright/test";
 import { LoginPage } from "./pageObjects/LoginPage.js";
 import { BASE_URL } from "./utils/constants.js";

@@ -335,7 +335,7 @@ test.describe("Service Page Test Suite", () => {
 
       // Force hover on wrapper
       await wrapper.hover();
-      await page.waitForTimeout(500); // allow transition
+      await page.waitForTimeout(0); // allow transition
 
       const transformAfter = await img.evaluate(
         (el) => getComputedStyle(el).transform

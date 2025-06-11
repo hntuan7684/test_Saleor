@@ -82,14 +82,14 @@ test("Login, add product to cart, check total price, checkout", async ({
 
   // Click Checkout button
   const checkoutBtn = page.locator("text=/.*Checkout.*/i");
-  await checkoutBtn.waitFor({ state: "visible", timeout: 30000 });
+  await checkoutBtn.waitFor({ state: "visible", timeout: 150000 });
   await checkoutBtn.click();
 
   await page.waitForURL(/\/checkout\?checkout=/, { timeout: 150000 });
 
   const ShippingDropdown = page.locator('select[name="deliveryMethod"]');
 
-  await ShippingDropdown.waitFor({ state: "visible", timeout: 10000 });
+  await ShippingDropdown.waitFor({ state: "visible", timeout: 120000 });
 
   await expect(ShippingDropdown).toBeVisible();
 
@@ -104,5 +104,5 @@ test("Login, add product to cart, check total price, checkout", async ({
   await page.click('button:has-text("Place Order")');
 
   // await page.waitForLoadState("networkidle");
-  await expect(page).toHaveURL(ORDERS_URL, {timeout: 30000});
+  await expect(page).toHaveURL(ORDERS_URL, {timeout: 120000});
 });

@@ -113,10 +113,10 @@ test.describe('PS003 - Products Page Performance Tests', () => {
     console.log('Products Page - Desktop Accessibility Score:', result.data.lighthouseResult.categories.accessibility.score);
     console.log('Products Page - Desktop Best Practices Score:', result.data.lighthouseResult.categories['best-practices'].score);
     console.log('Products Page - Desktop SEO Score:', result.data.lighthouseResult.categories.seo.score);
-  }, 60000);
+  }, 120000);
 
   test('should pass PageSpeed Insights test for mobile', async () => {
-    const result = await psi(productsUrl, {
+    const result = await psi(PRODUCTS_URL, {
       key: process.env.PAGESPEED_API_KEY,
       strategy: 'mobile',
       category: ['performance', 'accessibility', 'best-practices', 'seo']

@@ -1,4 +1,4 @@
-import { test } from './global-test';
+import { test } from './global-test.js';
 import { expect } from "@playwright/test";
 import { ForgotPasswordPage } from "./pageObjects/ForgotPasswordPage.js";
 import { generateUniqueEmail } from "./utils/testDataHelper.js";
@@ -86,7 +86,7 @@ test.describe("Forgot Password Flow", () => {
           await forgotPage.fillEmail(tc.email);
           for (let i = 0; i < tc.repeat; i++) {
             await forgotPage.clickSubmit();
-            await page.waitForTimeout(1000);
+            await page.waitForTimeout(120000);
           }
           const msg = await forgotPage.getErrorMessageText();
           const limited = /too many|rate limit|try again/i.test(msg);

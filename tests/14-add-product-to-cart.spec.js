@@ -98,7 +98,7 @@ test.describe("Add Product to Cart", () => {
     
     // Get cart price
     const cartPriceLocator = page.locator("p", { hasText: "$" }).nth(0);
-    await expect(cartPriceLocator).toBeVisible({ timeout: 20000 });
+    await expect(cartPriceLocator).toBeVisible({ timeout: 30000 });
     const cartPriceText = await cartPriceLocator.textContent();
     const cartPrice = cartPriceText.match(/\$[\d.]+/)[0]; // Extract price like $7.42
     

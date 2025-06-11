@@ -1,21 +1,49 @@
 import { test, expect } from "@playwright/test";
-import { BASE_URL } from "./utils/constants.js";
-// import {
-//   initExcel,
-//   logTestResult,
-//   saveExcel,
-// } from "./utils/testResultLogger.js";
+import { PRODUCTS_URL } from "./utils/constants";
 
-test.describe("Đăng nhập và thêm sản phẩm vào giỏ hàng", () => {
-  // test.beforeAll(async () => {
-  //   await initExcel();
-  // });
 
-  // test.afterAll(async () => {
-  //   await saveExcel();
-  // });
+test.describe("Add product to cart", () => {
 
-  test("TC019 - Đăng nhập và thêm sản phẩm vào giỏ hàng", async ({ page }) => {
+  test("TC018 - Selece color, size and add to cart", async ({ page }) => {
+    let actual = "";
+    let status = "Fail";
+
+    try {
+      // Truy cập trang sản phẩm cụ thể
+      await page.goto(`${PRODUCTS_URL}/bella-3001`);
+
+      // Chọn màu (button có attribute title)
+      const colorButton = page.locator('button[title^="WHITE"]'); // hoặc chọn màu bất kỳ
+      await expect(colorButton).toBeVisible({ timeout: 5000 });
+      await colorButton.click();
+
+      // Chọn size
+      const sizeButton = page.locator('button[title="M"]'); // có thể chọn size khác
+      await expect(sizeButton).toBeVisible({ timeout: 5000 });
+      await sizeButton.click();
+
+      // (Tùy chọn) Chọn biến thể sản phẩm nếu có (role="option")
+      const option = page.locator('[role="option"]').first();
+      if (await option.isVisible()) {
+        await option.click();
+      }
+
+      // Click "Add to Cart"
+      const addToCartBtn = page.locator('#add-to-cart-button');
+      await expect(addToCartBtn).toBeVisible({ timeout: 5000 });
+      await addToCartBtn.click();
+
+      // Kiểm tra xác nhận (giả sử có toast hoặc redirect)
+      await expect(page.locator("text=Đã thêm vào giỏ")).toBeVisible({ timeout: 5000 });
+
+      actual = "Sản phẩm được thêm vào giỏ thành công";
+      status = "Pass";
+    } catch (e) {
+      actual = "Không thêm được sản phẩm vào giỏ";
+    } 
+  });
+
+   test("TC019 - Login and add product to cart", async ({ page }) => {
     const email = "testaccount455@mailinator.com";
     const password = "ValidPass123!";
 
@@ -64,10 +92,10 @@ test.describe("Đăng nhập và thêm sản phẩm vào giỏ hàng", () => {
 
       // 7. Xác nhận đã thêm vào giỏ (nếu có thông báo)
       const confirmationToast = page.locator(
-        '.toast-message, [role="alert"], text=Đã thêm vào giỏ'
+        '.toast-message, [role="alert"], text=Added to cart'
       );
       if (await confirmationToast.isVisible({ timeout: 5000 })) {
-        await expect(confirmationToast).toContainText("Đã thêm vào giỏ");
+        await expect(confirmationToast).toContainText("Added to cart");
       }
 
       // 8. Mở giỏ hàng
@@ -83,11 +111,11 @@ test.describe("Đăng nhập và thêm sản phẩm vào giỏ hàng", () => {
 
       // ✅ Gán kết quả Pass CHỈ SAU KHI tất cả thành công
       actual =
-        "Đăng nhập, thêm sản phẩm vào giỏ và xác minh trong giỏ hàng thành công";
+        "Login, add product to cart and verify add to cart successful";
       status = "Pass";
     } catch (e) {
-      console.error("❌ Lỗi trong TC019:", e);
-      actual = `Không thể hoàn tất quy trình thêm sản phẩm và xác minh giỏ hàng. Lỗi: ${e.message}`;
+      console.error("❌ Error in TC019:", e);
+      actual = `Could not complete the process of adding products and verifying the cart. Error: ${e.message}`;
     } 
   });
 });

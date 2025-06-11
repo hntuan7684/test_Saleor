@@ -8,7 +8,7 @@ const LOGIN_URL = "https://accounts.mypodsoftware.io.vn/realms/keycloak/protocol
 const ORDERS_URL = "https://zoomprints.com/default-channel/orders";
 const SUPPORT_URL = "https://zoomprints.com/default-channel/support";
 const SERVICE_URL = "https://zoomprints.com/default-channel/service";
-
+const FORGOTPASSWORD_URL = "https://accounts.mypodsoftware.io.vn/realms/keycloak/login-actions/reset-credentials?client_id=zoomprints-saleor-client&tab_id=zsyufFAFsXQ&client_data=eyJydSI6Imh0dHBzOi8vem9vbXByaW50cy5jb20vZGVmYXVsdC1jaGFubmVsL2F1dGgva2V5Y2xvYWstY2FsbGJhY2siLCJydCI6ImNvZGUiLCJzdCI6ImV5SnlaV1JwY21WamRGVnlhU0k2SW1oMGRIQnpPaTh2ZW05dmJYQnlhVzUwY3k1amIyMHZaR1ZtWVhWc2RDMWphR0Z1Ym1Wc0wyRjFkR2d2YTJWNVkyeHZZV3N0WTJGc2JHSmhZMnNpZlE6MXVPb3pZOjdROVl2OVZSWnB2LVFPNTZPNWVZb2NhWlhjSlFUbTFJMmpkckJ1cVdxc2sifQ";
 module.exports = {
   BASE_URL,
   MAILINATOR_BASE_URL,
@@ -18,4 +18,5 @@ module.exports = {
   ORDERS_URL,
   SUPPORT_URL,
   SERVICE_URL,
+  FORGOTPASSWORD_URL
 };
