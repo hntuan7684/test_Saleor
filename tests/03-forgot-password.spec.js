@@ -1,7 +1,7 @@
-import { test } from './global-test.js';
+import { test } from "./global-test.js";
 import { expect } from "@playwright/test";
 import { ForgotPasswordPage } from "./pageObjects/ForgotPasswordPage.js";
-import testDataHelper from './utils/testDataHelper.js';
+import testDataHelper from "./utils/testDataHelper.js";
 import { BASE_URL, MAILINATOR_URL } from "./utils/constants.js";
 
 test.describe("Forgot Password Flow", () => {
@@ -109,7 +109,8 @@ test.describe("Forgot Password Flow", () => {
     test(`${tc.id} - ${tc.desc}`, async ({ page, context }) => {
       const forgotPage = new ForgotPasswordPage(page);
       await forgotPage.navigate();
-      let actual = "", status = "Fail";
+      let actual = "",
+        status = "Fail";
 
       try {
         if (tc.mobile) await page.setViewportSize({ width: 375, height: 667 });
@@ -122,17 +123,28 @@ test.describe("Forgot Password Flow", () => {
           let accessible = true;
           for (const el of tabbable) {
             await el.focus();
-            const active = await page.evaluate(() => document.activeElement?.tagName);
-            if (!["INPUT", "BUTTON"].includes(active)) { accessible = false; break; }
+            const active = await page.evaluate(
+              () => document.activeElement?.tagName
+            );
+            if (!["INPUT", "BUTTON"].includes(active)) {
+              accessible = false;
+              break;
+            }
           }
-          actual = accessible ? "Accessible via keyboard" : "Not accessible via keyboard";
+          actual = accessible
+            ? "Accessible via keyboard"
+            : "Not accessible via keyboard";
           status = accessible ? "Pass" : "Fail";
         } else if (tc.multiple) {
           await forgotPage.fillEmail(tc.email);
-          const promises = Array.from({ length: 3 }, () => forgotPage.clickSubmit());
+          const promises = Array.from({ length: 3 }, () =>
+            forgotPage.clickSubmit()
+          );
           await Promise.all(promises);
           const isOk = await forgotPage.isFormStillFunctional();
-          actual = isOk ? "Handled multiple submits gracefully" : "Form error on multiple submits";
+          actual = isOk
+            ? "Handled multiple submits gracefully"
+            : "Form error on multiple submits";
           status = isOk ? "Pass" : "Fail";
         } else if (tc.checkInbox) {
           await forgotPage.fillEmail(tc.email);
@@ -140,9 +152,15 @@ test.describe("Forgot Password Flow", () => {
           const success = await forgotPage.isSuccessMessageVisible();
           if (success) {
             const inbox = await context.newPage();
-            await inbox.goto(`${MAILINATOR_URL}/v4/public/inboxes.jsp?to=${tc.email.split('@')[0]}`);
+            await inbox.goto(
+              `${MAILINATOR_URL}/v4/public/inboxes.jsp?to=${
+                tc.email.split("@")[0]
+              }`
+            );
             await inbox.waitForTimeout(8000);
-            const visible = await inbox.locator("tr", { hasText: "Password Reset" }).isVisible();
+            const visible = await inbox
+              .locator("tr", { hasText: "Password Reset" })
+              .isVisible();
             actual = visible ? "Email found in inbox" : "Email not found";
             status = visible ? "Pass" : "Fail";
             await inbox.close();
@@ -154,8 +172,12 @@ test.describe("Forgot Password Flow", () => {
           await forgotPage.fillEmail(tc.email);
           await forgotPage.clickSubmit();
           const message = await forgotPage.getSuccessMessageText();
-          const isGeneric = !/(not found|doesn't exist|no account)/i.test(message);
-          actual = isGeneric ? "No email disclosure" : `Message reveals existence: ${message}`;
+          const isGeneric = !/(not found|doesn't exist|no account)/i.test(
+            message
+          );
+          actual = isGeneric
+            ? "No email disclosure"
+            : `Message reveals existence: ${message}`;
           status = isGeneric ? "Pass" : "Fail";
         } else if (tc.repeat) {
           await forgotPage.fillEmail(tc.email);
@@ -165,13 +187,16 @@ test.describe("Forgot Password Flow", () => {
           }
           const msg = await forgotPage.getErrorMessageText();
           const limited = /too many|rate limit|try again/i.test(msg);
-          actual = limited ? "Rate limit triggered" : `No rate limit error (${msg})`;
+          actual = limited
+            ? "Rate limit triggered"
+            : `No rate limit error (${msg})`;
           status = limited ? "Pass" : "Fail";
         } else if (tc.reload) {
           await forgotPage.fillEmail(tc.email);
           await page.reload();
           const val = await forgotPage.emailInput.inputValue();
-          actual = val === "" ? "Form reset after reload" : `Form retains: ${val}`;
+          actual =
+            val === "" ? "Form reset after reload" : `Form retains: ${val}`;
           status = val === "" ? "Pass" : "Fail";
         } else {
           if (tc.email !== undefined) await forgotPage.fillEmail(tc.email);
