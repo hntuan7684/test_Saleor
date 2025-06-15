@@ -1,7 +1,7 @@
 import { test } from './global-test.js';
 import { expect } from "@playwright/test";
 import { ForgotPasswordPage } from "./pageObjects/ForgotPasswordPage.js";
-import { generateUniqueEmail } from "./utils/testDataHelper.js";
+import testDataHelper from './utils/testDataHelper.js';
 import { BASE_URL, MAILINATOR_URL } from "./utils/constants.js";
 
 test.describe("Forgot Password Flow", () => {
@@ -10,24 +10,99 @@ test.describe("Forgot Password Flow", () => {
   // });
 
   const testCases = [
-    { id: "FP001", desc: "Valid email", email: "existing-user@mailinator.com", shouldPass: true },
-    { id: "FP002", desc: "Invalid email format", email: "invalid-email", shouldPass: false },
+    {
+      id: "FP001",
+      desc: "Valid email",
+      email: "existing-user@mailinator.com",
+      shouldPass: true,
+    },
+    {
+      id: "FP002",
+      desc: "Invalid email format",
+      email: "invalid-email",
+      shouldPass: false,
+    },
     { id: "FP003", desc: "Verify Forgot Password heading is visible" },
-    { id: "FP004", desc: "Incorrect email syntax", email: "not-an-email", shouldPass: false },
+    {
+      id: "FP004",
+      desc: "Incorrect email syntax",
+      email: "not-an-email",
+      shouldPass: false,
+    },
     { id: "FP005", desc: "Empty email field", email: "", shouldPass: false },
-    { id: "FP006", desc: "Non-existent email", email: generateUniqueEmail(), shouldPass: true },
-    { id: "FP007", desc: "Security - no email existence disclosure", email: generateUniqueEmail(), shouldPass: true },
-    { id: "FP008", desc: "Multiple submissions in a row", email: "existing-user@mailinator.com", multiple: true },
-    { id: "FP009", desc: "Reset email is sent to inbox", email: "existing-user@mailinator.com", checkInbox: true },
-    { id: "FP010", desc: "Email with leading/trailing spaces", email: "  existing-user@mailinator.com  ", shouldPass: true },
-    { id: "FP011", desc: "Email in uppercase", email: "EXISTING-USER@MAILINATOR.COM", shouldPass: true },
-    { id: "FP012", desc: "Email with alias (+)", email: "existing-user+alias@mailinator.com", shouldPass: true },
-    { id: "FP013", desc: "Mobile viewport rendering", email: "existing-user@mailinator.com", mobile: true },
+    {
+      id: "FP006",
+      desc: "Non-existent email",
+      email: testDataHelper.generateUniqueEmail(),
+      shouldPass: true,
+    },
+    {
+      id: "FP007",
+      desc: "Security - no email existence disclosure",
+      email: testDataHelper.generateUniqueEmail(),
+      shouldPass: true,
+    },
+    {
+      id: "FP008",
+      desc: "Multiple submissions in a row",
+      email: "existing-user@mailinator.com",
+      multiple: true,
+    },
+    {
+      id: "FP009",
+      desc: "Reset email is sent to inbox",
+      email: "existing-user@mailinator.com",
+      checkInbox: true,
+    },
+    {
+      id: "FP010",
+      desc: "Email with leading/trailing spaces",
+      email: "  existing-user@mailinator.com  ",
+      shouldPass: true,
+    },
+    {
+      id: "FP011",
+      desc: "Email in uppercase",
+      email: "EXISTING-USER@MAILINATOR.COM",
+      shouldPass: true,
+    },
+    {
+      id: "FP012",
+      desc: "Email with alias (+)",
+      email: "existing-user+alias@mailinator.com",
+      shouldPass: true,
+    },
+    {
+      id: "FP013",
+      desc: "Mobile viewport rendering",
+      email: "existing-user@mailinator.com",
+      mobile: true,
+    },
     { id: "FP014", desc: "Accessibility with keyboard navigation" },
-    { id: "FP015", desc: "Rate limiting after multiple requests", email: "existing-user@mailinator.com", repeat: 6 },
-    { id: "FP016", desc: "SQL Injection in email field", email: "' OR '1'='1@mailinator.com", shouldPass: false },
-    { id: "FP017", desc: "XSS attack in email field", email: "<script>alert(1)</script>@mail.com", shouldPass: false },
-    { id: "FP018", desc: "Reload after email entry", email: "existing-user@mailinator.com", reload: true },
+    {
+      id: "FP015",
+      desc: "Rate limiting after multiple requests",
+      email: "existing-user@mailinator.com",
+      repeat: 6,
+    },
+    {
+      id: "FP016",
+      desc: "SQL Injection in email field",
+      email: "' OR '1'='1@mailinator.com",
+      shouldPass: false,
+    },
+    {
+      id: "FP017",
+      desc: "XSS attack in email field",
+      email: "<script>alert(1)</script>@mail.com",
+      shouldPass: false,
+    },
+    {
+      id: "FP018",
+      desc: "Reload after email entry",
+      email: "existing-user@mailinator.com",
+      reload: true,
+    },
   ];
 
   for (const tc of testCases) {

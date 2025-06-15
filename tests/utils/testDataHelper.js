@@ -14,6 +14,6 @@ const generateUniqueEmail = (domain = "mailinator.com") => {
   return `test${formatted}@${domain}`;
 };
 
-module.exports = {
+export default {
   generateUniqueEmail,
-};
+}
