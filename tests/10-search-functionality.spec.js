@@ -1,4 +1,4 @@
-import { test } from './global-test';
+import { test } from "./global-test";
 import { expect } from "@playwright/test";
 import { BASE_URL } from "./utils/constants";
 
@@ -40,7 +40,9 @@ test.describe("Searching Tests", () => {
     await page.fill('input[placeholder="Search for products..."]', keyword);
     await page.click('button[type="submit"]');
     await page.pause();
-    await expect(page.locator('h1:text("No results found")')).toBeVisible({ timeout: 120000 });
+    await expect(page.locator('h1:text("No results found")')).toBeVisible({
+      timeout: 120000,
+    });
     await expect(page.locator("p.text-gray-500")).toContainText(
       `We couldn't find any matches for "${keyword}"`
     );

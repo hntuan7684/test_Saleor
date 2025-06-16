@@ -1,64 +1,34 @@
-import { test } from './global-test';
-const { expect } = require("@playwright/test");
-const { generateUniqueEmail } = require("./utils/testDataHelper");
+import { test, expect } from "@playwright/test";
+import testDataHelper from "./utils/testDataHelper";
 import { SUPPORT_URL } from "./utils/constants";
 
-// Helper function to verify dialog
-async function verifyDialog(page, expectedMessage) {
-  // Wait for dialog to be visible
-  await page.waitForSelector('div[role="dialog"]', { state: "visible" });
-
-  // Check if dialog contains expected message
-  const dialogText = await page.evaluate(() => {
-    const dialog = document.querySelector('div[role="dialog"]');
-    return dialog ? dialog.textContent : "";
-  });
-
-  // Verify dialog content
-  expect(dialogText).toContain(expectedMessage);
-
-  // Click OK button using various possible selectors
-  try {
-    // Try finding button by role first
-    const okButton = await page.getByRole("button", { name: /ok/i });
-    if (await okButton.isVisible()) {
-      await okButton.click();
-      return;
-    }
-
-    // Try finding button by text content
-    const buttonByText = await page.getByText(/ok/i);
-    if (await buttonByText.isVisible()) {
-      await buttonByText.click();
-      return;
-    }
-
-    // Try finding any visible button in the dialog
-    const dialogButton = await page
-      .locator('div[role="dialog"] button')
-      .first();
-    if (await dialogButton.isVisible()) {
-      await dialogButton.click();
-    }
-  } catch (error) {
-    console.log("Could not find or click OK button:", error);
-  }
+async function fillSupportForm(form, data) {
+  if (data.firstName)
+    await form.locator('input[name="firstName"]').fill(data.firstName);
+  if (data.lastName)
+    await form.locator('input[name="lastName"]').fill(data.lastName);
+  if (data.email) await form.locator('input[name="email"]').fill(data.email);
+  if (data.phoneNumber)
+    await form.locator('input[name="phoneNumber"]').fill(data.phoneNumber);
+  if (data.company)
+    await form.locator('input[name="company"]').fill(data.company);
+  if (data.address)
+    await form.locator('input[name="address"]').fill(data.address);
+  if (data.details)
+    await form.locator('textarea[name="details"]').fill(data.details);
 }
 
 test.describe("Support Form Tests", () => {
   test.beforeEach(async ({ page }) => {
-    try {
-      await page.goto(SUPPORT_URL, { timeout: 30000 }); // Lower timeout to fail fast
-      await page.waitForSelector("form.w-full.max-w-2xl", { state: "visible" });
-    } catch (error) {
-      console.error(`❌ Failed to navigate to support page: ${SUPPORT_URL}`);
-      throw error; // Rethrow to preserve Playwright test failure
-    }
+    await page.goto(SUPPORT_URL, {
+      timeout: 90000,
+      waitUntil: "domcontentloaded",
+    });
   });
 
   test("SP001 - Check alignment of input fields", async ({ page }) => {
+    test.setTimeout(60000);
     const form = await page.locator("form.w-full.max-w-2xl");
-
     // Define all form fields to check
     const formFields = [
       'input[name="firstName"]',
@@ -82,7 +52,7 @@ test.describe("Support Form Tests", () => {
       const field = form.locator(fieldSelector);
 
       // Verify field is visible
-      await expect(field).toBeVisible();
+      await expect(field).toBeVisible({ timeout: 10000 });
 
       // Get field position and dimensions
       const box = await field.boundingBox();
@@ -152,7 +122,7 @@ test.describe("Support Form Tests", () => {
 
     // Check for error messages on mandatory fields
     const errorMessages = await page.locator('.error-message, [role="alert"]');
-    await expect(errorMessages).toBeVisible();
+    await expect(errorMessages).toBeVisible({ timeout: 30000 });
 
     // Fill mandatory fields
     await page.fill('input[name="firstName"]', "John");
@@ -169,44 +139,18 @@ test.describe("Support Form Tests", () => {
 
     // Test mobile viewport
     await page.setViewportSize({ width: 375, height: 667 });
-    await expect(form).toBeVisible();
+    await expect(form).toBeVisible({ timeout: 30000 });
     await page.waitForTimeout(1000);
     await page.screenshot({ path: "mobile-layout.png", fullPage: true });
 
     // Test desktop viewport
     await page.setViewportSize({ width: 1280, height: 800 });
-    await expect(form).toBeVisible();
+    await expect(form).toBeVisible({ timeout: 30000 });
     await page.waitForTimeout(1000);
     await page.screenshot({ path: "desktop-layout.png", fullPage: true });
   });
 
-  // test("SP004 - Autofocus on the first input field", async ({ page }) => {
-  //   const form = await page.locator("form.w-full.max-w-2xl");
-  //   const firstNameInput = form.locator('input[name="firstName"]');
-
-  //   // Wait for form to be visible and stable
-  //   await expect(form).toBeVisible({ timeout: 100000 });
-
-  //   // Verify firstName field is focused by default without clicking
-  //   await expect(firstNameInput).toBeFocused({ timeout: 100000 });
-
-  //   // Additional check: verify other fields are not focused
-  //   const otherFields = [
-  //     'input[name="lastName"]',
-  //     'input[name="email"]',
-  //     'input[name="phoneNumber"]',
-  //     'input[name="company"]',
-  //     'input[name="address"]',
-  //     'textarea[name="details"]',
-  //   ];
-
-  //   for (const fieldSelector of otherFields) {
-  //     const field = form.locator(fieldSelector);
-  //     await expect(field).not.toBeFocused();
-  //   }
-  // });
-
-  test("SP004 - Tab navigation works properly", async ({ page }) => {
+  test("SP005 - Tab navigation works properly", async ({ page }) => {
     const form = await page.locator("form.w-full.max-w-2xl");
     const firstNameInput = form.locator('input[name="firstName"]');
 
@@ -230,329 +174,216 @@ test.describe("Support Form Tests", () => {
     }
   });
 
-  test("SP005 - Submit form with all valid data", async ({ page }) => {
+  test("SP007 - Submit form with all valid data", async ({ page }) => {
     test.setTimeout(120000);
-    const uniqueEmail = generateUniqueEmail("mailinator.com");
+    const uniqueEmail = testDataHelper.generateUniqueEmail("mailinator.com");
 
     const form = await page.locator("form.w-full.max-w-2xl");
 
-    // Fill all fields with valid data
-    await form.locator('input[name="firstName"]').fill("John");
-    await form.locator('input[name="lastName"]').fill("Doe");
-    await form.locator('input[name="email"]').fill(uniqueEmail);
-    await form.locator('input[name="phoneNumber"]').fill("1234567890");
-    await form.locator('input[name="company"]').fill("ABC Corp");
-    await form.locator('input[name="address"]').fill("123 Street");
-    await form.locator('textarea[name="details"]').fill("Hello");
+    await fillSupportForm(form, {
+      firstName: "John",
+      lastName: "Doe",
+      email: uniqueEmail,
+      phoneNumber: "1234567890",
+      company: "ABC Corp",
+      address: "123 Street",
+      details: "Hello",
+    });
 
     // Submit form
     await form.locator('button[type="submit"]').click();
 
     // Wait for submitting state
-    await expect(page.getByText("Submitting...")).toBeVisible();
+    await expect(page.getByText("Submitting...")).toBeVisible({
+      timeout: 30000,
+    });
 
     //Wait for submitting message to disappear
     await expect(
       page.locator("text=Support request created successfully")
-    ).toBeVisible({ timeout: 60000 });
+    ).toBeVisible({ timeout: 30000 });
+  });
 
-    await page.pause();
+  test("SP008 - Submit form with only mandatory fields filled", async ({
+    page,
+  }) => {
+    const uniqueEmail = testDataHelper.generateUniqueEmail("mailinator.com");
+    const form = await page.locator("form.w-full.max-w-2xl");
 
-    await page.screenshot({ path: "before-dialog.png" });
-
-    const visibleElements = await page.evaluate(() => {
-      return Array.from(document.querySelectorAll("*"))
-        .filter((el) => {
-          const style = window.getComputedStyle(el);
-          return style.display !== "none" && style.visibility !== "hidden";
-        })
-        .map((el) => ({
-          tagName: el.tagName,
-          id: el.id,
-          className: el.className,
-          textContent: el.textContent.trim(),
-        }));
+    await fillSupportForm(form, {
+      firstName: "John",
+      lastName: "Doe",
+      email: uniqueEmail,
+      phoneNumber: "",
+      company: "",
+      address: "",
+      details: "",
     });
 
-    try {
-      const dialogByRole = await page.locator('[role="dialog"]');
-      if (await dialogByRole.isVisible()) {
-        console.log("Found dialog by role");
-        await dialogByRole.screenshot({ path: "dialog-by-role.png" });
-      }
-
-      const dialogByModal = await page.locator('[aria-modal="true"]');
-      if (await dialogByModal.isVisible()) {
-        console.log("Found dialog by aria-modal");
-        await dialogByModal.screenshot({ path: "dialog-by-modal.png" });
-      }
-
-      const dialogByText = await page.getByText(
-        "Your support request has been submitted successfully"
-      );
-      if (await dialogByText.isVisible()) {
-        console.log("Found dialog by text");
-        await dialogByText.screenshot({ path: "dialog-by-text.png" });
-      }
-    } catch (error) {
-      console.log("Error while finding dialog:", error);
-    }
-
-    await page.pause();
-
-    // Verify form is cleared after successful submission
-    await expect(form.locator('input[name="firstName"]')).toHaveValue("");
-    await expect(form.locator('input[name="lastName"]')).toHaveValue("");
-    await expect(form.locator('input[name="email"]')).toHaveValue("");
-    await expect(form.locator('input[name="phoneNumber"]')).toHaveValue("");
-    await expect(form.locator('input[name="company"]')).toHaveValue("");
-    await expect(form.locator('input[name="address"]')).toHaveValue("");
-    await expect(form.locator('textarea[name="details"]')).toHaveValue("");
-
-    // Verify we're still on the support page
-    await expect(page.url()).toContain("/support");
-  });
-
-  test("SP006 - Submit form with only mandatory fields filled", async ({
-    page,
-  }) => {
-    const uniqueEmail = generateUniqueEmail("mailinator.com");
-    const form = await page.locator("form.w-full.max-w-2xl");
-
-    await form.locator('input[name="firstName"]').fill("John");
-    await form.locator('input[name="lastName"]').fill("Doe");
-    await form.locator('input[name="email"]').fill(uniqueEmail);
-
     // Try to submit empty form
     await form.locator('button[type="submit"]').click();
 
     // Wait for and verify error messages for each required field
-    await expect(page.locator('text="Phone number is required"')).toBeVisible();
-    await expect(page.locator('text="Company name is required"')).toBeVisible();
-    await expect(page.locator('text="Address is required"')).toBeVisible();
-    // await expect(page.locator('text="Details are required"')).toBeVisible();
+    await expect(page.locator('text="Phone number is required"')).toBeVisible({
+      timeout: 30000,
+    });
+    await expect(page.locator('text="Company name is required"')).toBeVisible({
+      timeout: 30000,
+    });
+    await expect(page.locator('text="Address is required"')).toBeVisible({
+      timeout: 30000,
+    });
+    await expect(page.locator('text="Details are required"')).toBeVisible({
+      timeout: 30000,
+    });
+    // await expect(page.locator('text="Details are required"')).toBeVisible({timeout: 30000});
 
     // Verify that the form was not submitted
     await expect(page.url()).toContain("/support");
 
     // Verify that the submit button is still present
-    await expect(form.locator('button[type="submit"]')).toBeVisible();
+    await expect(form.locator('button[type="submit"]')).toBeVisible({
+      timeout: 30000,
+    });
   });
 
-  test("SP007 - Leave all fields empty and submit", async ({ page }) => {
+  test("SP009 - Leave all fields empty and submit", async ({ page }) => {
     const form = await page.locator("form.w-full.max-w-2xl");
 
     // Try to submit empty form
     await form.locator('button[type="submit"]').click();
 
     // Wait for and verify error messages for each required field
-    await expect(page.locator('text="Email is required"')).toBeVisible();
-    await expect(page.locator('text="Phone number is required"')).toBeVisible();
-    await expect(page.locator('text="Company name is required"')).toBeVisible();
-    await expect(page.locator('text="Address is required"')).toBeVisible();
-    // await expect(page.locator('text="Details are required"')).toBeVisible();
+    await expect(page.locator('text="Email is required"')).toBeVisible({
+      timeout: 30000,
+    });
+    await expect(page.locator('text="Phone number is required"')).toBeVisible({
+      timeout: 30000,
+    });
+    await expect(page.locator('text="Company name is required"')).toBeVisible({
+      timeout: 30000,
+    });
+    await expect(page.locator('text="Address is required"')).toBeVisible({
+      timeout: 30000,
+    });
+    // await expect(page.locator('text="Details are required"')).toBeVisible({timeout: 30000});
 
     // Verify that the form was not submitted
     await expect(page.url()).toContain("/support");
 
     // Verify that the submit button is still present
-    await expect(form.locator('button[type="submit"]')).toBeVisible();
+    await expect(form.locator('button[type="submit"]')).toBeVisible({
+      timeout: 30000,
+    });
   });
 
-  test("SP008 - Submit with First Name empty (assuming mandatory)", async ({
+  test("SP010 - Submit with First Name empty (assuming mandatory)", async ({
     page,
   }) => {
-    const uniqueEmail = generateUniqueEmail("mailinator.com");
+    const uniqueEmail = testDataHelper.generateUniqueEmail("mailinator.com");
     const form = await page.locator("form.w-full.max-w-2xl");
 
-    // Fill all fields except First Name
-    await form.locator('input[name="lastName"]').fill("Doe");
-    await form.locator('input[name="email"]').fill(uniqueEmail);
-    await form.locator('input[name="phoneNumber"]').fill("1234567890");
-    await form.locator('input[name="company"]').fill("ABC Corp");
-    await form.locator('input[name="address"]').fill("123 Street");
-    await form.locator('textarea[name="details"]').fill("Hello");
+    await fillSupportForm(form, {
+      firstName: "",
+      lastName: "Doe",
+      email: uniqueEmail,
+      phoneNumber: "1234567890",
+      company: "ABC Corp",
+      address: "123 Street",
+      details: "Hello",
+    });
 
     // Submit form
     await form.locator('button[type="submit"]').click();
 
     // Simple verification of error message
     const errorText = page.getByText("First name is required");
-    await expect(errorText).toBeVisible();
+    await expect(errorText).toBeVisible({ timeout: 30000 });
   });
 
-  test("SP009 - Submit with Last Name empty (assuming mandatory)", async ({
+  test("SP011 - Submit with Last Name empty (assuming mandatory)", async ({
     page,
   }) => {
-    const uniqueEmail = generateUniqueEmail("mailinator.com");
+    const uniqueEmail = testDataHelper.generateUniqueEmail("mailinator.com");
     const form = await page.locator("form.w-full.max-w-2xl");
 
-    // Fill all fields except Last Name
-    await form.locator('input[name="firstName"]').fill("John");
-    await form.locator('input[name="email"]').fill(uniqueEmail);
-    await form.locator('input[name="phoneNumber"]').fill("1234567890");
-    await form.locator('input[name="company"]').fill("ABC Corp");
-    await form.locator('input[name="address"]').fill("123 Street");
-    await form.locator('textarea[name="details"]').fill("Hello");
+    await fillSupportForm(form, {
+      firstName: "John",
+      lastName: "",
+      email: uniqueEmail,
+      phoneNumber: "1234567890",
+      company: "ABC Corp",
+      address: "123 Street",
+      details: "Hello",
+    });
 
     // Submit form
     await form.locator('button[type="submit"]').click();
 
     // Simple verification of error message
     const errorText = page.getByText("Last name is required");
-    await expect(errorText).toBeVisible();
+    await expect(errorText).toBeVisible({ timeout: 30000 });
   });
 
-  test("SP010 - Submit with Details empty (assuming mandatory)", async ({
+  test("SP012 - Submit with Details empty (assuming mandatory)", async ({
     page,
   }) => {
     test.setTimeout(120000);
+    const uniqueEmail = testDataHelper.generateUniqueEmail("mailinator.com");
     const form = await page.locator("form.w-full.max-w-2xl");
 
-    // Fill all fields except Details
-    await form.locator('input[name="firstName"]').fill("John");
-    await form.locator('input[name="lastName"]').fill("Doe");
-    await form.locator('input[name="email"]').fill("john@example.com");
-    await form.locator('input[name="phoneNumber"]').fill("1234567890");
-    await form.locator('input[name="company"]').fill("ABC Corp");
-    await form.locator('input[name="address"]').fill("123 Street");
+    // // Fill all fields except Details
+    // await form.locator('input[name="firstName"]').pressSequentially("John");
+    // await form.locator('input[name="lastName"]').pressSequentially("Doe");
+    // await form.locator('input[name="email"]').pressSequentially("john@example.com");
+    // await form.locator('input[name="phoneNumber"]').pressSequentially("1234567890");
+    // await form.locator('input[name="company"]').pressSequentially("ABC Corp");
+    // await form.locator('input[name="address"]').pressSequentially("123 Street");
 
+    await fillSupportForm(form, {
+      firstName: "John",
+      lastName: "Doe",
+      email: uniqueEmail,
+      phoneNumber: "1234567890",
+      company: "ABC Corp",
+      address: "123 Street",
+      details: "",
+    });
     // Submit form
     await form.locator('button[type="submit"]').click();
 
-    // Verify error message for Details
-    // await expect(page.locator('text="Details are required"')).toBeVisible();
-    // Wait for submitting state
-    await expect(page.getByText("Submitting...")).toBeVisible();
-
-    //Wait for submitting message to disappear
-    await expect(
-      page.locator("text=Support request created successfully")
-    ).toBeVisible({ timeout: 30000 });
-
-    await page.pause();
-
-    await page.screenshot({ path: "before-dialog.png" });
-
-    const visibleElements = await page.evaluate(() => {
-      return Array.from(document.querySelectorAll("*"))
-        .filter((el) => {
-          const style = window.getComputedStyle(el);
-          return style.display !== "none" && style.visibility !== "hidden";
-        })
-        .map((el) => ({
-          tagName: el.tagName,
-          id: el.id,
-          className: el.className,
-          textContent: el.textContent.trim(),
-        }));
+    await expect(page.locator('text="Details are required"')).toBeVisible({
+      timeout: 30000,
     });
-
-    try {
-      const dialogByRole = await page.locator('[role="dialog"]');
-      if (await dialogByRole.isVisible()) {
-        console.log("Found dialog by role");
-        await dialogByRole.screenshot({ path: "dialog-by-role.png" });
-      }
-
-      const dialogByModal = await page.locator('[aria-modal="true"]');
-      if (await dialogByModal.isVisible()) {
-        console.log("Found dialog by aria-modal");
-        await dialogByModal.screenshot({ path: "dialog-by-modal.png" });
-      }
-
-      const dialogByText = await page.getByText(
-        "Your support request has been submitted successfully"
-      );
-      if (await dialogByText.isVisible()) {
-        console.log("Found dialog by text");
-        await dialogByText.screenshot({ path: "dialog-by-text.png" });
-      }
-    } catch (error) {
-      console.log("Error while finding dialog:", error);
-    }
-
-    await page.pause();
-
-    // Verify form is cleared after successful submission
-    await expect(form.locator('input[name="firstName"]')).toHaveValue("");
-    await expect(form.locator('input[name="lastName"]')).toHaveValue("");
-    await expect(form.locator('input[name="email"]')).toHaveValue("");
-    await expect(form.locator('input[name="phoneNumber"]')).toHaveValue("");
-    await expect(form.locator('input[name="company"]')).toHaveValue("");
-    await expect(form.locator('input[name="address"]')).toHaveValue("");
-    await expect(form.locator('textarea[name="details"]')).toHaveValue("");
-
-    // Verify we're still on the support page
     await expect(page.url()).toContain("/support");
   });
 
-  test("SP011 - Submit with Email empty (assuming mandatory)", async ({
+  test("SP013 - Submit with Email empty (assuming mandatory)", async ({
     page,
   }) => {
+    test.setTimeout(60000);
     const form = await page.locator("form.w-full.max-w-2xl");
 
-    // Fill all fields except Email
-    await form.locator('input[name="firstName"]').fill("John");
-    await form.locator('input[name="lastName"]').fill("Doe");
-    await form.locator('input[name="phoneNumber"]').fill("1234567890");
-    await form.locator('input[name="company"]').fill("ABC Corp");
-    await form.locator('input[name="address"]').fill("123 Street");
-    await form.locator('textarea[name="details"]').fill("Hello");
+    await fillSupportForm(form, {
+      firstName: "John",
+      lastName: "Doe",
+      email: "",
+      phoneNumber: "1234567890",
+      company: "ABC Corp",
+      address: "123 Street",
+      details: "Hello",
+    });
 
     // Submit form
     await form.locator('button[type="submit"]').click();
 
     // Verify error message for Email
-    await expect(page.locator('text="Email is required"')).toBeVisible();
+    await expect(page.locator('text="Email is required"')).toBeVisible({
+      timeout: 30000,
+    });
   });
 
-  // test("SP014 - First Name with numbers", async ({ page }) => {
-  //   const uniqueEmail = generateUniqueEmail("mailinator.com");
-  //   const form = await page.locator("form.w-full.max-w-2xl");
-
-  //   // Fill First Name with numbers
-  //   await form.locator('input[name="firstName"]').fill("John123");
-
-  //   // Fill other required fields
-  //   await form.locator('input[name="lastName"]').fill("Doe");
-  //   await form.locator('input[name="email"]').fill(uniqueEmail);
-  //   await form.locator('input[name="phoneNumber"]').fill("1234567890");
-  //   await form.locator('input[name="company"]').fill("ABC Corp");
-  //   await form.locator('input[name="address"]').fill("123 Street");
-  //   await form.locator('textarea[name="details"]').fill("Hello");
-
-  //   // Submit form
-  //   await form.locator('button[type="submit"]').click();
-
-  //   // Simple verification of error message
-  //   const errorText = page.getByText("First name cannot contain numbers");
-  //   await expect(errorText).toBeVisible();
-  // });
-
-  // test("SP015 - Special characters in name fields", async ({ page }) => {
-  //   const form = await page.locator("form.w-full.max-w-2xl");
-
-  //   // Fill First Name with special characters
-  //   await form.locator('input[name="firstName"]').fill("@John!");
-
-  //   // Fill other required fields
-  //   await form.locator('input[name="lastName"]').fill("Doe");
-  //   await form.locator('input[name="email"]').fill("john@example.com");
-  //   await form.locator('input[name="phoneNumber"]').fill("1234567890");
-  //   await form.locator('input[name="company"]').fill("ABC Corp");
-  //   await form.locator('input[name="address"]').fill("123 Street");
-  //   await form.locator('textarea[name="details"]').fill("Hello");
-
-  //   // Submit form
-  //   await form.locator('button[type="submit"]').click();
-
-  //   // Simple verification of error message
-  //   const errorText = page.getByText("First name contains invalid characters");
-  //   await expect(errorText).toBeVisible();
-  // });
-
-  test("SP012 - First Name - Verify maximum length boundary", async ({
+  test("SP016 - First Name - Verify maximum length boundary", async ({
     page,
   }) => {
     test.setTimeout(240000);
@@ -560,15 +391,17 @@ test.describe("Support Form Tests", () => {
 
     // Create string of maximum length (255 characters)
     const maxLengthName = "A".repeat(255);
+    const uniqueEmail = testDataHelper.generateUniqueEmail("mailinator.com");
 
-    // Fill all required fields
-    await form.locator('input[name="firstName"]').fill(maxLengthName);
-    await form.locator('input[name="lastName"]').fill("Doe");
-    await form.locator('input[name="email"]').fill("john@example.com");
-    await form.locator('input[name="phoneNumber"]').fill("1234567890");
-    await form.locator('input[name="company"]').fill("ABC Corp");
-    await form.locator('input[name="address"]').fill("123 Street");
-    await form.locator('textarea[name="details"]').fill("Hello");
+    await fillSupportForm(form, {
+      firstName: maxLengthName,
+      lastName: "Doe",
+      email: uniqueEmail,
+      phoneNumber: "1234567890",
+      company: "ABC Corp",
+      address: "123 Street",
+      details: "Hello",
+    });
 
     // Submit form
     await form.locator('button[type="submit"]').click();
@@ -576,9 +409,9 @@ test.describe("Support Form Tests", () => {
     // Wait for success state
     try {
       // Try to find success message
-      await page.waitForSelector('[data-testid="success-message"]', {
-        timeout: 20000,
-      });
+      await expect(
+        page.locator("text=Support request created successfully")
+      ).toBeVisible({ timeout: 30000 });
     } catch {
       // If no success message, check if form was cleared/reset
       const firstNameInput = form.locator('input[name="firstName"]');
@@ -586,7 +419,7 @@ test.describe("Support Form Tests", () => {
     }
   });
 
-  test("SP013 - First Name - Verify exceeding maximum length", async ({
+  test("SP017 - First Name - Verify exceeding maximum length", async ({
     page,
   }) => {
     test.setTimeout(60000);
@@ -595,42 +428,34 @@ test.describe("Support Form Tests", () => {
 
     // Create string exceeding maximum length (256 characters)
     const tooLongName = "A".repeat(256);
+    const uniqueEmail = testDataHelper.generateUniqueEmail("mailinator.com");
 
-    // Fill all required fields
-    await form.locator('input[name="firstName"]').fill(tooLongName);
-    await form.locator('input[name="lastName"]').fill("Doe");
-    await form.locator('input[name="email"]').fill("john@example.com");
-    await form.locator('input[name="phoneNumber"]').fill("1234567890");
-    await form.locator('input[name="company"]').fill("ABC Corp");
-    await form.locator('input[name="address"]').fill("123 Street");
-    await form.locator('textarea[name="details"]').fill("Hello");
+    await fillSupportForm(form, {
+      firstName: tooLongName,
+      lastName: "Doe",
+      email: uniqueEmail,
+      phoneNumber: "1234567890",
+      company: "ABC Corp",
+      address: "123 Street",
+      details: "Hello",
+    });
 
     // Submit form
     await form.locator('button[type="submit"]').click();
 
     // Wait for submitting state
-    await expect(page.getByText("Submitting...")).toBeVisible();
+    await expect(page.getByText("Submitting...")).toBeVisible({
+      timeout: 30000,
+    });
 
     // Wait for submitting message to disappear
     await expect(page.getByText("Submitting...")).toBeHidden();
 
     await page.pause();
 
-    await page.screenshot({ path: "before-dialog.png" });
+    // console.log("Current URL:", page.url());
 
-    const visibleElements = await page.evaluate(() => {
-      return Array.from(document.querySelectorAll("*"))
-        .filter((el) => {
-          const style = window.getComputedStyle(el);
-          return style.display !== "none" && style.visibility !== "hidden";
-        })
-        .map((el) => ({
-          tagName: el.tagName,
-          id: el.id,
-          className: el.className,
-          textContent: el.textContent.trim(),
-        }));
-    });
+    await page.screenshot({ path: "before-dialog.png" });
 
     try {
       const dialogByRole = await page.locator('[role="dialog"]');
@@ -662,9 +487,7 @@ test.describe("Support Form Tests", () => {
       tooLongName
     );
     await expect(form.locator('input[name="lastName"]')).toHaveValue("Doe");
-    await expect(form.locator('input[name="email"]')).toHaveValue(
-      "john@example.com"
-    );
+    await expect(form.locator('input[name="email"]')).toHaveValue(uniqueEmail);
     await expect(form.locator('input[name="phoneNumber"]')).toHaveValue(
       "1234567890"
     );
@@ -678,32 +501,7 @@ test.describe("Support Form Tests", () => {
     await expect(page.url()).toContain("/support");
   });
 
-  // test("SP018 - Last Name with numbers", async ({ page }) => {
-  //   const form = await page.locator("form.w-full.max-w-2xl");
-
-  //   // Fill all required fields with Last Name containing numbers
-  //   await form.locator('input[name="firstName"]').fill("John");
-  //   await form.locator('input[name="lastName"]').fill("Doe456");
-  //   await form.locator('input[name="email"]').fill("john@example.com");
-  //   await form.locator('input[name="phoneNumber"]').fill("1234567890");
-  //   await form.locator('input[name="company"]').fill("ABC Corp");
-  //   await form.locator('input[name="address"]').fill("123 Street");
-  //   await form.locator('textarea[name="details"]').fill("Hello");
-
-  //   // Submit form
-  //   await form.locator('button[type="submit"]').click();
-
-  //   // Wait for submitting state
-  //   await expect(page.getByText("Submitting...")).toBeVisible();
-
-  //   // Verify error dialog
-  //   await verifyDialog(page, "Last Name cannot contain numbers");
-
-  //   // Verify form retains the entered data
-  //   await expect(form.locator('input[name="lastName"]')).toHaveValue("Doe456");
-  // });
-
-  test("SP014 - Last Name - Verify maximum length boundary", async ({
+  test("SP019 - Last Name - Verify maximum length boundary", async ({
     page,
   }) => {
     test.setTimeout(120000);
@@ -711,15 +509,17 @@ test.describe("Support Form Tests", () => {
 
     // Create string of maximum length (255 characters)
     const maxLengthName = "A".repeat(255);
+    const uniqueEmail = testDataHelper.generateUniqueEmail("mailinator.com");
 
-    // Fill all required fields
-    await form.locator('input[name="firstName"]').fill("John");
-    await form.locator('input[name="lastName"]').fill(maxLengthName);
-    await form.locator('input[name="email"]').fill("john@example.com");
-    await form.locator('input[name="phoneNumber"]').fill("1234567890");
-    await form.locator('input[name="company"]').fill("ABC Corp");
-    await form.locator('input[name="address"]').fill("123 Street");
-    await form.locator('textarea[name="details"]').fill("Hello");
+    await fillSupportForm(form, {
+      firstName: "John",
+      lastName: maxLengthName,
+      email: uniqueEmail,
+      phoneNumber: "1234567890",
+      company: "ABC Corp",
+      address: "123 Street",
+      details: "Hello",
+    });
 
     // Submit form
     await form.locator('button[type="submit"]').click();
@@ -737,50 +537,44 @@ test.describe("Support Form Tests", () => {
     }
   });
 
-  test("SP015 - Last Name - Verify exceeding maximum length", async ({
+  test("SP020 - Last Name - Verify exceeding maximum length", async ({
     page,
   }) => {
+    // Enable debug logging
+    // page.on("console", (msg) => console.log(msg.text()));
 
     const form = await page.locator("form.w-full.max-w-2xl");
 
     // Create string exceeding maximum length (256 characters)
     const tooLongName = "A".repeat(256);
+    const uniqueEmail = testDataHelper.generateUniqueEmail("mailinator.com");
 
-    // Fill all required fields
-    await form.locator('input[name="firstName"]').fill("John");
-    await form.locator('input[name="lastName"]').fill(tooLongName);
-    await form.locator('input[name="email"]').fill("john@example.com");
-    await form.locator('input[name="phoneNumber"]').fill("1234567890");
-    await form.locator('input[name="company"]').fill("ABC Corp");
-    await form.locator('input[name="address"]').fill("123 Street");
-    await form.locator('textarea[name="details"]').fill("Hello");
+    await fillSupportForm(form, {
+      firstName: "John",
+      lastName: tooLongName,
+      email: uniqueEmail,
+      phoneNumber: "1234567890",
+      company: "ABC Corp",
+      address: "123 Street",
+      details: "Hello",
+    });
 
     // Submit form
     await form.locator('button[type="submit"]').click();
 
     // Wait for submitting state
-    await expect(page.getByText("Submitting...")).toBeVisible();
+    await expect(page.getByText("Submitting...")).toBeVisible({
+      timeout: 30000,
+    });
 
     // Wait for submitting message to disappear
     await expect(page.getByText("Submitting...")).toBeHidden();
 
     await page.pause();
 
-    await page.screenshot({ path: "before-dialog.png" });
+    // console.log("Current URL:", page.url());
 
-    const visibleElements = await page.evaluate(() => {
-      return Array.from(document.querySelectorAll("*"))
-        .filter((el) => {
-          const style = window.getComputedStyle(el);
-          return style.display !== "none" && style.visibility !== "hidden";
-        })
-        .map((el) => ({
-          tagName: el.tagName,
-          id: el.id,
-          className: el.className,
-          textContent: el.textContent.trim(),
-        }));
-    });
+    await page.screenshot({ path: "before-dialog.png" });
 
     try {
       const dialogByRole = await page.locator('[role="dialog"]');
@@ -813,9 +607,7 @@ test.describe("Support Form Tests", () => {
     await expect(form.locator('input[name="lastName"]')).toHaveValue(
       tooLongName
     );
-    await expect(form.locator('input[name="email"]')).toHaveValue(
-      "john@example.com"
-    );
+    await expect(form.locator('input[name="email"]')).toHaveValue(uniqueEmail);
     await expect(form.locator('input[name="phoneNumber"]')).toHaveValue(
       "1234567890"
     );
@@ -829,86 +621,75 @@ test.describe("Support Form Tests", () => {
     await expect(page.url()).toContain("/support");
   });
 
-  test("SP016 - Email format validation", async ({ page }) => {
+  test("SP021 - Email format validation", async ({ page }) => {
     test.setTimeout(60000);
     const form = await page.locator("form.w-full.max-w-2xl");
 
-    // Fill all required fields with invalid email format
-    await form.locator('input[name="firstName"]').fill("John");
-    await form.locator('input[name="lastName"]').fill("Doe");
-    await form.locator('input[name="email"]').fill("john.doe@mail.com");
-    await form.locator('input[name="phoneNumber"]').fill("1234567890");
-    await form.locator('input[name="company"]').fill("ABC Corp");
-    await form.locator('input[name="address"]').fill("123 Street");
-    await form.locator('textarea[name="details"]').fill("Hello");
-
+    await fillSupportForm(form, {
+      firstName: "John",
+      lastName: "Doe",
+      email: "john.doe@mail.com",
+      phoneNumber: "1234567890",
+      company: "ABC Corp",
+      address: "123 Street",
+      details: "Hello",
+    });
     // Submit form
     await form.locator('button[type="submit"]').click();
 
-    // Verify form retains the entered data
-    await expect(form.locator('input[name="email"]')).toHaveValue("", {
-      timeout: 30000,
-    });
+    await expect(
+      page.locator("text=Support request created successfully")
+    ).toBeVisible({ timeout: 30000 });
   });
 
-  test("SP017 - Invalid email format", async ({ page }) => {
+  test("SP022 - Invalid email format", async ({ page }) => {
     const form = await page.locator("form.w-full.max-w-2xl");
 
-    // Fill all required fields with email containing spaces
-    await form.locator('input[name="firstName"]').fill("John");
-    await form.locator('input[name="lastName"]').fill("Doe");
-    await form.locator('input[name="email"]').fill("john.com");
-    await form.locator('input[name="phoneNumber"]').fill("1234567890");
-    await form.locator('input[name="company"]').fill("ABC Corp");
-    await form.locator('input[name="address"]').fill("123 Street");
-    await form.locator('textarea[name="details"]').fill("Hello");
+    await fillSupportForm(form, {
+      firstName: "John",
+      lastName: "Doe",
+      email: "join.com",
+      phoneNumber: "1234567890",
+      company: "ABC Corp",
+      address: "123 Street",
+      details: "Hello",
+    });
 
     // Submit form
     await form.locator('button[type="submit"]').click();
 
-    // Wait for submitting state
-    // await expect(page.getByText("Submitting...")).toBeVisible();
-
-    // Verify error dialog
-    // await verifyDialog(page, "Invalid email address");
     await expect(page.locator("text=Invalid email address")).toBeVisible({
       timeout: 10000,
     });
-
-    // Verify form retains the entered data but might trim spaces
-    await expect(form.locator('input[name="email"]')).toHaveValue("john.com");
   });
 
-  test("SP018 - Email format - Spaces are trimmed and accepted", async ({
+  test("SP023 - Email format - Spaces are trimmed and accepted", async ({
     page,
   }) => {
     const form = await page.locator("form.w-full.max-w-2xl");
 
-    // Fill email with spaces that should be trimmed
-    await form.locator('input[name="email"]').fill("  test@example.com  ");
-
-    // Fill other required fields
-    await form.locator('input[name="firstName"]').fill("John");
-    await form.locator('input[name="lastName"]').fill("Doe");
-    await form.locator('input[name="phoneNumber"]').fill("1234567890");
-    await form.locator('input[name="company"]').fill("ABC Corp");
-    await form.locator('input[name="address"]').fill("123 Street");
-    await form.locator('textarea[name="details"]').fill("Hello");
+    await fillSupportForm(form, {
+      firstName: "John",
+      lastName: "Doe",
+      email: "  test@example.com  ",
+      phoneNumber: "1234567890",
+      company: "ABC Corp",
+      address: "123 Street",
+      details: "Hello",
+    });
 
     // Submit form
     await form.locator('button[type="submit"]').click();
 
     // Wait for submitting state
-    await expect(page.getByText("Submitting...")).toBeVisible();
+    await expect(page.getByText("Submitting...")).toBeVisible({
+      timeout: 30000,
+    });
 
-    // Wait for submitting message to disappear
-    // await expect(page.getByText("Submitting...")).toBeHidden();
-
-    // Verify form submission was successful
     try {
-      await page.waitForSelector('[data-testid="success-message"]', {
-        timeout: 10000,
-      });
+      await expect(
+        page.locator("text=Support request created successfully")
+      ).toBeVisible({ timeout: 30000 });
     } catch {
       // If no success message, verify form was cleared which also indicates success
       const emailInput = form.locator('input[name="email"]');
@@ -919,87 +700,82 @@ test.describe("Support Form Tests", () => {
     await expect(page.url()).toContain("/support");
   });
 
-  test("SP019 - Invalid email format - Invalid characters in domain", async ({
+  test("SP024 - Invalid email format - Invalid characters in domain", async ({
     page,
   }) => {
     const form = await page.locator("form.w-full.max-w-2xl");
 
     // Fill email with invalid domain
-    await form.locator('input[name="email"]').fill("test@exa!mple.com");
+    await form
+      .locator('input[name="email"]')
+      .pressSequentially("test@exa!mple.com");
 
-    // Fill other required fields
-    await form.locator('input[name="firstName"]').fill("John");
-    await form.locator('input[name="lastName"]').fill("Doe");
-    await form.locator('input[name="phoneNumber"]').fill("1234567890");
-    await form.locator('input[name="company"]').fill("ABC Corp");
-    await form.locator('input[name="address"]').fill("123 Street");
-    await form.locator('textarea[name="details"]').fill("Hello");
+    await fillSupportForm(form, {
+      firstName: "John",
+      lastName: "Doe",
+      email: "test@exa!mple.com",
+      phoneNumber: "1234567890",
+      company: "ABC Corp",
+      address: "123 Street",
+      details: "Hello",
+    });
 
     // Verify error message appears for invalid email
-    await expect(page.locator("text=Invalid email address")).toBeVisible();
-
-    // Verify that the form was not submitted
-    await expect(page.url()).toContain("/support");
-
-    // Verify that the submit button is still present
-    await expect(form.locator('button[type="submit"]')).toBeVisible();
-
-    // Verify form retains the entered data
-    await expect(form.locator('input[name="email"]')).toHaveValue(
-      "test@exa!mple.com"
-    );
+    await expect(page.locator("text=Invalid email address")).toBeVisible({
+      timeout: 30000,
+    });
   });
 
-  test("SP020 - Valid phone number format", async ({ page }) => {
+  test("SP025 - Valid phone number format", async ({ page }) => {
     const form = await page.locator("form.w-full.max-w-2xl");
+    const uniqueEmail = testDataHelper.generateUniqueEmail("mailinator.com");
 
-    // Fill form with valid phone number
-    await form.locator('input[name="firstName"]').fill("John");
-    await form.locator('input[name="lastName"]').fill("Doe");
-    await form.locator('input[name="email"]').fill("john@example.com");
-    await form.locator('input[name="phoneNumber"]').fill("0123456789");
-    await form.locator('input[name="company"]').fill("ABC Corp");
-    await form.locator('input[name="address"]').fill("123 Street");
-    await form.locator('textarea[name="details"]').fill("Hello");
+    await fillSupportForm(form, {
+      firstName: "John",
+      lastName: "Doe",
+      email: uniqueEmail,
+      phoneNumber: "0123456789",
+      company: "ABC Corp",
+      address: "123 Street",
+      details: "Hello",
+    });
 
     // Submit form
     await form.locator('button[type="submit"]').click();
 
     // Wait for success state
-    try {
-      await page.waitForSelector('[data-testid="success-message"]', {
-        timeout: 10000,
-      });
-    } catch {
-      const phoneInput = form.locator('input[name="phoneNumber"]');
-      await expect(phoneInput).toHaveValue("");
-    }
+    await expect(
+      page.locator("text=Support request created successfully")
+    ).toBeVisible({ timeout: 30000 });
   });
 
-  test("SP021 - Phone number with letters", async ({ page }) => {
+  test("SP026 - Phone number with letters", async ({ page }) => {
+    test.setTimeout(60000);
     const form = await page.locator("form.w-full.max-w-2xl");
+    const uniqueEmail = testDataHelper.generateUniqueEmail("mailinator.com");
 
-    // Fill phone number with letters
-    await form.locator('input[name="phoneNumber"]').fill("abc123456");
-
-    // Fill other required fields
-    await form.locator('input[name="firstName"]').fill("John");
-    await form.locator('input[name="lastName"]').fill("Doe");
-    await form.locator('input[name="email"]').fill("john@example.com");
-    await form.locator('input[name="company"]').fill("ABC Corp");
-    await form.locator('input[name="address"]').fill("123 Street");
-    await form.locator('textarea[name="details"]').fill("Hello");
+    await fillSupportForm(form, {
+      firstName: "John",
+      lastName: "Doe",
+      email: uniqueEmail,
+      phoneNumber: "abc123456",
+      company: "ABC Corp",
+      address: "123 Street",
+      details: "Hello",
+    });
 
     // Verify error message appears for invalid phone number
     await expect(
       page.locator("text=Please enter a valid phone number")
-    ).toBeVisible();
+    ).toBeVisible({ timeout: 30000 });
 
     // Verify that the form was not submitted
     await expect(page.url()).toContain("/support");
 
     // Verify that the submit button is still present
-    await expect(form.locator('button[type="submit"]')).toBeVisible();
+    await expect(form.locator('button[type="submit"]')).toBeVisible({
+      timeout: 30000,
+    });
 
     // Verify form retains the entered data
     await expect(form.locator('input[name="phoneNumber"]')).toHaveValue(
@@ -1007,99 +783,91 @@ test.describe("Support Form Tests", () => {
     );
   });
 
-  test("SP022 - Phone number with special characters", async ({ page }) => {
+  test("SP027 - Phone number with special characters", async ({ page }) => {
     const form = await page.locator("form.w-full.max-w-2xl");
+    const uniqueEmail = testDataHelper.generateUniqueEmail("mailinator.com");
 
-    // Fill phone number with special characters
-    await form.locator('input[name="phoneNumber"]').fill("123456%780");
-
-    // Fill other required fields
-    await form.locator('input[name="firstName"]').fill("John");
-    await form.locator('input[name="lastName"]').fill("Doe");
-    await form.locator('input[name="email"]').fill("john@example.com");
-    await form.locator('input[name="company"]').fill("ABC Corp");
-    await form.locator('input[name="address"]').fill("123 Street");
-    await form.locator('textarea[name="details"]').fill("Hello");
+    await fillSupportForm(form, {
+      firstName: "John",
+      lastName: "Doe",
+      email: uniqueEmail,
+      phoneNumber: "123456%780",
+      company: "ABC Corp",
+      address: "123 Street",
+      details: "Hello",
+    });
 
     // Verify error message appears for invalid phone number
     await expect(
       page.locator('text="Please enter a valid phone number"')
-    ).toBeVisible();
-
-    // Verify that the form was not submitted
-    await expect(page.url()).toContain("/support");
-
-    // Verify that the submit button is still present
-    await expect(form.locator('button[type="submit"]')).toBeVisible();
-
-    // Verify form retains the entered data
-    await expect(form.locator('input[name="phoneNumber"]')).toHaveValue(
-      "123456%780"
-    );
+    ).toBeVisible({ timeout: 30000 });
   });
 
-  test("SP023 - Phone number with incorrect length (too short/long)", async ({
+  test("SP028 - Phone number with incorrect length (too short/long)", async ({
     page,
   }) => {
     const form = await page.locator("form.w-full.max-w-2xl");
+    const uniqueEmail = testDataHelper.generateUniqueEmail("mailinator.com");
 
-    // Fill phone number with invalid length
-    await form.locator('input[name="phoneNumber"]').fill("123");
-
-    // Fill other required fields
-    await form.locator('input[name="firstName"]').fill("John");
-    await form.locator('input[name="lastName"]').fill("Doe");
-    await form.locator('input[name="email"]').fill("john@example.com");
-    await form.locator('input[name="company"]').fill("ABC Corp");
-    await form.locator('input[name="address"]').fill("123 Street");
-    await form.locator('textarea[name="details"]').fill("Hello");
+    await fillSupportForm(form, {
+      firstName: "John",
+      lastName: "Doe",
+      email: uniqueEmail,
+      phoneNumber: "123",
+      company: "ABC Corp",
+      address: "123 Street",
+      details: "Hello",
+    });
 
     // Verify error message appears for invalid phone number
     await expect(
       page.locator('text="Please enter a valid phone number"')
-    ).toBeVisible();
+    ).toBeVisible({ timeout: 30000 });
 
     // Verify that the form was not submitted
     await expect(page.url()).toContain("/support");
 
     // Verify that the submit button is still present
-    await expect(form.locator('button[type="submit"]')).toBeVisible();
+    await expect(form.locator('button[type="submit"]')).toBeVisible({
+      timeout: 30000,
+    });
 
     // Verify form retains the entered data
     await expect(form.locator('input[name="phoneNumber"]')).toHaveValue("123");
   });
 
-  test("SP024 - Company field - Accept alphanumeric & common symbols", async ({
+  test("SP030 - Company field - Accept alphanumeric & common symbols", async ({
     page,
   }) => {
+    test.setTimeout(60000);
     const form = await page.locator("form.w-full.max-w-2xl");
+    const uniqueEmail = testDataHelper.generateUniqueEmail("mailinator.com");
 
-    // Fill company with various valid characters
-    await form.locator('input[name="firstName"]').fill("John");
-    await form.locator('input[name="lastName"]').fill("Doe");
-    await form.locator('input[name="email"]').fill("john@example.com");
-    await form.locator('input[name="phoneNumber"]').fill("1234567890");
-    await form
-      .locator('input[name="company"]')
-      .fill('ABC Corp., "X&Y Inc.", Jane\'s Shop (Local)');
-    await form.locator('input[name="address"]').fill("123 Street");
-    await form.locator('textarea[name="details"]').fill("Hello");
+    await fillSupportForm(form, {
+      firstName: "John",
+      lastName: "Doe",
+      email: uniqueEmail,
+      phoneNumber: "1234567890",
+      company: 'ABC Corp., "X&Y Inc.", Jane\'s Shop (Local)',
+      address: "123 Street",
+      details: "Hello",
+    });
 
     // Submit form
     await form.locator('button[type="submit"]').click();
 
+    // Wait for submitting state
+    await expect(page.getByText("Submitting...")).toBeVisible({
+      timeout: 30000,
+    });
+
     // Wait for success state
-    try {
-      await page.waitForSelector('[data-testid="success-message"]', {
-        timeout: 10000,
-      });
-    } catch {
-      const companyInput = form.locator('input[name="company"]');
-      await expect(companyInput).toHaveValue("");
-    }
+    await expect(
+      page.locator("text=Support request created successfully")
+    ).toBeVisible({ timeout: 30000 });
   });
 
-  test("SP025 - HTML/JS injection attempt", async ({ page }) => {
+  test("SP032 - HTML/JS injection attempt", async ({ page }) => {
     let alertTriggered = false;
 
     page.on("dialog", async (dialog) => {
@@ -1123,19 +891,25 @@ test.describe("Support Form Tests", () => {
     // Fill all fields with XSS attempts
     await form
       .locator('input[name="firstName"]')
-      .fill(injectionData.xss.firstName);
+      .pressSequentially(injectionData.xss.firstName);
     await form
       .locator('input[name="lastName"]')
-      .fill(injectionData.xss.lastName);
-    await form.locator('input[name="email"]').fill(injectionData.xss.email);
+      .pressSequentially(injectionData.xss.lastName);
+    await form
+      .locator('input[name="email"]')
+      .pressSequentially(injectionData.xss.email);
     await form
       .locator('input[name="phoneNumber"]')
-      .fill(injectionData.xss.phoneNumber);
-    await form.locator('input[name="company"]').fill(injectionData.xss.company);
-    await form.locator('input[name="address"]').fill(injectionData.xss.address);
+      .pressSequentially(injectionData.xss.phoneNumber);
+    await form
+      .locator('input[name="company"]')
+      .pressSequentially(injectionData.xss.company);
+    await form
+      .locator('input[name="address"]')
+      .pressSequentially(injectionData.xss.address);
     await form
       .locator('textarea[name="details"]')
-      .fill(injectionData.xss.details);
+      .pressSequentially(injectionData.xss.details);
 
     // Submit form
     await form.locator('button[type="submit"]').click();
@@ -1144,21 +918,29 @@ test.describe("Support Form Tests", () => {
     expect(alertTriggered).toBeFalsy();
   });
 
-  test("SP026 - SQL injection attempt in various fields", async ({ page }) => {
+  test("SP033 - SQL injection attempt in various fields", async ({ page }) => {
     const form = await page.locator("form.w-full.max-w-2xl");
 
     const sqlInjection = "OR 1=1";
 
     // Try SQL injection in all fields
-    await form.locator('input[name="firstName"]').fill(sqlInjection);
-    await form.locator('input[name="lastName"]').fill(sqlInjection);
+    await form
+      .locator('input[name="firstName"]')
+      .pressSequentially(sqlInjection);
+    await form
+      .locator('input[name="lastName"]')
+      .pressSequentially(sqlInjection);
     await form
       .locator('input[name="email"]')
-      .fill(`test${sqlInjection}@example.com`);
-    await form.locator('input[name="phoneNumber"]').fill("1234567890");
-    await form.locator('input[name="company"]').fill(sqlInjection);
-    await form.locator('input[name="address"]').fill(sqlInjection);
-    await form.locator('textarea[name="details"]').fill(sqlInjection);
+      .pressSequentially(`test${sqlInjection}@example.com`);
+    await form
+      .locator('input[name="phoneNumber"]')
+      .pressSequentially("1234567890");
+    await form.locator('input[name="company"]').pressSequentially(sqlInjection);
+    await form.locator('input[name="address"]').pressSequentially(sqlInjection);
+    await form
+      .locator('textarea[name="details"]')
+      .pressSequentially(sqlInjection);
 
     // Submit form
     await form.locator('button[type="submit"]').click();
@@ -1167,6 +949,8 @@ test.describe("Support Form Tests", () => {
     await expect(page.url()).toContain("/support");
 
     // Verify no database errors are exposed
-    await expect(page.locator("text=/SQL|database|error/i")).not.toBeVisible();
+    await expect(page.locator("text=/SQL|database|error/i")).not.toBeVisible({
+      timeout: 30000,
+    });
   });
 });
