@@ -18,16 +18,16 @@ test("Login, add product to card, remove product from cart", async ({
     TEST_CREDENTIALS.validUser.password
   );
   await page.click('button:has-text("Log in")');
-  await page.waitForURL("**/default-channel");
+  await page.waitForURL("**/us");
   await page.waitForSelector(
     'button.bg-neutral-200 >> span[aria-hidden="true"]'
   );
 
   //Step 2: Access product page
-  await page.waitForSelector('a[href="/default-channel/products"]');
+  await page.waitForSelector('a[href="/us/products"]');
 
   // Click in "Order"
-  await page.click('a[href="/default-channel/products"]');
+  await page.click('a[href="/us/products"]');
 
   const firstProduct = page
     .locator('li[data-testid="ProductElement"] a')
@@ -38,8 +38,7 @@ test("Login, add product to card, remove product from cart", async ({
   await page.pause();
 
   //Step 3: Add product to cart
-  const xsInput = page.locator('input[type="number"]').first();
-  await xsInput.fill("1");
+  await page.fill('input[max="9999"]', "1");
   const addToCartBtn = page.locator("button:has-text('Add to Cart')");
   await expect(addToCartBtn).toBeVisible({ timeout: 30000 });
   await addToCartBtn.click();
@@ -64,7 +63,7 @@ test("Login, add product to card, remove product from cart", async ({
     expect(itemCount).toBeGreaterThan(0);
 
     //Step 5: Access the cart
-    await page.click("a[href='/default-channel/cart']");
+    await page.click("a[href='/us/cart']");
     await expect(page).toHaveURL(CART_URL);
 
     //Step 6: Remove product from cart
@@ -85,16 +84,16 @@ test("Login, add product to cart, check total price, checkout", async ({
     TEST_CREDENTIALS.validUser.password
   );
   await page.click('button:has-text("Log in")');
-  await page.waitForURL("**/default-channel");
+  await page.waitForURL("**/us");
   await page.waitForSelector(
     'button.bg-neutral-200 >> span[aria-hidden="true"]'
   );
 
   //Step 2: Access product page
-  await page.waitForSelector('a[href="/default-channel/products"]');
+  await page.waitForSelector('a[href="/us/products"]');
 
   // Click in "Order"
-  await page.click('a[href="/default-channel/products"]');
+  await page.click('a[href="/us/products"]');
 
   const firstProduct = page
     .locator('li[data-testid="ProductElement"] a')
@@ -105,8 +104,7 @@ test("Login, add product to cart, check total price, checkout", async ({
   await page.pause();
 
   //Step 3: Add product to cart
-  const xsInput = page.locator('input[type="number"]').first();
-  await xsInput.fill("1");
+  await page.fill('input[max="9999"]', "1");
   const addToCartBtn = page.locator("button:has-text('Add to Cart')");
   await expect(addToCartBtn).toBeVisible({ timeout: 30000 });
   await addToCartBtn.click();
@@ -122,7 +120,7 @@ test("Login, add product to cart, check total price, checkout", async ({
     const errorText = await errorMessage.textContent();
     console.error("Error message:", errorText);
   } else {
-    await page.click("a[href='/default-channel/cart']");
+    await page.click("a[href='/us/cart']");
     // Check total price
     const totalLocator = page.locator("div.font-medium.text-neutral-900");
     const priceText = await totalLocator.textContent({ timeout: 300000 });
