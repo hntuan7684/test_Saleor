@@ -5,13 +5,21 @@
   "scripts": {
     "test": "playwright test",
     "test:performance": "playwright test performance.spec.js",
-    "test:pagespeed": "playwright test pagespeed.spec.js"
+    "test:pagespeed": "playwright test pagespeed.spec.js",
+    "test:cucumber": "cucumber-js",
+    "test:cucumber:gui": "cucumber-js --format progress --format html:results/cucumber-report.html",
+    "test:cucumber:headed": "cucumber-js --format progress --format html:results/cucumber-report.html --tags '@SP007'",
+    "test:cucumber:all": "cucumber-js --format progress --format html:results/cucumber-report.html --format summary",
+    "test:all": "npm run test && npm run test:cucumber"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "description": "",
   "devDependencies": {
+    "@babel/preset-env": "^7.27.2",
+    "@babel/register": "^7.27.1",
+    "@cucumber/cucumber": "^11.3.0",
     "@playwright/test": "^1.52.0",
     "@types/node": "^22.15.17",
     "chrome-launcher": "^1.2.0",
