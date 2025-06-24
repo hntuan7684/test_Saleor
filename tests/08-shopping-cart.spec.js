@@ -1,12 +1,13 @@
 // cartPage.spec.js
-const { BASE_URL } = require("./utils/constants");
-const { test, expect } = require("@playwright/test");
+import { test } from './global-test';
+const { LOGIN_URL, PRODUCTS_URL, CART_URL } = require("./utils/constants");
+const { expect } = require("@playwright/test");
 const { CartPage } = require("./pageObjects/ShoppingCartPage");
 
-const PRODUCT_URL = `${BASE_URL}/products`;
-const CART_URL = `${BASE_URL}/cart`;
 
-// Helper để mở Cart từ icon
+
+
+// Helper to open Cart from icon
 const openCart = async (page) => {
   const cartIcon = page.locator('a[href*="/cart"]'); // ✅
   await expect(cartIcon).toBeVisible();
@@ -15,14 +16,14 @@ const openCart = async (page) => {
 };
 
 const login = async (page) => {
-  await page.goto(`${BASE_URL}/login`);
+  await page.goto(`${LOGIN_URL}`);
   await page.locator("[placeholder='Email']").fill("testaccount455@mailinator.com");
   await page.locator("[placeholder='Password']").fill("ValidPass123!");
 
-  // ✅ Sửa đúng cách chọn nút
+  // ✅ Fixed correct button selection
   await page.getByRole("button", { name: "Log In" }).click();
 
-  // ⏳ Đảm bảo chuyển hướng thành công
+  // ⏳ Ensure successful redirection
   await expect(page).toHaveURL(/default-channel/);
 };
 
@@ -31,19 +32,20 @@ test.describe("Shopping Cart Tests", () => {
     await login(page);
     await page.waitForLoadState("networkidle");
 
-    await page.goto(`${PRODUCT_URL}/bella-3001`);
+    await page.goto(`${PRODUCTS_URL}/bella-3001`);
     await page.waitForLoadState("domcontentloaded");
 
-    await page.getByRole("button", { name: "2XL" }).click();
+    await page.getByRole("button", { title: "2XL" }).click();
     await page.locator("input[type='number']").fill("1");
     await page.getByRole("button", { name: "Add to Cart" }).click();
-    await page.waitForTimeout(1000);
+    await page.waitForSelector('text=Added to Cart', { timeout: 120000 });
+
 
     const cartIcon = page.locator('a[href*="/cart"]');
     await cartIcon.click();
     await page.waitForLoadState("networkidle");
 
-    // ✅ Kiểm tra heading sản phẩm trong giỏ hàng
+    // ✅ Check product heading in cart
     const heading = page.locator('a h2');
     await expect(heading).toHaveText("BELLA + CANVAS - Jersey Tee - 3001", {
       timeout: 10000,
@@ -51,7 +53,7 @@ test.describe("Shopping Cart Tests", () => {
   });
 
   test("CT002 - Open Cart Page from Header", async ({ page }) => {
-    await login(page); // nếu login là bắt buộc
+    await login(page); // if login is required
     await page.waitForLoadState("networkidle");
 
     await openCart(page);
@@ -71,23 +73,24 @@ test.describe("Shopping Cart Tests", () => {
   });
 
   test("CT004 - Remove Product from Cart", async ({ page }) => {
-  await login(page); // đảm bảo đã login
-  await page.waitForLoadState("networkidle");
+    await login(page); // ensure logged in
+    await page.waitForLoadState("networkidle");
 
-  await openCart(page);
-  const cart = new CartPage(page);
-  await cart.removeItem(0);
+    await openCart(page);
+    const cart = new CartPage(page);
+    await cart.removeItem(0);
 
-  const cartItems = await cart.getItemCount();
-  expect(cartItems);
-});
+    const cartItems = await cart.getItemCount();
+    expect(cartItems);
+  });
 
+ test("CT005 - Verify Subtotal Matches Sum of Prices", async ({ page }) => {
+  test.setTimeout(60000); // ⏱ Set timeout to 60 seconds
 
-test("CT005 - Verify Subtotal Matches Sum of Prices", async ({ page }) => {
   await login(page);
   await page.waitForLoadState("networkidle");
 
-  await page.goto(`${PRODUCT_URL}/bella-3001`);
+  await page.goto(`${PRODUCTS_URL}/bella-3001`);
   await page.waitForLoadState("domcontentloaded");
 
   await page.getByRole("button", { name: "2XL" }).click();

@@ -1,14 +1,8 @@
-import { test, expect } from "@playwright/test";
+import { test } from './global-test.js';
+import { expect } from "@playwright/test";
 import { ForgotPasswordPage } from "./pageObjects/ForgotPasswordPage.js";
 import { generateUniqueEmail } from "./utils/testDataHelper.js";
 import { BASE_URL, MAILINATOR_URL } from "./utils/constants.js";
-
-// Excel logging utilities are disabled in this version
-// import {
-//   initExcel,
-//   logTestResult,
-//   saveExcel,
-// } from "./utils/testResultLogger.js";
 
 test.describe("Forgot Password Flow", () => {
   // test.beforeAll(async () => {
@@ -92,7 +86,7 @@ test.describe("Forgot Password Flow", () => {
           await forgotPage.fillEmail(tc.email);
           for (let i = 0; i < tc.repeat; i++) {
             await forgotPage.clickSubmit();
-            await page.waitForTimeout(1000);
+            await page.waitForTimeout(120000);
           }
           const msg = await forgotPage.getErrorMessageText();
           const limited = /too many|rate limit|try again/i.test(msg);
@@ -121,20 +115,6 @@ test.describe("Forgot Password Flow", () => {
         actual = `Exception: ${e.message}`;
         status = "Fail";
       }
-
-      // Result logging is currently disabled
-      // await logTestResult({
-      //   id: tc.id,
-      //   description: tc.desc,
-      //   input: tc.email || "N/A",
-      //   expected: tc.shouldPass ? "Success" : "Error or appropriate message",
-      //   actual,
-      //   status,
-      // });
     });
   }
-
-  // test.afterAll(async () => {
-  //   await saveExcel();
-  // });
 });

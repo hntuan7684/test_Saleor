@@ -1,4 +1,5 @@
 // pageObjects/ForgotPasswordPage.js
+import { FORGOTPASSWORD_URL } from '../utils/constants';
 export class ForgotPasswordPage {
   constructor(page) {
     this.page = page;
@@ -11,7 +12,7 @@ export class ForgotPasswordPage {
   }
 
   async navigate() {
-    await this.page.goto("https://mypod.io.vn/default-channel/reset-password");
+    await this.page.goto(`${FORGOTPASSWORD_URL}`);
   }
 
   async fillEmail(value) {
