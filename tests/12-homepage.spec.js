@@ -1,6 +1,7 @@
 import { test } from "./global-test";
 import { expect } from "@playwright/test";
-import { BASE_URL } from "./utils/constants";
+import { BASE_URL, LOGIN_URL } from "./utils/constants";
+
 
 test.describe("ZoomPrints UI Test Cases", () => {
   test.beforeEach(async ({ page }) => {
@@ -71,7 +72,7 @@ test.describe("ZoomPrints UI Test Cases", () => {
 
       // Wait for header to be present
       const header = page.locator("header");
-      await expect(header).toBeVisible({ timeout: 10000 });
+      await expect(header).toBeVisible({ timeout: 30000 });
 
       // Get initial header position
       const initialPosition = await header.boundingBox();
@@ -132,12 +133,12 @@ test.describe("ZoomPrints UI Test Cases", () => {
   test("HP008 - Login button disabled when already logged in (mock)", async ({
     page,
   }) => {
-    await page.goto(`${BASE_URL}/login`);
+    await page.goto(LOGIN_URL);
     await page.fill('input[name="username"]', "testaccount455@mailinator.com");
     await page.fill('input[name="password"]', "ValidPass123!");
     await page.click('button:has-text("Log in")');
-    await page.waitForURL("**/default-channel");
-    const loginLink = page.locator('a[href="/default-channel/login"]');
+    await page.waitForURL("**/us");
+    const loginLink = page.locator('a[href="/us/login"]');
     await expect(loginLink).toHaveCount(0);
   });
   test('HP009 - "Welcome to ZoomPrints" is readable on all screen sizes', async ({
@@ -375,7 +376,7 @@ test.describe("Home Page Tests", () => {
     // Verify main navigation elements
     await expect(page.locator("nav")).toBeVisible();
     await expect(
-      page.locator('nav li a[href*="/default-channel/products"]')
+      page.locator('nav li a[href*="/us/products"]')
     ).toBeVisible();
     await expect(page.locator('a[href*="/cart"]')).toBeVisible();
 

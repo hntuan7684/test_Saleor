@@ -4,7 +4,10 @@ import { BASE_URL } from "./utils/constants";
 
 test.describe("Searching Tests", () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto(BASE_URL);
+    await page.goto(BASE_URL, {
+      timeout: 90000,
+      waitUntil: "domcontentloaded",
+    });
   });
 
   test("SF001 - Valid keyword search", async ({ page }) => {

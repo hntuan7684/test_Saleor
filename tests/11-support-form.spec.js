@@ -4,27 +4,18 @@ import { SUPPORT_URL } from "./utils/constants";
 
 async function fillSupportForm(form, data) {
   if (data.firstName)
-    await form
-      .locator('input[name="firstName"]')
-      .fill(data.firstName);
+    await form.locator('input[name="firstName"]').fill(data.firstName);
   if (data.lastName)
-    await form
-      .locator('input[name="lastName"]')
-      .fill(data.lastName);
-  if (data.email)
-    await form.locator('input[name="email"]').fill(data.email);
+    await form.locator('input[name="lastName"]').fill(data.lastName);
+  if (data.email) await form.locator('input[name="email"]').fill(data.email);
   if (data.phoneNumber)
-    await form
-      .locator('input[name="phoneNumber"]')
-      .fill(data.phoneNumber);
+    await form.locator('input[name="phoneNumber"]').fill(data.phoneNumber);
   if (data.company)
     await form.locator('input[name="company"]').fill(data.company);
   if (data.address)
     await form.locator('input[name="address"]').fill(data.address);
   if (data.details)
-    await form
-      .locator('textarea[name="details"]')
-      .fill(data.details);
+    await form.locator('textarea[name="details"]').fill(data.details);
 }
 
 
@@ -569,8 +560,6 @@ test.describe("Support Form Tests", () => {
       details: "Hello",
     });
 
-
-
     // Submit form
     await form.locator('button[type="submit"]').click();
 
@@ -718,7 +707,9 @@ test.describe("Support Form Tests", () => {
     const form = await page.locator("form.w-full.max-w-2xl");
 
     // Fill email with invalid domain
-    await form.locator('input[name="email"]').pressSequentially("test@exa!mple.com");
+    await form
+      .locator('input[name="email"]')
+      .pressSequentially("test@exa!mple.com");
 
     await fillSupportForm(form, {
       firstName: "John",
@@ -858,7 +849,7 @@ test.describe("Support Form Tests", () => {
       lastName: "Doe",
       email: uniqueEmail,
       phoneNumber: "1234567890",
-      company: "ABC Corp., \"X&Y Inc.\", Jane\'s Shop (Local)",
+      company: 'ABC Corp., "X&Y Inc.", Jane\'s Shop (Local)',
       address: "123 Street",
       details: "Hello",
     });
@@ -905,12 +896,18 @@ test.describe("Support Form Tests", () => {
     await form
       .locator('input[name="lastName"]')
       .pressSequentially(injectionData.xss.lastName);
-    await form.locator('input[name="email"]').pressSequentially(injectionData.xss.email);
+    await form
+      .locator('input[name="email"]')
+      .pressSequentially(injectionData.xss.email);
     await form
       .locator('input[name="phoneNumber"]')
       .pressSequentially(injectionData.xss.phoneNumber);
-    await form.locator('input[name="company"]').pressSequentially(injectionData.xss.company);
-    await form.locator('input[name="address"]').pressSequentially(injectionData.xss.address);
+    await form
+      .locator('input[name="company"]')
+      .pressSequentially(injectionData.xss.company);
+    await form
+      .locator('input[name="address"]')
+      .pressSequentially(injectionData.xss.address);
     await form
       .locator('textarea[name="details"]')
       .pressSequentially(injectionData.xss.details);
@@ -928,15 +925,23 @@ test.describe("Support Form Tests", () => {
     const sqlInjection = "OR 1=1";
 
     // Try SQL injection in all fields
-    await form.locator('input[name="firstName"]').pressSequentially(sqlInjection);
-    await form.locator('input[name="lastName"]').pressSequentially(sqlInjection);
+    await form
+      .locator('input[name="firstName"]')
+      .pressSequentially(sqlInjection);
+    await form
+      .locator('input[name="lastName"]')
+      .pressSequentially(sqlInjection);
     await form
       .locator('input[name="email"]')
       .pressSequentially(`test${sqlInjection}@example.com`);
-    await form.locator('input[name="phoneNumber"]').pressSequentially("1234567890");
+    await form
+      .locator('input[name="phoneNumber"]')
+      .pressSequentially("1234567890");
     await form.locator('input[name="company"]').pressSequentially(sqlInjection);
     await form.locator('input[name="address"]').pressSequentially(sqlInjection);
-    await form.locator('textarea[name="details"]').pressSequentially(sqlInjection);
+    await form
+      .locator('textarea[name="details"]')
+      .pressSequentially(sqlInjection);
 
     // Submit form
     await form.locator('button[type="submit"]').click();
