@@ -14,7 +14,7 @@ module.exports = {
     },
     parallel: 1,
     publishQuiet: false,
-    timeout: 60000,
+    timeout: 30000,
     tags: 'not @skip'
   }
 }; 

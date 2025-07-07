@@ -1,26 +1,7 @@
-const { Given, When, Then, Before, After } = require('@cucumber/cucumber');
+const { Given, When, Then } = require('@cucumber/cucumber');
 const { expect } = require('@playwright/test');
 const { SUPPORT_URL } = require('../../../tests/utils/constants');
 const testDataHelper = require('../../../tests/utils/testDataHelper');
-
-let browser, page;
-
-Before(async function() {
-  const { chromium } = require('playwright');
-  browser = await chromium.launch({ 
-    headless: false,
-    slowMo: 1000,
-    args: ['--start-maximized']
-  });
-  page = await browser.newPage();
-  this.page = page;
-});
-
-After(async function() {
-  if (browser) {
-    await browser.close();
-  }
-});
 
 Given('I am on the support form page', async function() {
   await this.page.goto(SUPPORT_URL, {

@@ -10,6 +10,12 @@
     "test:cucumber:gui": "cucumber-js --format progress --format html:results/cucumber-report.html",
     "test:cucumber:headed": "cucumber-js --format progress --format html:results/cucumber-report.html --tags '@SP007'",
     "test:cucumber:all": "cucumber-js --format progress --format html:results/cucumber-report.html --format summary",
+    "test:cucumber:products": "cucumber-js --format progress --format html:results/cucumber-report.html --tags '@PR'",
+    "test:cucumber:products:gui": "cucumber-js --format progress --format html:results/cucumber-report.html --tags '@PR' --headed",
+    "test:cucumber:products:navigation": "cucumber-js --format progress --format html:results/cucumber-report.html --tags '@navigation'",
+    "test:cucumber:products:layout": "cucumber-js --format progress --format html:results/cucumber-report.html --tags '@layout'",
+    "test:cucumber:products:accessibility": "cucumber-js --format progress --format html:results/cucumber-report.html --tags '@accessibility'",
+    "test:cucumber:products:responsive": "cucumber-js --format progress --format html:results/cucumber-report.html --tags '@responsive'",
     "test:all": "npm run test && npm run test:cucumber"
   },
   "keywords": [],
