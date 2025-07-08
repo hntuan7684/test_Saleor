@@ -5,19 +5,19 @@ let browser, page;
 Before(async function() {
   const { chromium } = require('playwright');
   browser = await chromium.launch({ 
-    headless: false,        // ✅ Faster than headless mode
-    slowMo: 0,           // ✅ Disable delay completely
+    headless: true,        // Faster than headless mode
+    slowMo: 0,           // Disable delay completely
     args: [
       '--disable-dev-shm-usage',
       '--no-sandbox',
-      '--disable-gpu',    // ✅ Disable GPU for speed
-      '--disable-web-security', // ✅ Disable security checks
-      '--disable-features=VizDisplayCompositor', // ✅ Optimize rendering
-      '--disable-extensions', // ✅ Disable extensions
-      '--disable-plugins', // ✅ Disable plugins
-      '--disable-background-timer-throttling', // ✅ Disable throttling
-      '--disable-backgrounding-occluded-windows', // ✅ Optimize performance
-      '--disable-renderer-backgrounding' // ✅ Optimize performance
+      '--disable-gpu',    // Disable GPU for speed
+      '--disable-web-security', // Disable security checks
+      '--disable-features=VizDisplayCompositor', // Optimize rendering
+      '--disable-extensions', // Disable extensions
+      '--disable-plugins', // Disable plugins
+      '--disable-background-timer-throttling', // Disable throttling
+      '--disable-backgrounding-occluded-windows', // Optimize performance
+      '--disable-renderer-backgrounding' // Optimize performance
     ]
   });
   page = await browser.newPage();
