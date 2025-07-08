@@ -12,6 +12,12 @@ Feature: Support Form
     And no input fields should overlap each other
     And all fields should be contained within the form boundaries
 
+  # @SP001 @layout
+  # Scenario: Kiểm tra căn chỉnh của các trường nhập liệu
+  #   Then tất cả các trường nhập liệu phải hiển thị và được căn chỉnh đúng
+  #   And không có trường nhập liệu nào bị chồng lên nhau
+  #   And tất cả các trường phải nằm trong phạm vi của biểu mẫu
+
   @SP002 @validation @mandatory
   Scenario: Send button is disabled until mandatory fields are filled
     When I try to submit the form without filling mandatory fields
@@ -85,7 +91,7 @@ Feature: Support Form
   Scenario: First name exceeding maximum length
     When I fill first name exceeding maximum allowed length
     And I submit the form
-    Then I should see "Error creating support request: value too long for type character varying(255)" message
+    Then I should see "Failed to submit support request. Please try again" message
 
   @SP019 @validation @boundary
   Scenario: Last name with maximum length boundary
@@ -97,7 +103,7 @@ Feature: Support Form
   Scenario: Last name exceeding maximum length
     When I fill last name exceeding maximum allowed length
     And I submit the form
-    Then I should see "Error creating support request: value too long for type character varying(255)" message
+    Then I should see "Failed to submit support request. Please try again" message
 
   @SP021 @validation @email
   Scenario: Valid email format

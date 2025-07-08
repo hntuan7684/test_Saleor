@@ -1,11 +1,8 @@
 // cartPage.spec.js
 import { test } from './global-test';
 const { LOGIN_URL, PRODUCTS_URL, CART_URL } = require("./utils/constants");
-const { expect } = require("@playwright/test");
+import { expect } from '@playwright/test';
 const { CartPage } = require("./pageObjects/ShoppingCartPage");
-
-
-
 
 // Helper to open Cart from icon
 const openCart = async (page) => {
@@ -39,7 +36,6 @@ test.describe("Shopping Cart Tests", () => {
     await page.locator("input[type='number']").fill("1");
     await page.getByRole("button", { name: "Add to Cart" }).click();
     await page.waitForSelector('text=Added to Cart', { timeout: 120000 });
-
 
     const cartIcon = page.locator('a[href*="/cart"]');
     await cartIcon.click();

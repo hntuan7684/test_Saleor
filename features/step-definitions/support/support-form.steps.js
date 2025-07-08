@@ -5,7 +5,7 @@ const testDataHelper = require('../../../tests/utils/testDataHelper');
 
 Given('I am on the support form page', async function() {
   await this.page.goto(SUPPORT_URL, {
-    timeout: 90000,
+    timeout: 30000,
     waitUntil: "domcontentloaded",
   });
 });
@@ -59,6 +59,24 @@ Then('all input fields should be visible and properly aligned', async function()
   }
 });
 
+// Then('tất cả các trường nhập liệu phải hiển thị và được căn chỉnh đúng', async function() {
+//   const form = await this.page.locator("form.w-full.max-w-2xl");
+//   const formFields = [
+//     'input[name="firstName"]',
+//     'input[name="lastName"]',
+//     'input[name="email"]',
+//     'input[name="phoneNumber"]',
+//     'input[name="company"]',
+//     'input[name="address"]',
+//     'textarea[name="details"]',
+//   ];
+
+//   for (const fieldSelector of formFields) {
+//     const field = form.locator(fieldSelector);
+//     await expect(field).toBeVisible({ timeout: 10000 });
+//   }
+// });
+
 Then('no input fields should overlap each other', async function() {
   const form = await this.page.locator("form.w-full.max-w-2xl");
   const formFields = [
@@ -105,6 +123,52 @@ Then('no input fields should overlap each other', async function() {
   }
 });
 
+// Then('không có trường nhập liệu nào bị chồng lên nhau', async function() {
+//   const form = await this.page.locator("form.w-full.max-w-2xl");
+//   const formFields = [
+//     'input[name="firstName"]',
+//     'input[name="lastName"]',
+//     'input[name="email"]',
+//     'input[name="phoneNumber"]',
+//     'input[name="company"]',
+//     'input[name="address"]',
+//     'textarea[name="details"]',
+//   ];
+
+//   const fieldPositions = [];
+//   for (const fieldSelector of formFields) {
+//     const field = form.locator(fieldSelector);
+//     const box = await field.boundingBox();
+//     fieldPositions.push({ selector: fieldSelector, box: box });
+//   }
+
+//   for (let i = 0; i < fieldPositions.length; i++) {
+//     for (let j = i + 1; j < fieldPositions.length; j++) {
+//       const field1 = fieldPositions[i];
+//       const field2 = fieldPositions[j];
+
+//       const horizontalOverlap = Math.max(
+//         0,
+//         Math.min(
+//           field1.box.x + field1.box.width,
+//           field2.box.x + field2.box.width
+//         ) - Math.max(field1.box.x, field2.box.x)
+//       );
+
+//       const verticalOverlap = Math.max(
+//         0,
+//         Math.min(
+//           field1.box.y + field1.box.height,
+//           field2.box.y + field2.box.height
+//         ) - Math.max(field1.box.y, field2.box.y)
+//       );
+
+//       const isOverlapping = horizontalOverlap > 0 && verticalOverlap > 0;
+//       expect(isOverlapping).toBeFalsy();
+//     }
+//   }
+// });
+
 Then('all fields should be contained within the form boundaries', async function() {
   const form = await this.page.locator("form.w-full.max-w-2xl");
   const formBox = await form.boundingBox();
@@ -128,6 +192,30 @@ Then('all fields should be contained within the form boundaries', async function
     expect(box.y + box.height).toBeLessThanOrEqual(formBox.y + formBox.height);
   }
 });
+
+// Then('tất cả các trường phải nằm trong phạm vi của biểu mẫu', async function() {
+//   const form = await this.page.locator("form.w-full.max-w-2xl");
+//   const formBox = await form.boundingBox();
+//   const formFields = [
+//     'input[name="firstName"]',
+//     'input[name="lastName"]',
+//     'input[name="email"]',
+//     'input[name="phoneNumber"]',
+//     'input[name="company"]',
+//     'input[name="address"]',
+//     'textarea[name="details"]',
+//   ];
+
+//   for (const fieldSelector of formFields) {
+//     const field = form.locator(fieldSelector);
+//     const box = await field.boundingBox();
+    
+//     expect(box.x).toBeGreaterThanOrEqual(formBox.x);
+//     expect(box.x + box.width).toBeLessThanOrEqual(formBox.x + formBox.width);
+//     expect(box.y).toBeGreaterThanOrEqual(formBox.y);
+//     expect(box.y + box.height).toBeLessThanOrEqual(formBox.y + formBox.height);
+//   }
+// });
 
 // Validation and mandatory field steps
 When('I try to submit the form without filling mandatory fields', async function() {

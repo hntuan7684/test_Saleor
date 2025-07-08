@@ -18,6 +18,7 @@ async function fillSupportForm(form, data) {
     await form.locator('textarea[name="details"]').fill(data.details);
 }
 
+
 test.describe("Support Form Tests", () => {
   test.beforeEach(async ({ page }) => {
     await page.goto(SUPPORT_URL, {

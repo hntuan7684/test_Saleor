@@ -141,7 +141,6 @@ test.describe("ZoomPrints UI Test Cases", () => {
     const loginLink = page.locator('a[href="/us/login"]');
     await expect(loginLink).toHaveCount(0);
   });
-
   test('HP009 - "Welcome to ZoomPrints" is readable on all screen sizes', async ({
     page,
   }) => {

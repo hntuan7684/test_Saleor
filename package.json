@@ -30,11 +30,12 @@
     "@types/node": "^22.15.17",
     "chrome-launcher": "^1.2.0",
     "lighthouse": "^12.6.1",
-    "psi": "^4.1.0"
+    "psi": "^0.1.6"
   },
   "dependencies": {
     "dotenv": "^16.5.0",
     "node-fetch": "^2.7.0",
-    "nodemailer": "^7.0.3"
+    "nodemailer": "^7.0.3",
+    "playwright": "^1.53.1"
   }
 }
