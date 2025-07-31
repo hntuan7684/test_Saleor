@@ -24,6 +24,7 @@ Given('I am on the product detail page for {string}', async function(productSlug
       throw new Error(`Product page returned 404 for slug: ${productSlug}`);
     }
     
+    const currentUrl = this.page.url();
     if (!currentUrl.includes(productSlug)) {
       throw new Error(`Navigation failed: expected URL to contain ${productSlug}, got ${currentUrl}`);
     }

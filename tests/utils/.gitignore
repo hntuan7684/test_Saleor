@@ -1,0 +1,17 @@
+# Ignore sensitive test credentials
+testCredentials.js
+.env
+*.env
+
+# Ignore test results with credentials
+test-results/
+results/
+screenshots/
+
+# Ignore logs that might contain credentials
+*.log
+logs/
+
+# Ignore temporary files
+*.tmp
+*.temp 

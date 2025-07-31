@@ -2,18 +2,32 @@ import { test } from "./global-test.js";
 import { expect } from "@playwright/test";
 import { ForgotPasswordPage } from "./pageObjects/ForgotPasswordPage.js";
 import testDataHelper from "./utils/testDataHelper.js";
-import { BASE_URL, MAILINATOR_URL } from "./utils/constants.js";
+import { BASE_URL, MAILINATOR_BASE_URL } from "./utils/constants.js";
+import { TEST_CREDENTIALS, TEST_EMAILS } from "./utils/testCredentials.js";
+
+// Simple test to verify navigation fix
+test("FP000 - Verify navigation to forgot password page", async ({ page }) => {
+  const forgotPage = new ForgotPasswordPage(page);
+  
+  // Navigate through login page first
+  await forgotPage.navigate();
+  
+  // Verify we're on the correct page
+  await expect(forgotPage.heading).toBeVisible();
+  await expect(forgotPage.heading).toHaveText("Forgot Password");
+  
+  // Verify email input is present
+  await expect(forgotPage.emailInput).toBeVisible();
+  
+  console.log("✅ Navigation to forgot password page successful");
+});
 
 test.describe("Forgot Password Flow", () => {
-  // test.beforeAll(async () => {
-  //   await initExcel("ForgotPassword");
-  // });
-
   const testCases = [
     {
       id: "FP001",
       desc: "Valid email",
-      email: "existing-user@mailinator.com",
+      email: TEST_CREDENTIALS.VALID_EMAIL,
       shouldPass: true,
     },
     {
@@ -45,44 +59,44 @@ test.describe("Forgot Password Flow", () => {
     {
       id: "FP008",
       desc: "Multiple submissions in a row",
-      email: "existing-user@mailinator.com",
+      email: TEST_CREDENTIALS.VALID_EMAIL,
       multiple: true,
     },
     {
       id: "FP009",
       desc: "Reset email is sent to inbox",
-      email: "existing-user@mailinator.com",
+      email: TEST_CREDENTIALS.VALID_EMAIL,
       checkInbox: true,
     },
     {
       id: "FP010",
       desc: "Email with leading/trailing spaces",
-      email: "  existing-user@mailinator.com  ",
+      email: `  ${TEST_CREDENTIALS.VALID_EMAIL}  `,
       shouldPass: true,
     },
     {
       id: "FP011",
       desc: "Email in uppercase",
-      email: "EXISTING-USER@MAILINATOR.COM",
+      email: TEST_CREDENTIALS.VALID_EMAIL.toUpperCase(),
       shouldPass: true,
     },
     {
       id: "FP012",
       desc: "Email with alias (+)",
-      email: "existing-user+alias@mailinator.com",
+      email: `${TEST_CREDENTIALS.VALID_EMAIL.split('@')[0]}+alias@${TEST_CREDENTIALS.VALID_EMAIL.split('@')[1]}`,
       shouldPass: true,
     },
     {
       id: "FP013",
       desc: "Mobile viewport rendering",
-      email: "existing-user@mailinator.com",
+      email: TEST_CREDENTIALS.VALID_EMAIL,
       mobile: true,
     },
     { id: "FP014", desc: "Accessibility with keyboard navigation" },
     {
       id: "FP015",
       desc: "Rate limiting after multiple requests",
-      email: "existing-user@mailinator.com",
+      email: TEST_CREDENTIALS.VALID_EMAIL,
       repeat: 6,
     },
     {
@@ -100,7 +114,7 @@ test.describe("Forgot Password Flow", () => {
     {
       id: "FP018",
       desc: "Reload after email entry",
-      email: "existing-user@mailinator.com",
+      email: TEST_CREDENTIALS.VALID_EMAIL,
       reload: true,
     },
   ];
@@ -108,29 +122,21 @@ test.describe("Forgot Password Flow", () => {
   for (const tc of testCases) {
     test(`${tc.id} - ${tc.desc}`, async ({ page, context }) => {
       const forgotPage = new ForgotPasswordPage(page);
-      await forgotPage.navigate();
       let actual = "",
         status = "Fail";
 
       try {
+        // Navigate with proper session handling
+        await forgotPage.navigate();
+        
         if (tc.mobile) await page.setViewportSize({ width: 375, height: 667 });
+        
         if (tc.id === "FP003") {
           const heading = await forgotPage.isHeadingVisible();
           actual = heading ? "Heading is visible" : "Heading not found";
           status = heading ? "Pass" : "Fail";
         } else if (tc.id === "FP014") {
-          const tabbable = [forgotPage.emailInput, forgotPage.submitButton];
-          let accessible = true;
-          for (const el of tabbable) {
-            await el.focus();
-            const active = await page.evaluate(
-              () => document.activeElement?.tagName
-            );
-            if (!["INPUT", "BUTTON"].includes(active)) {
-              accessible = false;
-              break;
-            }
-          }
+          const accessible = await forgotPage.testKeyboardNavigation();
           actual = accessible
             ? "Accessible via keyboard"
             : "Not accessible via keyboard";
@@ -153,7 +159,7 @@ test.describe("Forgot Password Flow", () => {
           if (success) {
             const inbox = await context.newPage();
             await inbox.goto(
-              `${MAILINATOR_URL}/v4/public/inboxes.jsp?to=${
+              `${MAILINATOR_BASE_URL}?to=${
                 tc.email.split("@")[0]
               }`
             );
@@ -183,7 +189,7 @@ test.describe("Forgot Password Flow", () => {
           await forgotPage.fillEmail(tc.email);
           for (let i = 0; i < tc.repeat; i++) {
             await forgotPage.clickSubmit();
-            await page.waitForTimeout(120000);
+            await page.waitForTimeout(120000); // 2 minutes wait
           }
           const msg = await forgotPage.getErrorMessageText();
           const limited = /too many|rate limit|try again/i.test(msg);
@@ -206,14 +212,17 @@ test.describe("Forgot Password Flow", () => {
             actual = visible ? "Success message shown" : "No success message";
             status = visible ? "Pass" : "Fail";
           } else {
-            const error = await forgotPage.getErrorMessageText();
+            const error = await forgotPage.getErrorMessageText() || await forgotPage.getFieldErrorText();
             actual = error ? `Error shown: ${error}` : "No error message";
-            status = /invalid|required/i.test(error || "") ? "Pass" : "Fail";
+            status = /invalid|required|specify/i.test(error || "") ? "Pass" : "Fail";
           }
         }
       } catch (e) {
         actual = `Exception: ${e.message}`;
         status = "Fail";
+        
+        // Take screenshot on failure
+        await page.screenshot({ path: `error-${tc.id}.png` });
       }
     });
   }

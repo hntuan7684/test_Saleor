@@ -12,12 +12,6 @@ Feature: Support Form
     And no input fields should overlap each other
     And all fields should be contained within the form boundaries
 
-  # @SP001 @layout
-  # Scenario: Kiểm tra căn chỉnh của các trường nhập liệu
-  #   Then tất cả các trường nhập liệu phải hiển thị và được căn chỉnh đúng
-  #   And không có trường nhập liệu nào bị chồng lên nhau
-  #   And tất cả các trường phải nằm trong phạm vi của biểu mẫu
-
   @SP002 @validation @mandatory
   Scenario: Send button is disabled until mandatory fields are filled
     When I try to submit the form without filling mandatory fields

@@ -5,7 +5,7 @@ let browser, page;
 Before(async function() {
   const { chromium } = require('playwright');
   browser = await chromium.launch({ 
-    headless: true,        // Faster than headless mode
+    headless: false,        // Faster than headless mode
     slowMo: 0,           // Disable delay completely
     args: [
       '--disable-dev-shm-usage',
