@@ -109,18 +109,6 @@ zoomprints-test-automation/
 │       ├── support-form.steps.js
 │       ├── hooks.js                 # Cucumber hooks
 │       └── shared-steps.js          # Shared step definitions
-├── CSV_Files_ZoomPrints_28_08_2025/ # Test data files
-│   ├── Tasks.csv                    # Main task list (38 tasks)
-│   ├── Bugs.csv                     # Bug reports
-│   ├── checkout.csv                 # Checkout test data
-│   ├── User Account.csv             # User account test data
-│   └── Task *.csv                   # Individual task data files
-├── scripts/                         # Helper scripts
-│   ├── debug-cart-error.sh          # Cart error debugging
-│   ├── debug-quantity.sh            # Quantity validation debugging
-│   ├── fix-hardcoded-credentials.js # Credential management
-│   ├── update-env-credentials.js    # Environment credential updates
-│   └── verify-dev-urls.js           # URL verification
 ├── results/                         # Test execution results
 │   ├── screenshots/                 # Test screenshots
 │   ├── cucumber-report.html         # Cucumber HTML reports
