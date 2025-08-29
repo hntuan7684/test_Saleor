@@ -1,0 +1,63 @@
+{
+  "name": "zoomprints-test-automation",
+  "version": "1.0.0",
+  "description": "Comprehensive test automation suite for ZoomPrints e-commerce platform",
+  "main": "index.js",
+  "scripts": {
+    "test": "playwright test",
+    "test:playwright": "playwright test tests/playwright/",
+    "test:cucumber": "cucumber-js",
+    "test:cucumber:gui": "cucumber-js --format progress --format html:results/cucumber-report.html",
+    "test:cucumber:headed": "cucumber-js --format progress --format html:results/cucumber-report.html --tags '@SP007'",
+    "test:cucumber:all": "cucumber-js --format progress --format html:results/cucumber-report.html --format summary",
+    "test:cucumber:products": "cucumber-js --format progress --format html:results/cucumber-report.html --tags '@PR'",
+    "test:cucumber:products:gui": "cucumber-js --format progress --format html:results/cucumber-report.html --tags '@PR' --headed",
+    "test:cucumber:products:navigation": "cucumber-js --format progress --format html:results/cucumber-report.html --tags '@navigation'",
+    "test:cucumber:products:layout": "cucumber-js --format progress --format html:results/cucumber-report.html --tags '@layout'",
+    "test:cucumber:products:accessibility": "cucumber-js --format progress --format html:results/cucumber-report.html --tags '@accessibility'",
+    "test:cucumber:products:responsive": "cucumber-js --format progress --format html:results/cucumber-report.html --tags '@responsive'",
+    "test:performance": "playwright test tests/cucumber/performance/",
+    "test:pagespeed": "playwright test tests/cucumber/performance/pagespeed-api.spec.js",
+    "test:all": "npm run test",
+    "test:debug": "playwright test --debug",
+    "test:headed": "playwright test --headed",
+    "test:ui": "playwright test --ui",
+    "install:browsers": "playwright install",
+    "verify:urls": "node scripts/verify-dev-urls.js",
+    "update:credentials": "node scripts/update-env-credentials.js",
+    "debug:cart": "chmod +x scripts/debug-cart-error.sh && ./scripts/debug-cart-error.sh",
+    "debug:quantity": "chmod +x scripts/debug-quantity.sh && ./scripts/debug-quantity.sh"
+  },
+  "keywords": [
+    "playwright",
+    "cucumber",
+    "test-automation",
+    "e-commerce",
+    "zoomprints",
+    "bdd",
+    "performance-testing"
+  ],
+  "author": "ZoomPrints Test Team",
+  "license": "MIT",
+  "devDependencies": {
+    "@babel/preset-env": "^7.27.2",
+    "@babel/register": "^7.27.1",
+    "@cucumber/cucumber": "^11.3.0",
+    "@playwright/test": "^1.53.0-alpha-2025-05-12",
+    "@types/node": "^22.15.17",
+    "chrome-launcher": "^1.2.0",
+    "lighthouse": "^12.6.1",
+    "psi": "^0.1.6"
+  },
+  "dependencies": {
+    "dotenv": "^16.5.0",
+    "node-fetch": "^2.7.0",
+    "nodemailer": "^7.0.3",
+    "playwright": "^1.53.1"
+  },
+  "engines": {
+    "node": ">=16.0.0",
+    "npm": ">=8.0.0"
+  }
+}
+
