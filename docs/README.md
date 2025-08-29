@@ -7,7 +7,6 @@
 - [Getting Started](#getting-started)
 - [Running Tests](#running-tests)
 - [Test Categories](#test-categories)
-- [Configuration](#configuration)
 - [Best Practices](#best-practices)
 - [Troubleshooting](#troubleshooting)
 - [Contributing](#contributing)
@@ -174,7 +173,6 @@ Behavior-Driven Development tests using Cucumber framework.
 1. **Clone the Repository**
    ```bash
    git clone <repository-url>
-   cd zoomprints-test-automation
    ```
 
 2. **Install Dependencies**
@@ -345,62 +343,6 @@ npm run debug:quantity
 - **Desktop Layout**: Desktop optimization
 - **Cross-device**: Consistent experience
 
-## ⚙️ Configuration
-
-### Playwright Configuration (`playwright.config.ts`)
-
-```typescript
-export default defineConfig({
-  testDir: './tests',
-  testMatch: '**/*.spec.{js,ts}',
-  fullyParallel: false,
-  forbidOnly: !!process.env.CI,
-  retries: process.env.CI ? 2 : 0,
-  workers: 4,
-  reporter: 'html',
-  use: {
-    trace: 'on-first-retry',
-    launchOptions: {
-      args: [
-        '--window-position=1920,0',
-        '--window-size=1920,1080',
-        '--start-maximized'
-      ]
-    }
-  },
-  projects: [
-    { name: 'chromium', use: { ...devices['Desktop Chrome'] } },
-    { name: 'firefox', use: { ...devices['Desktop Firefox'] } },
-    { name: 'webkit', use: { ...devices['Desktop Safari'] } }
-  ]
-});
-```
-
-### Cucumber Configuration (`cucumber.config.js`)
-
-```javascript
-module.exports = {
-  default: {
-    requireModule: ['@babel/register'],
-    require: ['features/step-definitions/**/*.js'],
-    format: [
-      'progress',
-      'html:results/cucumber-report.html',
-      'json:results/cucumber-report.json',
-      'summary'
-    ],
-    formatOptions: {
-      snippetInterface: 'async-await',
-      colors: true
-    },
-    parallel: 1,
-    publishQuiet: false,
-    timeout: 30000,
-    tags: 'not @skip'
-  }
-};
-```
-
 ## 📈 Test Reports
 
 ### Playwright Reports
@@ -520,19 +462,6 @@ npm run test:cucumber:headed
 
 This project is licensed under the MIT License - see the LICENSE file for details.
 
-## 🏢 About ZoomPrints
-
-ZoomPrints is a comprehensive e-commerce platform specializing in promotional apparel products, offering:
-
-- **Screen Printing Services**: Custom t-shirt printing
-- **Bulk Order Management**: Minimum 500 shirts for orders
-- **Design Tool Integration**: Custom design capabilities
-- **Multi-location Shipping**: Distributed order fulfillment
-- **Pricing Tiers**: A/B pricing based on user status
-
-This test automation suite ensures the highest quality and reliability of the ZoomPrints platform, covering all critical user journeys and business processes.
-
----
 
 **Last Updated**: August 2025
 **Version**: 1.0.0  
